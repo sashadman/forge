@@ -42,14 +42,16 @@ export default function CareerQuiz() {
         (answer) => answer.question_id === currentQuestion.id
       )
 
+      const currentSelectedOptions = existingAnswer?.selected_options ?? []
+
       let nextSelectedOptions: string[]
 
       if (isMulti) {
-        const alreadySelected = selectedOptions.includes(optionId)
+        const alreadySelected = currentSelectedOptions.includes(optionId)
 
         nextSelectedOptions = alreadySelected
-          ? selectedOptions.filter((id) => id !== optionId)
-          : [...selectedOptions, optionId]
+          ? currentSelectedOptions.filter((id) => id !== optionId)
+          : [...currentSelectedOptions, optionId]
       } else {
         nextSelectedOptions = [optionId]
       }
@@ -71,19 +73,40 @@ export default function CareerQuiz() {
       ]
     })
   }
+  
+function goNext() {
+  const currentAnswer = answers.find(
+    (answer) => answer.question_id === currentQuestion.id
+  )
 
-  function goNext() {
-    if (selectedOptions.length === 0) return
+  const hasSelection =
+    currentAnswer && currentAnswer.selected_options.length > 0
 
-    const isLastQuestion = currentQuestionIndex === QUIZ_QUESTIONS.length - 1
+  if (!hasSelection) return
 
-    if (isLastQuestion) {
-      setIsComplete(true)
-      return
+  const isLastQuestion =
+    currentQuestionIndex === QUIZ_QUESTIONS.length - 1
+
+  if (isLastQuestion) {
+    const calculatedResults = calculateQuizResults(answers)
+
+    const resultToSave = {
+      completedAt: new Date().toISOString(),
+      answers,
+      results: calculatedResults,
     }
 
-    setCurrentQuestionIndex((index) => index + 1)
+    window.localStorage.setItem(
+      'forge_latest_quiz_result',
+      JSON.stringify(resultToSave)
+    )
+
+    setIsComplete(true)
+    return
   }
+
+  setCurrentQuestionIndex((index) => index + 1)
+}
 
   function goBack() {
     if (currentQuestionIndex === 0) return
@@ -92,6 +115,7 @@ export default function CareerQuiz() {
   }
 
   function restartQuiz() {
+    window.localStorage.removeItem('forge_latest_quiz_result')
     setCurrentQuestionIndex(0)
     setAnswers([])
     setIsComplete(false)
