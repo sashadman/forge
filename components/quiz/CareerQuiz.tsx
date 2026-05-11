@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react'
 import {
   calculateQuizResults,
@@ -15,6 +15,7 @@ export default function CareerQuiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [isComplete, setIsComplete] = useState(false)
+  const [savedResult, setSavedResult] = useState<any | null>(null)
 
   const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex]
   const currentAnswer = answers.find(
@@ -33,6 +34,20 @@ export default function CareerQuiz() {
       tradeDetails: TRADE_MAP[result.trade],
     }))
   }, [answers, isComplete])
+  useEffect(() => {
+    const storedResult = window.localStorage.getItem(
+      'forge_latest_quiz_result'
+    )
+    if (!storedResult) return
+
+    try {
+      const parsedResult = JSON.parse(storedResult)
+      setSavedResult(parsedResult)
+     
+    } catch (error) {
+      console.error('Failed to parse saved quiz result:', error)
+    }
+  }, [])
 
   function updateAnswer(optionId: string) {
     const isMulti = currentQuestion.type === 'multi'
@@ -73,7 +88,7 @@ export default function CareerQuiz() {
       ]
     })
   }
-  
+
 function goNext() {
   const currentAnswer = answers.find(
     (answer) => answer.question_id === currentQuestion.id
@@ -119,6 +134,103 @@ function goNext() {
     setCurrentQuestionIndex(0)
     setAnswers([])
     setIsComplete(false)
+  }
+  if (!isComplete && savedResult) {
+    return (
+      <section className="py-16">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+            <div className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
+                Latest quiz result
+              </p>
+
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+                Welcome back.
+              </h2>
+
+              <p className="mt-4 leading-7 text-slate-600">
+                Forge found trade paths that matched your previous answers.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6">
+              {savedResult.results.map((result: any) => {
+                const trade = TRADE_MAP[result.trade]
+
+                return (
+                  <div
+                    key={result.trade}
+                    className="rounded-3xl border border-slate-200 bg-slate-50 p-6"
+                  >
+                    <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                      <div>
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 font-bold text-white">
+                            {result.rank}
+                          </span>
+
+                          <div>
+                            <h3 className="text-2xl font-bold text-slate-950">
+                              {trade.name}
+                            </h3>
+
+                            <p className="text-slate-600">
+                              {trade.tagline}
+                            </p>
+                          </div>
+                        </div>
+
+                        <p className="mt-5 max-w-3xl leading-7 text-slate-600">
+                          {trade.description}
+                        </p>
+                      </div>
+
+                      <div className="min-w-40 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          Match score
+                        </p>
+
+                        <p className="mt-1 text-3xl font-bold text-orange-600">
+                          {result.score}%
+                        </p>
+
+                        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          Median salary
+                        </p>
+
+                        <p className="mt-1 font-bold text-slate-950">
+                          {formatSalary(trade.median_salary)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                      <Link
+                        href={`/trades/${trade.slug}`}
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                      >
+                        View career profile
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <button
+              type="button"
+              onClick={restartQuiz}
+              className="mt-8 inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Retake quiz
+            </button>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   if (isComplete) {
