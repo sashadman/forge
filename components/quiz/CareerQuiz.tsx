@@ -9,13 +9,25 @@ import {
   TRADE_MAP,
   formatSalary,
 } from '@/utils/trades'
-import type { QuizAnswer } from '@/types'
+import type { QuizAnswer, TradeCategory } from '@/types'
+type QuizResultItem = {
+  trade: TradeCategory
+  score: number
+  rank: number
+}
+
+type SavedQuizResult = {
+  completedAt: string
+  answers: QuizAnswer[]
+  results: QuizResultItem[]
+}
 
 export default function CareerQuiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [isComplete, setIsComplete] = useState(false)
-  const [savedResult, setSavedResult] = useState<any | null>(null)
+  const [savedResult, setSavedResult] = useState<SavedQuizResult | null>(null)
+  const [hasLoadedSavedResult, setHasLoadedSavedResult] = useState(false)
 
   const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex]
   const currentAnswer = answers.find(
@@ -34,18 +46,24 @@ export default function CareerQuiz() {
       tradeDetails: TRADE_MAP[result.trade],
     }))
   }, [answers, isComplete])
+  
   useEffect(() => {
+    if (typeof window === 'undefined') return
     const storedResult = window.localStorage.getItem(
       'forge_latest_quiz_result'
     )
-    if (!storedResult) return
-
+    if (!storedResult) {
+    setHasLoadedSavedResult(true)
+    return
+  }
     try {
-      const parsedResult = JSON.parse(storedResult)
+      const parsedResult = JSON.parse(storedResult) as SavedQuizResult  
       setSavedResult(parsedResult)
-     
     } catch (error) {
       console.error('Failed to parse saved quiz result:', error)
+      window.localStorage.removeItem('forge_latest_quiz_result')
+    } finally {
+      setHasLoadedSavedResult(true)
     }
   }, [])
 
