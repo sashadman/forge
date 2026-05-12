@@ -107,15 +107,13 @@ export default function CareerQuiz() {
     })
   }
 
-function goNext() {
-  const currentAnswer = answers.find(
-    (answer) => answer.question_id === currentQuestion.id
+  function goNext() {
+    const currentAnswer = answers.find(
+      (answer) => answer.question_id === currentQuestion.id
   )
 
-  const hasSelection =
-    currentAnswer && currentAnswer.selected_options.length > 0
 
-  if (!hasSelection) return
+  if (!(currentAnswer && currentAnswer.selected_options.length > 0)) return
 
   const isLastQuestion =
     currentQuestionIndex === QUIZ_QUESTIONS.length - 1
@@ -128,8 +126,8 @@ function goNext() {
       answers,
       results: calculatedResults,
     }
-
-    window.localStorage.setItem(
+//Save anonymous quiz results locally so visitors can return before creating an account.
+    window.localStorage.setItem( 
       'forge_latest_quiz_result',
       JSON.stringify(resultToSave)
     )
@@ -149,10 +147,30 @@ function goNext() {
 
   function restartQuiz() {
     window.localStorage.removeItem('forge_latest_quiz_result')
+    setSavedResult(null)
     setCurrentQuestionIndex(0)
     setAnswers([])
     setIsComplete(false)
   }
+  if (!hasLoadedSavedResult) {
+  return (
+    <section className="py-16">
+      <div className="mx-auto max-w-4xl px-6">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+          <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
+            Career quiz
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+            Loading your quiz...
+          </h2>
+          <p className="mt-4 text-slate-600">
+            Checking whether you already have a saved result.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
   if (!isComplete && savedResult) {
     return (
       <section className="py-16">
@@ -173,7 +191,7 @@ function goNext() {
             </div>
 
             <div className="mt-10 grid gap-6">
-              {savedResult.results.map((result: any) => {
+              {savedResult.results.map((result) => {
                 const trade = TRADE_MAP[result.trade]
 
                 return (
