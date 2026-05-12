@@ -10,6 +10,8 @@ import {
   formatSalary,
 } from '@/utils/trades'
 import type { QuizAnswer, TradeCategory } from '@/types'
+import type { Json } from '@/lib/supabase/types'
+import { createClient } from '@/lib/supabase/client'
 type QuizResultItem = {
   trade: TradeCategory
   score: number
@@ -23,6 +25,7 @@ type SavedQuizResult = {
 }
 
 export default function CareerQuiz() {
+  const supabase = createClient()
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [isComplete, setIsComplete] = useState(false)
@@ -106,38 +109,62 @@ export default function CareerQuiz() {
       ]
     })
   }
-
-  function goNext() {
+    async function goNext() {
     const currentAnswer = answers.find(
       (answer) => answer.question_id === currentQuestion.id
-  )
-
-
-  if (!(currentAnswer && currentAnswer.selected_options.length > 0)) return
-
-  const isLastQuestion =
-    currentQuestionIndex === QUIZ_QUESTIONS.length - 1
-
-  if (isLastQuestion) {
-    const calculatedResults = calculateQuizResults(answers)
-
-    const resultToSave = {
-      completedAt: new Date().toISOString(),
-      answers,
-      results: calculatedResults,
-    }
-//Save anonymous quiz results locally so visitors can return before creating an account.
-    window.localStorage.setItem( 
-      'forge_latest_quiz_result',
-      JSON.stringify(resultToSave)
     )
 
-    setIsComplete(true)
-    return
-  }
+    const hasSelection =
+      currentAnswer && currentAnswer.selected_options.length > 0
 
-  setCurrentQuestionIndex((index) => index + 1)
-}
+    if (!hasSelection) return
+
+    const isLastQuestion =
+      currentQuestionIndex === QUIZ_QUESTIONS.length - 1
+
+    if (isLastQuestion) {
+      const calculatedResults = calculateQuizResults(answers)
+
+      const resultToSave = {
+        completedAt: new Date().toISOString(),
+        answers,
+        results: calculatedResults,
+      }
+
+      // Save anonymous quiz results locally so visitors can return before creating an account.
+      window.localStorage.setItem(
+        'forge_latest_quiz_result',
+        JSON.stringify(resultToSave)
+      )
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user) {
+        const { error } = await supabase.from('quiz_results').insert({
+          user_id: user.id,
+          answers: answers as unknown as Json,
+          results: calculatedResults as unknown as Json,
+          completed_at: resultToSave.completedAt,
+        })
+
+        if (error) {
+          console.error('Failed to save quiz result to Supabase:', error)
+        } else {
+          await supabase
+            .from('profiles')
+            .update({ quiz_completed: true })
+            .eq('id', user.id)
+        }
+      }
+
+      setIsComplete(true)
+      return
+    }
+
+    setCurrentQuestionIndex((index) => index + 1)
+  }
 
   function goBack() {
     if (currentQuestionIndex === 0) return
