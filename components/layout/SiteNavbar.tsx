@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Hammer } from 'lucide-react'
 import { siteConfig } from '@/config/site'
+import AuthNav from '@/components/layout/AuthNav'
 
 export default function SiteNavbar() {
   return (
@@ -22,19 +23,10 @@ export default function SiteNavbar() {
           <Link href="/quiz" className="hover:text-slate-950">
             Quiz
           </Link>
-
-          <Link href="/auth/sign-in" className="hover:text-slate-950">
-            Sign in
-          </Link>
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/auth/sign-in"
-            className="hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 sm:inline-flex"
-          >
-            Sign in
-          </Link>
+          <AuthNav />
 
           <Link
             href="/quiz"
