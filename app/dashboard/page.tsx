@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import { TRADE_MAP, formatSalary } from '@/utils/trades'
 import type { TradeCategory } from '@/types'
+import ProfileForm from '@/components/dashboard/ProfileForm'
 
 type QuizResultItem = {
   trade: TradeCategory
@@ -84,18 +85,14 @@ export default async function DashboardPage() {
               {profile?.email || user.email}
             </p>
 
-            <div className="mt-6 space-y-4">
-              <ProfileRow label="Role" value={profile?.role || 'seeker'} />
-              <ProfileRow label="Location" value={profile?.location || 'Not added yet'} />
-              <ProfileRow
-                label="Experience"
-                value={profile?.experience_level || 'Not added yet'}
-              />
-              <ProfileRow
-                label="Quiz completed"
-                value={profile?.quiz_completed ? 'Yes' : 'Not yet'}
-              />
-            </div>
+          <div className="mt-6">
+  <ProfileForm
+    userId={user.id}
+    fullName={profile?.full_name || ''}
+    location={profile?.location || ''}
+    experienceLevel={profile?.experience_level || ''}
+  />
+</div> 
           </aside>
 
           <div className="space-y-8">

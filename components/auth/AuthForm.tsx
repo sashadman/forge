@@ -44,10 +44,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
           },
         })
 
-        if (error) {
-          setError(error.message)
-          return
-        }
+     if (error) {
+  console.error(error)
+  setError(error.message)
+  setLoading(false)
+  return
+}
 
         setSuccessMessage(
           'Account created successfully. Check your email to confirm your account.'
@@ -61,13 +63,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
         password,
       })
 
-      if (error) {
-        setError(error.message)
-        return
-      }
+ if (error) {
+  console.error(error)
+  setError(error.message)
+  setLoading(false)
+  return
+}
 
-      router.push('/dashboard')
-      router.refresh()
+  window.location.href = '/dashboard'
     } catch (error) {
       console.error(error)
       setError('Something went wrong. Please try again.')

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { ArrowRight, Search } from 'lucide-react'
+import { ArrowRight, Search, TrendingUp, WalletCards } from 'lucide-react'
 import { TRADES, formatSalary } from '@/utils/trades'
 
 export default function TradesExplorer() {
@@ -34,121 +34,144 @@ export default function TradesExplorer() {
   }, [searchTerm])
 
   return (
-    <>
-      <div className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <label
-          htmlFor="trade-search"
-          className="mb-3 block text-sm font-semibold text-slate-700"
-        >
-          Search skilled trades
-        </label>
+    <div className="space-y-10">
+      <div className="-mt-24 rounded-[2rem] border border-white/70 bg-white/90 p-5 shadow-2xl shadow-slate-900/10 backdrop-blur md:p-6">
+        <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <label
+              htmlFor="trade-search"
+              className="mb-3 block text-sm font-semibold uppercase tracking-wide text-orange-600"
+            >
+              Search the marketplace
+            </label>
 
-        <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-slate-200">
-          <Search className="h-5 w-5 text-slate-400" />
+            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
+              <Search className="h-5 w-5 text-slate-400" />
 
-          <input
-            id="trade-search"
-            type="search"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="Search electrician, HVAC, solar, welding, salary, skills..."
-            className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-          />
+              <input
+                id="trade-search"
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search electrician, HVAC, solar, welding, salary, skills..."
+                className="w-full bg-transparent text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-slate-950 px-5 py-4 text-white">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Showing
+            </p>
+            <p className="mt-1 text-2xl font-bold">
+              {filteredTrades.length} of {TRADES.length}
+            </p>
+          </div>
         </div>
-
-        <p className="mt-3 text-sm text-slate-500">
-          Showing {filteredTrades.length} of {TRADES.length} trades
-        </p>
       </div>
 
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          {filteredTrades.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredTrades.map((trade) => (
-                <Link
-                  key={trade.id}
-                  href={`/trades/${trade.slug}`}
-                  className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                        {trade.training_duration}
-                      </p>
+      {filteredTrades.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredTrades.map((trade) => (
+            <Link
+              key={trade.id}
+              href={`/trades/${trade.slug}`}
+              className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10"
+            >
+              <div className="h-2 bg-gradient-to-r from-orange-500 via-orange-400 to-slate-900" />
 
-                      <h2 className="mt-3 text-2xl font-bold text-slate-950">
-                        {trade.name}
-                      </h2>
-                    </div>
+              <div className="p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
+                      {trade.training_duration}
+                    </p>
 
-                    <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-semibold text-orange-700">
-                      +{trade.job_growth_rate}%
-                    </span>
+                    <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
+                      {trade.name}
+                    </h2>
+
+                    <p className="mt-2 text-sm font-semibold text-slate-500">
+                      {trade.tagline}
+                    </p>
                   </div>
 
-                  <p className="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
-                    {trade.description}
-                  </p>
+                  <span className="rounded-full bg-slate-950 px-3 py-1 text-sm font-bold text-white">
+                    +{trade.job_growth_rate}%
+                  </span>
+                </div>
 
-                  <div className="mt-6 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-600">
+                  {trade.description}
+                </p>
+
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center gap-2">
+                      <WalletCards className="h-4 w-4 text-orange-600" />
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Median salary
-                      </p>
-                      <p className="mt-1 font-bold text-slate-950">
-                        {formatSalary(trade.median_salary)}
+                        Salary
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-slate-50 p-4">
+                    <p className="mt-2 font-bold text-slate-950">
+                      {formatSalary(trade.median_salary)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-orange-600" />
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Key skills
-                      </p>
-                      <p className="mt-1 font-bold text-slate-950">
-                        {trade.key_skills.length}
+                        Skills
                       </p>
                     </div>
+
+                    <p className="mt-2 font-bold text-slate-950">
+                      {trade.key_skills.length} key areas
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {trade.key_skills.slice(0, 2).map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
 
-                  <div className="mt-6 flex items-center justify-between">
-                    <div className="flex flex-wrap gap-2">
-                      {trade.key_skills.slice(0, 2).map((skill) => (
-                        <span
-                          key={skill}
-                          className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-
-                    <ArrowRight className="h-5 w-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-orange-600" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
+                    <ArrowRight className="h-5 w-5 transition group-hover:translate-x-0.5" />
                   </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-950">
-                No trades found
-              </h2>
-
-              <p className="mt-3 text-slate-600">
-                Try searching for a different trade, skill, certification, or training path.
-              </p>
-
-              <button
-                type="button"
-                onClick={() => setSearchTerm('')}
-                className="mt-6 rounded-full bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
-              >
-                Clear search
-              </button>
-            </div>
-          )}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </section>
-    </>
+      ) : (
+        <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+          <h2 className="text-2xl font-bold text-slate-950">
+            No trades found
+          </h2>
+
+          <p className="mt-3 text-slate-600">
+            Try searching for a different trade, skill, certification, or training path.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setSearchTerm('')}
+            className="mt-6 rounded-full bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
