@@ -16,6 +16,7 @@ import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { TRADES, TRADE_MAP, formatSalaryRange, formatSalary } from '@/utils/trades'
 import type { TradeCategory } from '@/types'
+import SaveTradeButton from '@/components/trades/SaveTradeButton'
 
 type TradeDetailPageProps = {
   params: {
@@ -98,6 +99,7 @@ export default function TradeDetailPage({ params }: TradeDetailPageProps) {
                 >
                   Compare other trades
                 </Link>
+                <SaveTradeButton tradeSlug={trade.slug} />
               </div>
             </div>
 
