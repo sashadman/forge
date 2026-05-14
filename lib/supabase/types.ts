@@ -181,6 +181,43 @@ export type Database = {
         }
         Relationships: []
       }
+
+      saved_programs: {
+        Row: {
+          id: string
+          user_id: string
+          program_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          program_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          program_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'saved_programs_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'saved_programs_program_id_fkey'
+            columns: ['program_id']
+            isOneToOne: false
+            referencedRelation: 'programs'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

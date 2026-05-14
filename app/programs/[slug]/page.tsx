@@ -1,7 +1,9 @@
 // Creating Dynamic program Route
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import SaveProgramButton from '@/components/programs/SaveProgramButton'
 import {
   ArrowLeft,
   ArrowRight,
@@ -194,12 +196,16 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                 />
               </div>
 
+              <div className="mt-8">
+                <SaveProgramButton programId={program.id} />
+              </div>
+
               {program.website_url && (
                 <a
                   href={program.website_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-4 font-semibold text-white hover:bg-orange-700"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-4 font-semibold text-white hover:bg-orange-700"
                 >
                   Visit provider website
                   <ExternalLink className="h-4 w-4" />
@@ -242,7 +248,7 @@ function DetailItem({
   label,
   value,
 }: {
-  icon: React.ReactNode
+  icon: ReactNode
   label: string
   value: string
 }) {
