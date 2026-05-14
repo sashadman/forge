@@ -82,8 +82,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
         tradeFocus === 'all' || program.trade_slug === tradeFocus
 
       const programLocation = `${program.location}, ${program.state}`
-      const matchesLocation =
-        location === 'all' || programLocation === location
+      const matchesLocation = location === 'all' || programLocation === location
 
       return matchesSearch && matchesType && matchesTrade && matchesLocation
     })
@@ -97,20 +96,18 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
   }
 
   return (
-    <div>
-      <div className="-mt-16 rounded-[2rem] border border-white/70 bg-white p-6 shadow-2xl shadow-slate-900/10">
+    <div className="space-y-10">
+      <div className="content-panel -mt-16">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-              Program directory
-            </p>
+            <p className="eyebrow">Program directory</p>
 
-            <h2 className="mt-2 text-3xl font-bold tracking-tight">
+            <h2 className="section-title mt-3">
               Listed San Diego-area pathways
             </h2>
           </div>
 
-          <p className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+          <p className="badge-slate">
             {filteredPrograms.length} of {programs.length} listings
           </p>
         </div>
@@ -131,7 +128,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
           <select
             value={programType}
             onChange={(event) => setProgramType(event.target.value)}
-            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+            className="select-field"
           >
             <option value="all">All program types</option>
             {programTypes.map((type) => (
@@ -144,7 +141,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
           <select
             value={tradeFocus}
             onChange={(event) => setTradeFocus(event.target.value)}
-            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+            className="select-field"
           >
             <option value="all">All trades</option>
             {tradeFocusOptions.map((trade) => (
@@ -157,7 +154,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
           <select
             value={location}
             onChange={(event) => setLocation(event.target.value)}
-            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+            className="select-field"
           >
             <option value="all">All locations</option>
             {locationOptions.map((programLocation) => (
@@ -167,28 +164,24 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
             ))}
           </select>
 
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-          >
+          <button type="button" onClick={clearFilters} className="btn-outline rounded-2xl px-4 py-3">
             <SlidersHorizontal className="h-4 w-4" />
             Clear
           </button>
         </div>
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => (
             <Link
               key={program.slug}
               href={`/programs/${program.slug}`}
-              className="group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10"
+              className="card card-hover group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
+                  <span className="badge-orange">
                     {formatProgramType(program.program_type)}
                   </span>
 
@@ -211,7 +204,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="mini-card">
                   <div className="flex items-center gap-2 text-slate-500">
                     <MapPin className="h-4 w-4" />
                     <p className="text-xs font-semibold uppercase tracking-wide">
@@ -224,7 +217,7 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="mini-card">
                   <div className="flex items-center gap-2 text-slate-500">
                     <GraduationCap className="h-4 w-4" />
                     <p className="text-xs font-semibold uppercase tracking-wide">
@@ -240,18 +233,14 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
             </Link>
           ))
         ) : (
-          <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center lg:col-span-2">
+          <div className="card border-dashed p-10 text-center lg:col-span-2">
             <h3 className="text-2xl font-bold">No programs found</h3>
 
             <p className="mt-3 text-slate-600">
               Try changing your search or clearing the filters.
             </p>
 
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="mt-6 rounded-full bg-slate-950 px-6 py-3 font-semibold text-white hover:bg-slate-800"
-            >
+            <button type="button" onClick={clearFilters} className="btn-dark mt-6">
               Clear filters
             </button>
           </div>

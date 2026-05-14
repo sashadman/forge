@@ -27,24 +27,21 @@ export default async function ProgramsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="page-shell">
       <SiteNavbar />
 
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.24),transparent_34rem)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-50 to-transparent" />
+      <section className="hero-dark">
+        <div className="hero-fade" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-24">
+        <div className="section-shell relative py-24">
           <div className="max-w-4xl">
-            <p className="inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-300">
-              Training pathways
-            </p>
+            <p className="eyebrow-dark">Training pathways</p>
 
-            <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
+            <h1 className="page-title-dark mt-6">
               Find real programs that can move you toward the trades.
             </h1>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className="lead-text-dark mt-6 max-w-3xl">
               Browse listed apprenticeships, workforce programs, and training pathways.
               These are public directory listings, not verified platform partners yet.
             </p>
@@ -52,8 +49,8 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      <section className="relative bg-slate-50 pb-20">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="section-light pb-20">
+        <div className="section-shell">
           <ProgramsExplorer programs={programs ?? []} />
         </div>
       </section>
