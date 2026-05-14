@@ -20,6 +20,10 @@ export default function SiteNavbar() {
             Trades
           </Link>
 
+          <Link href="/programs" className="hover:text-slate-950">
+            Programs
+          </Link>
+
           <Link href="/quiz" className="hover:text-slate-950">
             Quiz
           </Link>

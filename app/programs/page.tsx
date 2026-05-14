@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowRight, GraduationCap, MapPin } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
+import ProgramsExplorer from '@/components/programs/ProgramsExplorer'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 
@@ -10,13 +9,6 @@ export const metadata: Metadata = {
   title: `Training Programs — ${siteConfig.name}`,
   description:
     'Browse skilled trades training programs, apprenticeships, and workforce pathways.',
-}
-
-function formatProgramType(type: string) {
-  return type
-    .split('_')
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(' ')
 }
 
 export default async function ProgramsPage() {
@@ -62,91 +54,7 @@ export default async function ProgramsPage() {
 
       <section className="relative bg-slate-50 pb-20">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="-mt-16 rounded-[2rem] border border-white/70 bg-white p-6 shadow-2xl shadow-slate-900/10">
-            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                  Program directory
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight">
-                  Listed San Diego-area pathways
-                </h2>
-              </div>
-
-              <p className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                {programs?.length ?? 0} listings
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            {programs && programs.length > 0 ? (
-              programs.map((program) => (
-                <Link
-                  key={program.slug}
-                  href={`/programs/${program.slug}`}
-                  className="group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
-                        {formatProgramType(program.program_type)}
-                      </span>
-
-                      <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
-                        {program.name}
-                      </h3>
-
-                      <p className="mt-2 font-semibold text-slate-600">
-                        {program.provider_name}
-                      </p>
-                    </div>
-
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
-                      <ArrowRight className="h-5 w-5" />
-                    </div>
-                  </div>
-
-                  <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
-                    {program.description}
-                  </p>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl bg-slate-50 p-4">
-                      <div className="flex items-center gap-2 text-slate-500">
-                        <MapPin className="h-4 w-4" />
-                        <p className="text-xs font-semibold uppercase tracking-wide">
-                          Location
-                        </p>
-                      </div>
-                      <p className="mt-2 font-semibold text-slate-950">
-                        {program.location}, {program.state}
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl bg-slate-50 p-4">
-                      <div className="flex items-center gap-2 text-slate-500">
-                        <GraduationCap className="h-4 w-4" />
-                        <p className="text-xs font-semibold uppercase tracking-wide">
-                          Duration
-                        </p>
-                      </div>
-                      <p className="mt-2 font-semibold text-slate-950">
-                        {program.duration || 'See provider'}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center lg:col-span-2">
-                <h3 className="text-2xl font-bold">No programs found</h3>
-                <p className="mt-3 text-slate-600">
-                  Program listings will appear here after they are added.
-                </p>
-              </div>
-            )}
-          </div>
+          <ProgramsExplorer programs={programs ?? []} />
         </div>
       </section>
 
