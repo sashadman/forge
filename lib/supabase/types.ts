@@ -238,6 +238,13 @@ export type Database = {
           state: string
           website_url: string | null
           contact_email: string | null
+          linkedin_url: string | null
+          instagram_url: string | null
+          facebook_url: string | null
+          x_url: string | null
+          youtube_url: string | null
+          tiktok_url: string | null
+          other_social_url: string | null
           is_verified: boolean
           is_active: boolean
           created_at: string
@@ -254,6 +261,13 @@ export type Database = {
           state: string
           website_url?: string | null
           contact_email?: string | null
+          linkedin_url?: string | null
+          instagram_url?: string | null
+          facebook_url?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+          tiktok_url?: string | null
+          other_social_url?: string | null
           is_verified?: boolean
           is_active?: boolean
           created_at?: string
@@ -270,6 +284,13 @@ export type Database = {
           state?: string
           website_url?: string | null
           contact_email?: string | null
+          linkedin_url?: string | null
+          instagram_url?: string | null
+          facebook_url?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+          tiktok_url?: string | null
+          other_social_url?: string | null
           is_verified?: boolean
           is_active?: boolean
           created_at?: string

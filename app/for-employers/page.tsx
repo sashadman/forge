@@ -84,8 +84,8 @@ export default function ForEmployersPage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
-              <Link href="/auth/sign-up" className="btn-outline-dark px-7 py-4">
-                Create account
+              <Link href="/employers/sign-up" className="btn-outline-dark px-7 py-4">
+                Create employer profile
               </Link>
             </div>
           </div>
@@ -192,8 +192,8 @@ export default function ForEmployersPage() {
                   ))}
                 </ul>
 
-                <Link href="/auth/sign-up" className="btn-light mt-8">
-                  Create account
+                <Link href="/employers/new" className="btn-light mt-8">
+                  Create employer profile
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
