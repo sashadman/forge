@@ -23,12 +23,12 @@ export default function SiteNavbar() {
           <Link href="/programs" className="hover:text-slate-950">
             Programs
           </Link>
+          <Link href="/opportunities" className="hover:text-slate-950">
+           Opportunities
+          </Link>
           <Link href="/for-programs" className="hover:text-slate-950">
            For Programs
           </Link>
-          <Link href="/for-employers" className="hover:text-slate-950">
-            For Employers
-          </Link> 
           <Link href="/quiz" className="hover:text-slate-950">
             Quiz
           </Link>
