@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Barlow, DM_Sans, JetBrains_Mono } from 'next/font/google'
-import { Toaster } from 'react-hot-toast'
+import ToastProvider from '@/components/providers/ToastProvider'
 import './globals.css'
 
 const barlow = Barlow({
@@ -67,17 +67,7 @@ export default function RootLayout({
     >
       <body className="bg-white font-body text-forge-navy antialiased">
         {children}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              fontFamily: 'var(--font-dm-sans)',
-              fontSize: '14px',
-              borderRadius: '8px',
-            },
-          }}
-        />
+        <ToastProvider />
       </body>
     </html>
   )
