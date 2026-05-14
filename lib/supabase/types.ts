@@ -15,6 +15,13 @@ export type ProgramType =
   | 'workforce_program'
   | 'employer_training'
 
+export type OpportunityType =
+  | 'job'
+  | 'apprenticeship'
+  | 'trainee'
+  | 'internship'
+  | 'pre_apprenticeship'
+
 export type Database = {
   public: {
     Tables: {
@@ -218,12 +225,142 @@ export type Database = {
           },
         ]
       }
+
+      employers: {
+        Row: {
+          id: string
+          owner_id: string
+          name: string
+          slug: string
+          description: string
+          industry: string | null
+          location: string
+          state: string
+          website_url: string | null
+          contact_email: string | null
+          is_verified: boolean
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          owner_id: string
+          name: string
+          slug: string
+          description: string
+          industry?: string | null
+          location: string
+          state: string
+          website_url?: string | null
+          contact_email?: string | null
+          is_verified?: boolean
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          owner_id?: string
+          name?: string
+          slug?: string
+          description?: string
+          industry?: string | null
+          location?: string
+          state?: string
+          website_url?: string | null
+          contact_email?: string | null
+          is_verified?: boolean
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'employers_owner_id_fkey'
+            columns: ['owner_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+
+      opportunities: {
+        Row: {
+          id: string
+          employer_id: string
+          title: string
+          slug: string
+          opportunity_type: OpportunityType
+          trade_slug: string
+          location: string
+          state: string
+          pay_range: string | null
+          schedule: string | null
+          description: string
+          requirements: string[] | null
+          benefits: string[] | null
+          application_url: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          employer_id: string
+          title: string
+          slug: string
+          opportunity_type: OpportunityType
+          trade_slug: string
+          location: string
+          state: string
+          pay_range?: string | null
+          schedule?: string | null
+          description: string
+          requirements?: string[] | null
+          benefits?: string[] | null
+          application_url?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          employer_id?: string
+          title?: string
+          slug?: string
+          opportunity_type?: OpportunityType
+          trade_slug?: string
+          location?: string
+          state?: string
+          pay_range?: string | null
+          schedule?: string | null
+          description?: string
+          requirements?: string[] | null
+          benefits?: string[] | null
+          application_url?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'opportunities_employer_id_fkey'
+            columns: ['employer_id']
+            isOneToOne: false
+            referencedRelation: 'employers'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
     Enums: {
       user_role: UserRole
       program_type: ProgramType
+      opportunity_type: OpportunityType
     }
     CompositeTypes: Record<string, never>
   }
