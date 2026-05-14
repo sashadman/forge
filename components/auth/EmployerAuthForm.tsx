@@ -78,7 +78,7 @@ export default function EmployerAuthForm({ mode }: EmployerAuthFormProps) {
           .eq('id', data.user.id)
       }
 
-      window.location.href = '/employers/new'
+      window.location.href = '/employers/dashboard'
     } catch (error) {
       console.error(error)
       setError('Something went wrong. Please try again.')

@@ -107,7 +107,7 @@ export default function EmployerProfileForm({
       return
     }
 
-    router.push(`/employers/${slug}`)
+    router.push(`/employers/dashboard`)
     router.refresh()
   }
 
