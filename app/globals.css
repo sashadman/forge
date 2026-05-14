@@ -10,6 +10,10 @@
   :root {
     --background: #f8fafc;
     --foreground: #0f172a;
+    --brand-orange: #f97316;
+    --brand-navy: #0f172a;
+    --surface: #ffffff;
+    --surface-soft: #f1f5f9;
   }
 
   html {
@@ -19,8 +23,9 @@
   body {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 32rem),
-      linear-gradient(to bottom, #ffffff, #f8fafc);
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.06), transparent 32rem),
+      linear-gradient(to bottom, #f8fafc, #eef2f7);
     color: var(--foreground);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -38,12 +43,12 @@
 }
 
 /* ─────────────────────────────────────────────
-   Reusable components
+   Layout system
 ───────────────────────────────────────────── */
 
 @layer components {
   .page-shell {
-    @apply min-h-screen bg-slate-50 text-slate-950;
+    @apply min-h-screen bg-slate-100 text-slate-950;
   }
 
   .section-shell {
@@ -51,33 +56,139 @@
   }
 
   .section-padding {
-    @apply py-16 sm:py-20;
+    @apply py-20 sm:py-24;
   }
 
+  .section-light {
+    @apply bg-slate-100;
+  }
+
+  .section-white {
+    @apply bg-white;
+  }
+
+  .section-dark {
+    @apply relative overflow-hidden bg-slate-950 text-white;
+  }
+
+  .hero-dark {
+    @apply relative overflow-hidden bg-slate-950 text-white;
+  }
+
+  .hero-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.26), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 30rem);
+    pointer-events: none;
+  }
+
+  .hero-fade {
+    @apply absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-100 to-transparent;
+  }
+
+  .content-panel {
+    @apply rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-2xl shadow-slate-900/10 backdrop-blur;
+  }
+
+  .dark-panel {
+    @apply relative overflow-hidden rounded-[2.25rem] bg-slate-950 text-white shadow-2xl shadow-slate-900/20;
+  }
+
+  .dark-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.22), transparent 30rem),
+      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 28rem);
+    pointer-events: none;
+  }
+
+  .dark-panel-content {
+    @apply relative;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Typography
+───────────────────────────────────────────── */
+
+@layer components {
   .eyebrow {
-    @apply text-sm font-semibold uppercase tracking-wide text-orange-600;
+    @apply inline-flex rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-700;
+  }
+
+  .eyebrow-dark {
+    @apply inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-300;
   }
 
   .page-title {
     @apply text-4xl font-bold tracking-tight text-slate-950 sm:text-6xl;
   }
 
+  .page-title-dark {
+    @apply text-4xl font-bold tracking-tight text-white sm:text-6xl;
+  }
+
   .section-title {
-    @apply text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl;
+    @apply text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl;
+  }
+
+  .section-title-dark {
+    @apply text-3xl font-bold tracking-tight text-white sm:text-5xl;
+  }
+
+  .lead-text {
+    @apply text-lg leading-8 text-slate-600;
+  }
+
+  .lead-text-dark {
+    @apply text-lg leading-8 text-slate-300;
   }
 
   .muted-text {
-    @apply text-slate-600 leading-7;
+    @apply leading-7 text-slate-600;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Cards
+───────────────────────────────────────────── */
+
+@layer components {
+  .card {
+    @apply rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition;
   }
 
-  .card {
-    @apply rounded-3xl border border-slate-200 bg-white shadow-sm;
+  .card-hover {
+    @apply hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10;
   }
 
   .card-soft {
-    @apply rounded-3xl border border-slate-200 bg-slate-50 shadow-sm;
+    @apply rounded-[2rem] border border-slate-200 bg-slate-50 p-6 shadow-sm;
   }
 
+  .card-dark {
+    @apply rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 text-white backdrop-blur;
+  }
+
+  .mini-card {
+    @apply rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200;
+  }
+
+  .mini-card-white {
+    @apply rounded-2xl bg-white p-4 ring-1 ring-slate-200;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Buttons and forms
+───────────────────────────────────────────── */
+
+@layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3 font-semibold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60;
   }
@@ -86,8 +197,16 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
+  .btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-slate-950 transition hover:bg-slate-100;
+  }
+
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10;
   }
 
   .input-field {
@@ -98,6 +217,16 @@
     @apply mb-2 block text-sm font-medium text-slate-700;
   }
 
+  .select-field {
+    @apply rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Badges and utilities
+───────────────────────────────────────────── */
+
+@layer components {
   .badge {
     @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
   }
@@ -110,14 +239,14 @@
     @apply badge bg-slate-100 text-slate-700;
   }
 
+  .badge-dark {
+    @apply badge border border-orange-400/30 bg-orange-500/10 text-orange-300;
+  }
+
   .subtle-ring {
     @apply ring-1 ring-slate-200;
   }
 }
-
-/* ─────────────────────────────────────────────
-   Small utilities
-───────────────────────────────────────────── */
 
 @layer utilities {
   .glass-card {
