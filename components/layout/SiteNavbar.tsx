@@ -30,10 +30,6 @@ export default function SiteNavbar() {
             Opportunities
           </Link>
 
-          <Link href="/for-programs" className="transition hover:text-slate-950">
-            For Programs
-          </Link>
-
           <Link href="/quiz" className="transition hover:text-slate-950">
             Quiz
           </Link>
@@ -41,13 +37,6 @@ export default function SiteNavbar() {
 
         <div className="flex items-center gap-3">
           <AuthNav />
-
-          <Link
-            href="/for-employers"
-            className="hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 lg:inline-flex"
-          >
-            For employers
-          </Link>
 
           <Link href="/quiz" className="btn-dark px-5 py-2 text-sm">
             Find your trade
