@@ -20,6 +20,13 @@ function formatProgramType(type: string) {
     .join(' ')
 }
 
+function formatOpportunityType(type: string) {
+  return type
+    .split('_')
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
 export default async function DashboardPage() {
   const supabase = createClient()
 
@@ -67,6 +74,31 @@ export default async function DashboardPage() {
         state,
         duration,
         description
+      )
+    `
+    )
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+
+  const { data: savedOpportunities } = await supabase
+    .from('saved_opportunities')
+    .select(
+      `
+      opportunity_id,
+      created_at,
+      opportunities (
+        slug,
+        title,
+        opportunity_type,
+        trade_slug,
+        location,
+        state,
+        pay_range,
+        schedule,
+        description,
+        employers (
+          name
+        )
       )
     `
     )
@@ -299,7 +331,9 @@ export default async function DashboardPage() {
               {savedPrograms && savedPrograms.length > 0 ? (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
                   {savedPrograms.map((savedProgram) => {
-                    const program = savedProgram.programs
+                    const program = Array.isArray(savedProgram.programs)
+                      ? savedProgram.programs[0]
+                      : savedProgram.programs
 
                     if (!program) return null
 
@@ -362,6 +396,91 @@ export default async function DashboardPage() {
                   description="Save programs while browsing training pathways so you can compare them later."
                   href="/programs"
                   action="Explore programs"
+                />
+              )}
+            </section>
+
+            <section className="content-panel">
+              <SectionHeader
+                eyebrow="Saved opportunities"
+                title="Your opportunity shortlist"
+                description="Keep track of jobs, apprenticeships, trainee roles, and other real opportunities you want to revisit."
+                href="/opportunities"
+                action="Explore opportunities"
+              />
+
+              {savedOpportunities && savedOpportunities.length > 0 ? (
+                <div className="mt-8 grid gap-5 md:grid-cols-2">
+                  {savedOpportunities.map((savedOpportunity) => {
+                    const opportunity = Array.isArray(savedOpportunity.opportunities)
+                      ? savedOpportunity.opportunities[0]
+                      : savedOpportunity.opportunities
+
+                    if (!opportunity) return null
+
+                    const employer = Array.isArray(opportunity.employers)
+                      ? opportunity.employers[0]
+                      : opportunity.employers
+
+                    return (
+                      <Link
+                        key={savedOpportunity.opportunity_id}
+                        href={`/opportunities/${opportunity.slug}`}
+                        className="card card-hover group bg-slate-50"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <span className="badge-orange">
+                              {formatOpportunityType(opportunity.opportunity_type)}
+                            </span>
+
+                            <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+                              {opportunity.title}
+                            </h3>
+
+                            <p className="mt-2 font-semibold text-slate-600">
+                              {employer?.name || 'Employer listing'}
+                            </p>
+                          </div>
+
+                          <ArrowCircle />
+                        </div>
+
+                        <p className="muted-text mt-5 line-clamp-3">
+                          {opportunity.description}
+                        </p>
+
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Location
+                            </p>
+
+                            <p className="mt-1 font-bold text-slate-950">
+                              {opportunity.location}, {opportunity.state}
+                            </p>
+                          </div>
+
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Schedule
+                            </p>
+
+                            <p className="mt-1 font-bold text-slate-950">
+                              {opportunity.schedule || 'See listing'}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              ) : (
+                <EmptyState
+                  title="No saved opportunities yet"
+                  description="Save real opportunities while browsing listings so you can return to them later."
+                  href="/opportunities"
+                  action="Explore opportunities"
                 />
               )}
             </section>

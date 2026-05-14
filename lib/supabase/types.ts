@@ -225,7 +225,43 @@ export type Database = {
           },
         ]
       }
-
+      saved_opportunities: {
+        Row: {
+          id: string
+          user_id: string
+          opportunity_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          opportunity_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          opportunity_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'saved_opportunities_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'saved_opportunities_opportunity_id_fkey'
+            columns: ['opportunity_id']
+            isOneToOne: false
+            referencedRelation: 'opportunities'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+           
       employers: {
         Row: {
           id: string

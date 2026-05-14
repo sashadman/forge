@@ -1,3 +1,4 @@
+import SaveOpportunityButton from '@/components/opportunities/SaveOpportunityButton'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
@@ -234,7 +235,9 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                   value={opportunity.pay_range || 'See listing'}
                 />
               </div>
-
+<div className="mt-8">
+  <SaveOpportunityButton opportunityId={opportunity.id} />
+</div>
               {opportunity.application_url && (
                 <a
                   href={opportunity.application_url}
