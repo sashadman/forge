@@ -8,9 +8,14 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   ExternalLink,
+  Facebook,
   Globe,
+  Instagram,
+  Linkedin,
   Mail,
   MapPin,
+  Music2,
+  Play,
   ShieldCheck,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
@@ -22,6 +27,12 @@ type PageProps = {
   params: {
     slug: string
   }
+}
+
+type SocialLink = {
+  label: string
+  href: string | null
+  icon: ReactNode
 }
 
 function formatOpportunityType(type: string) {
@@ -71,6 +82,13 @@ export default async function EmployerDetailPage({ params }: PageProps) {
       state,
       website_url,
       contact_email,
+      linkedin_url,
+      instagram_url,
+      facebook_url,
+      x_url,
+      youtube_url,
+      tiktok_url,
+      other_social_url,
       is_verified,
       opportunities (
         id,
@@ -97,6 +115,44 @@ export default async function EmployerDetailPage({ params }: PageProps) {
 
   const activeOpportunities =
     employer.opportunities?.filter((opportunity) => opportunity.is_active) ?? []
+
+  const socialLinks: SocialLink[] = [
+    {
+      label: 'LinkedIn',
+      href: employer.linkedin_url,
+      icon: <Linkedin className="h-4 w-4" />,
+    },
+    {
+      label: 'Instagram',
+      href: employer.instagram_url,
+      icon: <Instagram className="h-4 w-4" />,
+    },
+    {
+      label: 'Facebook',
+      href: employer.facebook_url,
+      icon: <Facebook className="h-4 w-4" />,
+    },
+    {
+      label: 'X / Twitter',
+      href: employer.x_url,
+      icon: <ExternalLink className="h-4 w-4" />,
+    },
+    {
+      label: 'YouTube',
+      href: employer.youtube_url,
+      icon: <Play className="h-4 w-4" />,
+    },
+    {
+      label: 'TikTok',
+      href: employer.tiktok_url,
+      icon: <Music2 className="h-4 w-4" />,
+    },
+    {
+      label: 'Other social',
+      href: employer.other_social_url,
+      icon: <ExternalLink className="h-4 w-4" />,
+    },
+  ].filter((link) => Boolean(link.href))
 
   return (
     <main className="page-shell">
@@ -140,9 +196,7 @@ export default async function EmployerDetailPage({ params }: PageProps) {
             <section className="content-panel">
               <p className="eyebrow">Employer overview</p>
 
-              <h2 className="section-title mt-3">
-                About this employer
-              </h2>
+              <h2 className="section-title mt-3">About this employer</h2>
 
               <p className="lead-text mt-5">{employer.description}</p>
 
@@ -303,6 +357,33 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   Contact employer
                   <Mail className="h-4 w-4" />
                 </a>
+              )}
+
+              {socialLinks.length > 0 && (
+                <div className="mt-8 border-t border-slate-200 pt-6">
+                  <h3 className="text-lg font-bold text-slate-950">
+                    Social links
+                  </h3>
+
+                  <div className="mt-4 grid gap-3">
+                    {socialLinks.map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href || '#'}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          {link.icon}
+                          {link.label}
+                        </span>
+
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
               )}
 
               <p className="mt-5 text-xs leading-6 text-slate-500">
