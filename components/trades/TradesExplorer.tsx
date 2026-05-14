@@ -35,17 +35,14 @@ export default function TradesExplorer() {
 
   return (
     <div className="space-y-10">
-      <div className="-mt-24 rounded-[2rem] border border-white/70 bg-white/90 p-5 shadow-2xl shadow-slate-900/10 backdrop-blur md:p-6">
+      <div className="content-panel -mt-16">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <label
-              htmlFor="trade-search"
-              className="mb-3 block text-sm font-semibold uppercase tracking-wide text-orange-600"
-            >
+            <label htmlFor="trade-search" className="eyebrow mb-3">
               Search the marketplace
             </label>
 
-            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-sm focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
+            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
               <Search className="h-5 w-5 text-slate-400" />
 
               <input
@@ -76,16 +73,14 @@ export default function TradesExplorer() {
             <Link
               key={trade.id}
               href={`/trades/${trade.slug}`}
-              className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10"
+              className="card card-hover group overflow-hidden p-0"
             >
               <div className="h-2 bg-gradient-to-r from-orange-500 via-orange-400 to-slate-900" />
 
               <div className="p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
-                      {trade.training_duration}
-                    </p>
+                    <p className="badge-orange">{trade.training_duration}</p>
 
                     <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
                       {trade.name}
@@ -106,7 +101,7 @@ export default function TradesExplorer() {
                 </p>
 
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="mini-card">
                     <div className="flex items-center gap-2">
                       <WalletCards className="h-4 w-4 text-orange-600" />
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -119,7 +114,7 @@ export default function TradesExplorer() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="mini-card">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-orange-600" />
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -136,10 +131,7 @@ export default function TradesExplorer() {
                 <div className="mt-6 flex items-center justify-between gap-4">
                   <div className="flex flex-wrap gap-2">
                     {trade.key_skills.slice(0, 2).map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
-                      >
+                      <span key={skill} className="badge-slate">
                         {skill}
                       </span>
                     ))}
@@ -154,7 +146,7 @@ export default function TradesExplorer() {
           ))}
         </div>
       ) : (
-        <div className="rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm">
+        <div className="card border-dashed p-10 text-center">
           <h2 className="text-2xl font-bold text-slate-950">
             No trades found
           </h2>
@@ -166,7 +158,7 @@ export default function TradesExplorer() {
           <button
             type="button"
             onClick={() => setSearchTerm('')}
-            className="mt-6 rounded-full bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
+            className="btn-primary mt-6"
           >
             Clear search
           </button>
