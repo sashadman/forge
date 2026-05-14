@@ -12,6 +12,7 @@ import {
 import type { QuizAnswer, TradeCategory } from '@/types'
 import type { Json } from '@/lib/supabase/types'
 import { createClient } from '@/lib/supabase/client'
+
 type QuizResultItem = {
   trade: TradeCategory
   score: number
@@ -49,18 +50,19 @@ export default function CareerQuiz() {
       tradeDetails: TRADE_MAP[result.trade],
     }))
   }, [answers, isComplete])
-  
+
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const storedResult = window.localStorage.getItem(
-      'forge_latest_quiz_result'
-    )
+
+    const storedResult = window.localStorage.getItem('forge_latest_quiz_result')
+
     if (!storedResult) {
-    setHasLoadedSavedResult(true)
-    return
-  }
+      setHasLoadedSavedResult(true)
+      return
+    }
+
     try {
-      const parsedResult = JSON.parse(storedResult) as SavedQuizResult  
+      const parsedResult = JSON.parse(storedResult) as SavedQuizResult
       setSavedResult(parsedResult)
     } catch (error) {
       console.error('Failed to parse saved quiz result:', error)
@@ -109,7 +111,8 @@ export default function CareerQuiz() {
       ]
     })
   }
-    async function goNext() {
+
+  async function goNext() {
     const currentAnswer = answers.find(
       (answer) => answer.question_id === currentQuestion.id
     )
@@ -119,8 +122,7 @@ export default function CareerQuiz() {
 
     if (!hasSelection) return
 
-    const isLastQuestion =
-      currentQuestionIndex === QUIZ_QUESTIONS.length - 1
+    const isLastQuestion = currentQuestionIndex === QUIZ_QUESTIONS.length - 1
 
     if (isLastQuestion) {
       const calculatedResults = calculateQuizResults(answers)
@@ -131,7 +133,6 @@ export default function CareerQuiz() {
         results: calculatedResults,
       }
 
-      // Save anonymous quiz results locally so visitors can return before creating an account.
       window.localStorage.setItem(
         'forge_latest_quiz_result',
         JSON.stringify(resultToSave)
@@ -168,7 +169,6 @@ export default function CareerQuiz() {
 
   function goBack() {
     if (currentQuestionIndex === 0) return
-
     setCurrentQuestionIndex((index) => index - 1)
   }
 
@@ -179,332 +179,275 @@ export default function CareerQuiz() {
     setAnswers([])
     setIsComplete(false)
   }
+
   if (!hasLoadedSavedResult) {
-  return (
-    <section className="py-16">
-      <div className="mx-auto max-w-4xl px-6">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-          <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-            Career quiz
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-            Loading your quiz...
-          </h2>
-          <p className="mt-4 text-slate-600">
-            Checking whether you already have a saved result.
-          </p>
-        </div>
+    return (
+      <div className="content-panel">
+        <p className="eyebrow">Career quiz</p>
+
+        <h2 className="section-title mt-3">Loading your quiz...</h2>
+
+        <p className="muted-text mt-4">
+          Checking whether you already have a saved result.
+        </p>
       </div>
-    </section>
-  )
-}
+    )
+  }
+
   if (!isComplete && savedResult) {
     return (
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-            <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                Latest quiz result
-              </p>
+      <div className="content-panel">
+        <div className="max-w-3xl">
+          <p className="eyebrow">Latest quiz result</p>
 
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-                Welcome back.
-              </h2>
+          <h2 className="section-title mt-3">Welcome back.</h2>
 
-              <p className="mt-4 leading-7 text-slate-600">
-                Forge found trade paths that matched your previous answers.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-6">
-              {savedResult.results.map((result) => {
-                const trade = TRADE_MAP[result.trade]
-
-                return (
-                  <div
-                    key={result.trade}
-                    className="rounded-3xl border border-slate-200 bg-slate-50 p-6"
-                  >
-                    <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                      <div>
-                        <div className="flex items-center gap-3">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 font-bold text-white">
-                            {result.rank}
-                          </span>
-
-                          <div>
-                            <h3 className="text-2xl font-bold text-slate-950">
-                              {trade.name}
-                            </h3>
-
-                            <p className="text-slate-600">
-                              {trade.tagline}
-                            </p>
-                          </div>
-                        </div>
-
-                        <p className="mt-5 max-w-3xl leading-7 text-slate-600">
-                          {trade.description}
-                        </p>
-                      </div>
-
-                      <div className="min-w-40 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                          Match score
-                        </p>
-
-                        <p className="mt-1 text-3xl font-bold text-orange-600">
-                          {result.score}%
-                        </p>
-
-                        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                          Median salary
-                        </p>
-
-                        <p className="mt-1 font-bold text-slate-950">
-                          {formatSalary(trade.median_salary)}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                      <Link
-                        href={`/trades/${trade.slug}`}
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-                      >
-                        View career profile
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            <button
-              type="button"
-              onClick={restartQuiz}
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Retake quiz
-            </button>
-          </div>
+          <p className="muted-text mt-4">
+            {`Forge`} found trade paths that matched your previous answers.
+          </p>
         </div>
-      </section>
+
+        <div className="mt-10 grid gap-6">
+          {savedResult.results.map((result) => {
+            const trade = TRADE_MAP[result.trade]
+
+            return (
+              <ResultCard
+                key={result.trade}
+                rank={result.rank}
+                score={result.score}
+                tradeName={trade.name}
+                tagline={trade.tagline}
+                description={trade.description}
+                salary={formatSalary(trade.median_salary)}
+                tradeSlug={trade.slug}
+              />
+            )
+          })}
+        </div>
+
+        <button type="button" onClick={restartQuiz} className="btn-outline mt-8">
+          <RotateCcw className="h-4 w-4" />
+          Retake quiz
+        </button>
+      </div>
     )
   }
 
   if (isComplete) {
     return (
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-            <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                Your results
-              </p>
+      <div className="content-panel">
+        <div className="max-w-3xl">
+          <p className="eyebrow">Your results</p>
 
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                These trades may fit your interests.
-              </h2>
+          <h2 className="section-title mt-3">
+            These trades may fit your interests.
+          </h2>
 
-              <p className="mt-4 leading-7 text-slate-600">
-                These results are not a final decision. They are a starting point
-                to help you explore career paths with more clarity.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-6">
-              {results.map((result) => (
-                <div
-                  key={result.trade}
-                  className="rounded-3xl border border-slate-200 bg-slate-50 p-6"
-                >
-                  <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 font-bold text-white">
-                          {result.rank}
-                        </span>
-
-                        <div>
-                          <h3 className="text-2xl font-bold text-slate-950">
-                            {result.tradeDetails.name}
-                          </h3>
-                          <p className="text-slate-600">
-                            {result.tradeDetails.tagline}
-                          </p>
-                        </div>
-                      </div>
-
-                      <p className="mt-5 max-w-3xl leading-7 text-slate-600">
-                        {result.tradeDetails.description}
-                      </p>
-
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {result.tradeDetails.key_skills.slice(0, 4).map((skill) => (
-                          <span
-                            key={skill}
-                            className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="min-w-40 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Match score
-                      </p>
-                      <p className="mt-1 text-3xl font-bold text-orange-600">
-                        {result.score}%
-                      </p>
-
-                      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Median salary
-                      </p>
-                      <p className="mt-1 font-bold text-slate-950">
-                        {formatSalary(result.tradeDetails.median_salary)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                    <Link
-                      href={`/trades/${result.tradeDetails.slug}`}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-                    >
-                      View career profile
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-
-                    <Link
-                      href="/trades"
-                      className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-800 hover:bg-white"
-                    >
-                      Compare trades
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={restartQuiz}
-              className="mt-8 inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Retake quiz
-            </button>
-          </div>
+          <p className="muted-text mt-4">
+            These results are not a final decision. They are a starting point
+            to help you explore career paths with more clarity.
+          </p>
         </div>
-      </section>
+
+        <div className="mt-10 grid gap-6">
+          {results.map((result) => (
+            <ResultCard
+              key={result.trade}
+              rank={result.rank}
+              score={result.score}
+              tradeName={result.tradeDetails.name}
+              tagline={result.tradeDetails.tagline}
+              description={result.tradeDetails.description}
+              salary={formatSalary(result.tradeDetails.median_salary)}
+              tradeSlug={result.tradeDetails.slug}
+              skills={result.tradeDetails.key_skills.slice(0, 4)}
+              showCompare
+            />
+          ))}
+        </div>
+
+        <button type="button" onClick={restartQuiz} className="btn-outline mt-8">
+          <RotateCcw className="h-4 w-4" />
+          Retake quiz
+        </button>
+      </div>
     )
   }
 
   return (
-    <section className="py-16">
-      <div className="mx-auto max-w-4xl px-6">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-          <div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                Question {currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
-              </p>
+    <div className="content-panel">
+      <div>
+        <div className="flex items-center justify-between gap-4">
+          <p className="eyebrow">
+            Question {currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
+          </p>
 
-              <p className="text-sm font-medium text-slate-500">
-                {Math.round(progressPercentage)}%
-              </p>
-            </div>
+          <p className="text-sm font-medium text-slate-500">
+            {Math.round(progressPercentage)}%
+          </p>
+        </div>
 
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-              <div
-                className="h-full rounded-full bg-orange-600 transition-all"
-                style={{ width: `${progressPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="mt-10">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950">
-              {currentQuestion.text}
-            </h2>
-
-            {currentQuestion.subtext && (
-              <p className="mt-3 text-slate-600">
-                {currentQuestion.subtext}
-              </p>
-            )}
-
-            {currentQuestion.type === 'multi' && (
-              <p className="mt-4 text-sm font-medium text-slate-500">
-                You can choose more than one.
-              </p>
-            )}
-          </div>
-
-          <div className="mt-8 grid gap-4">
-            {currentQuestion.options.map((option) => {
-              const isSelected = selectedOptions.includes(option.id)
-
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => updateAnswer(option.id)}
-                  className={`flex items-center justify-between gap-4 rounded-2xl border p-5 text-left transition ${
-                    isSelected
-                      ? 'border-orange-500 bg-orange-50'
-                      : 'border-slate-200 bg-white hover:border-orange-200 hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    {option.emoji && (
-                      <span className="text-2xl">{option.emoji}</span>
-                    )}
-
-                    <span className="font-semibold text-slate-800">
-                      {option.text}
-                    </span>
-                  </div>
-
-                  {isSelected && (
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-orange-600" />
-                  )}
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="mt-10 flex items-center justify-between gap-4">
-            <button
-              type="button"
-              onClick={goBack}
-              disabled={currentQuestionIndex === 0}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </button>
-
-            <button
-              type="button"
-              onClick={goNext}
-              disabled={selectedOptions.length === 0}
-              className="inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {currentQuestionIndex === QUIZ_QUESTIONS.length - 1
-                ? 'See results'
-                : 'Next'}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div
+            className="h-full rounded-full bg-orange-600 transition-all"
+            style={{ width: `${progressPercentage}%` }}
+          />
         </div>
       </div>
-    </section>
+
+      <div className="mt-10">
+        <h2 className="text-3xl font-bold tracking-tight text-slate-950">
+          {currentQuestion.text}
+        </h2>
+
+        {currentQuestion.subtext && (
+          <p className="muted-text mt-3">{currentQuestion.subtext}</p>
+        )}
+
+        {currentQuestion.type === 'multi' && (
+          <p className="mt-4 text-sm font-medium text-slate-500">
+            You can choose more than one.
+          </p>
+        )}
+      </div>
+
+      <div className="mt-8 grid gap-4">
+        {currentQuestion.options.map((option) => {
+          const isSelected = selectedOptions.includes(option.id)
+
+          return (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => updateAnswer(option.id)}
+              className={`flex items-center justify-between gap-4 rounded-2xl border p-5 text-left transition ${
+                isSelected
+                  ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100'
+                  : 'border-slate-200 bg-white hover:border-orange-200 hover:bg-slate-50'
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                {option.emoji && <span className="text-2xl">{option.emoji}</span>}
+
+                <span className="font-semibold text-slate-800">
+                  {option.text}
+                </span>
+              </div>
+
+              {isSelected && (
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-orange-600" />
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="mt-10 flex items-center justify-between gap-4">
+        <button
+          type="button"
+          onClick={goBack}
+          disabled={currentQuestionIndex === 0}
+          className="btn-outline"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </button>
+
+        <button
+          type="button"
+          onClick={goNext}
+          disabled={selectedOptions.length === 0}
+          className="btn-primary"
+        >
+          {currentQuestionIndex === QUIZ_QUESTIONS.length - 1
+            ? 'See results'
+            : 'Next'}
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function ResultCard({
+  rank,
+  score,
+  tradeName,
+  tagline,
+  description,
+  salary,
+  tradeSlug,
+  skills = [],
+  showCompare = false,
+}: {
+  rank: number
+  score: number
+  tradeName: string
+  tagline: string
+  description: string
+  salary: string
+  tradeSlug: string
+  skills?: string[]
+  showCompare?: boolean
+}) {
+  return (
+    <div className="card-soft">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 font-bold text-white">
+              {rank}
+            </span>
+
+            <div>
+              <h3 className="text-2xl font-bold text-slate-950">{tradeName}</h3>
+              <p className="text-slate-600">{tagline}</p>
+            </div>
+          </div>
+
+          <p className="muted-text mt-5 max-w-3xl">{description}</p>
+
+          {skills.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <span key={skill} className="badge-slate bg-white">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mini-card-white min-w-40">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Match score
+          </p>
+
+          <p className="mt-1 text-3xl font-bold text-orange-600">
+            {score}%
+          </p>
+
+          <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Median salary
+          </p>
+
+          <p className="mt-1 font-bold text-slate-950">{salary}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <Link href={`/trades/${tradeSlug}`} className="btn-dark">
+          View career profile
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+
+        {showCompare && (
+          <Link href="/trades" className="btn-outline">
+            Compare trades
+          </Link>
+        )}
+      </div>
+    </div>
   )
 }

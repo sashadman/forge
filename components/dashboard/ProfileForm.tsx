@@ -28,8 +28,7 @@ export default function ProfileForm({
 
   const [name, setName] = useState(fullName)
   const [currentLocation, setCurrentLocation] = useState(location)
-  const [currentExperience, setCurrentExperience] =
-    useState(experienceLevel)
+  const [currentExperience, setCurrentExperience] = useState(experienceLevel)
 
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState('')
@@ -65,42 +64,36 @@ export default function ProfileForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">
-          Full name
-        </label>
+        <label className="label">Full name</label>
 
         <input
           type="text"
           value={name}
           onChange={(event) => setName(event.target.value)}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-orange-500"
+          className="input-field"
           placeholder="Your full name"
         />
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">
-          Location
-        </label>
+        <label className="label">Location</label>
 
         <input
           type="text"
           value={currentLocation}
           onChange={(event) => setCurrentLocation(event.target.value)}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-orange-500"
+          className="input-field"
           placeholder="City, State"
         />
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-slate-700">
-          Experience level
-        </label>
+        <label className="label">Experience level</label>
 
         <select
           value={currentExperience}
           onChange={(event) => setCurrentExperience(event.target.value)}
-          className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-orange-500"
+          className="input-field"
         >
           <option value="">Select experience level</option>
 
@@ -124,11 +117,7 @@ export default function ProfileForm({
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={saving}
-        className="w-full rounded-2xl bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-      >
+      <button type="submit" disabled={saving} className="btn-dark w-full rounded-2xl">
         {saving ? 'Saving...' : 'Save profile'}
       </button>
     </form>

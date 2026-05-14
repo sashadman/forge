@@ -98,11 +98,7 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
 
   if (loading) {
     return (
-      <button
-        type="button"
-        disabled
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-7 py-4 font-semibold text-slate-400"
-      >
+      <button type="button" disabled className="btn-outline px-7 py-4 text-slate-400">
         Checking...
       </button>
     )
@@ -110,10 +106,7 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
 
   if (!userId) {
     return (
-      <Link
-        href="/auth/sign-in"
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-7 py-4 font-semibold text-slate-800 hover:bg-slate-100"
-      >
+      <Link href="/auth/sign-in" className="btn-outline px-7 py-4">
         <Bookmark className="h-4 w-4" />
         Sign in to save
       </Link>
@@ -129,7 +122,7 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
         className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
           isSaved
             ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-            : 'border border-slate-300 text-slate-800 hover:bg-slate-100'
+            : 'border border-white/20 text-white hover:bg-white/10'
         }`}
       >
         {isSaved ? (

@@ -5,51 +5,53 @@ import AuthNav from '@/components/layout/AuthNav'
 
 export default function SiteNavbar() {
   return (
-    <nav className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+    <nav className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur">
+      <div className="section-shell flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white shadow-sm shadow-orange-900/20">
             <Hammer className="h-5 w-5" />
           </div>
 
-          <span className="text-xl font-bold">{siteConfig.name}</span>
+          <span className="text-xl font-bold tracking-tight text-slate-950">
+            {siteConfig.name}
+          </span>
         </Link>
 
-        <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-          <Link href="/trades" className="hover:text-slate-950">
+        <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
+          <Link href="/trades" className="transition hover:text-slate-950">
             Trades
           </Link>
 
-          <Link href="/programs" className="hover:text-slate-950">
+          <Link href="/programs" className="transition hover:text-slate-950">
             Programs
           </Link>
-          <Link href="/opportunities" className="hover:text-slate-950">
-           Opportunities
+
+          <Link href="/opportunities" className="transition hover:text-slate-950">
+            Opportunities
           </Link>
-          <Link href="/for-programs" className="hover:text-slate-950">
-           For Programs
+
+          <Link href="/for-programs" className="transition hover:text-slate-950">
+            For Programs
           </Link>
-          <Link href="/quiz" className="hover:text-slate-950">
+
+          <Link href="/quiz" className="transition hover:text-slate-950">
             Quiz
           </Link>
         </div>
 
         <div className="flex items-center gap-3">
           <AuthNav />
+
           <Link
-  href="/for-employers"
-  className="hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 lg:inline-flex"
->
-  For employers
-</Link>
+            href="/for-employers"
+            className="hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 lg:inline-flex"
+          >
+            For employers
+          </Link>
 
-<Link
-  href="/quiz"
-  className="rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-800"
->
-  Find your trade
-</Link>
-
+          <Link href="/quiz" className="btn-dark px-5 py-2 text-sm">
+            Find your trade
+          </Link>
         </div>
       </div>
     </nav>

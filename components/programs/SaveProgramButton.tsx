@@ -98,11 +98,7 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
 
   if (loading) {
     return (
-      <button
-        type="button"
-        disabled
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-4 font-semibold text-slate-400"
-      >
+      <button type="button" disabled className="btn-outline w-full px-6 py-4 text-slate-400">
         Checking...
       </button>
     )
@@ -110,10 +106,7 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
 
   if (!userId) {
     return (
-      <Link
-        href="/auth/sign-in"
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-100"
-      >
+      <Link href="/auth/sign-in" className="btn-outline w-full px-6 py-4">
         <Bookmark className="h-4 w-4" />
         Sign in to save
       </Link>

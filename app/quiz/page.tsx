@@ -2,38 +2,45 @@ import type { Metadata } from 'next'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import CareerQuiz from '@/components/quiz/CareerQuiz'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'Career Quiz — Forge',
+  title: `Career Quiz — ${siteConfig.name}`,
   description:
     'Take a short skilled trades career quiz and discover trade paths that match your interests, strengths, and goals.',
 }
 
 export default function QuizPage() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="page-shell">
       <SiteNavbar />
 
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-16">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-              Career quiz
-            </p>
+      <section className="hero-dark">
+        <div className="hero-fade" />
 
-            <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-6xl">
+        <div className="section-shell relative py-20">
+          <div className="max-w-4xl">
+            <p className="eyebrow-dark">Career quiz</p>
+
+            <h1 className="page-title-dark mt-6">
               Find the skilled trade that fits you.
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-slate-600">
+            <p className="lead-text-dark mt-6 max-w-3xl">
               Answer a few questions about your interests, work style, and goals.
-              Forge will compare your answers with skilled trade career paths.
+              {siteConfig.name} will compare your answers with skilled trade career paths.
             </p>
           </div>
         </div>
       </section>
 
-      <CareerQuiz />
+      <section className="section-light pb-20">
+        <div className="section-shell">
+          <div className="-mt-12">
+            <CareerQuiz />
+          </div>
+        </div>
+      </section>
 
       <SiteFooter />
     </main>
