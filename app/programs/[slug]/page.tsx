@@ -1,4 +1,3 @@
-// Creating Dynamic program Route
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
@@ -69,14 +68,13 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="page-shell">
       <SiteNavbar />
 
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.24),transparent_34rem)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-50 to-transparent" />
+      <section className="hero-dark">
+        <div className="hero-fade" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-20">
+        <div className="section-shell relative py-20">
           <Link
             href="/programs"
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white"
@@ -86,40 +84,34 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           </Link>
 
           <div className="mt-10 max-w-4xl">
-            <p className="inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-300">
+            <p className="eyebrow-dark">
               {formatProgramType(program.program_type)}
             </p>
 
-            <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
-              {program.name}
-            </h1>
+            <h1 className="page-title-dark mt-6">{program.name}</h1>
 
             <p className="mt-5 text-xl font-semibold text-orange-300">
               {program.provider_name}
             </p>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className="lead-text-dark mt-6 max-w-3xl">
               {program.description}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="relative bg-slate-50 pb-20">
-        <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="section-light pb-20">
+        <div className="section-shell grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="-mt-12 space-y-8">
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/10">
-              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                Program overview
-              </p>
+            <section className="content-panel">
+              <p className="eyebrow">Program overview</p>
 
-              <h2 className="mt-3 text-3xl font-bold tracking-tight">
+              <h2 className="section-title mt-3">
                 What this pathway offers
               </h2>
 
-              <p className="mt-5 leading-8 text-slate-600">
-                {program.description}
-              </p>
+              <p className="lead-text mt-5">{program.description}</p>
 
               {program.outcomes && program.outcomes.length > 0 && (
                 <div className="mt-8">
@@ -127,10 +119,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
                   <div className="mt-5 grid gap-3">
                     {program.outcomes.map((outcome) => (
-                      <div
-                        key={outcome}
-                        className="flex gap-3 rounded-2xl bg-slate-50 p-4"
-                      >
+                      <div key={outcome} className="mini-card flex gap-3">
                         <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                         <p className="leading-7 text-slate-700">{outcome}</p>
                       </div>
@@ -141,21 +130,16 @@ export default async function ProgramDetailPage({ params }: PageProps) {
             </section>
 
             {program.requirements && program.requirements.length > 0 && (
-              <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
-                <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                  Requirements
-                </p>
+              <section className="content-panel">
+                <p className="eyebrow">Requirements</p>
 
-                <h2 className="mt-3 text-3xl font-bold tracking-tight">
+                <h2 className="section-title mt-3">
                   What to check before applying
                 </h2>
 
                 <div className="mt-6 grid gap-3">
                   {program.requirements.map((requirement) => (
-                    <div
-                      key={requirement}
-                      className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                    >
+                    <div key={requirement} className="mini-card">
                       <p className="leading-7 text-slate-700">{requirement}</p>
                     </div>
                   ))}
@@ -165,10 +149,8 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           </div>
 
           <aside className="-mt-12 space-y-6">
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/10">
-              <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                Listing details
-              </p>
+            <div className="content-panel">
+              <p className="eyebrow">Listing details</p>
 
               <div className="mt-6 space-y-4">
                 <DetailItem
@@ -205,7 +187,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   href={program.website_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-4 font-semibold text-white hover:bg-orange-700"
+                  className="btn-primary mt-4 w-full px-6 py-4"
                 >
                   Visit provider website
                   <ExternalLink className="h-4 w-4" />
@@ -219,20 +201,20 @@ export default async function ProgramDetailPage({ params }: PageProps) {
               </p>
             </div>
 
-            <div className="rounded-[2rem] bg-slate-950 p-6 text-white">
-              <h3 className="text-2xl font-bold">Not sure yet?</h3>
-              <p className="mt-3 leading-7 text-slate-300">
-                Compare this program with trade paths and save careers that match
-                your goals.
-              </p>
+            <div className="dark-panel p-6">
+              <div className="dark-panel-content">
+                <h3 className="text-2xl font-bold">Not sure yet?</h3>
 
-              <Link
-                href="/trades"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-semibold text-slate-950 hover:bg-slate-100"
-              >
-                Explore trades
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                <p className="mt-3 leading-7 text-slate-300">
+                  Compare this program with trade paths and save careers that match
+                  your goals.
+                </p>
+
+                <Link href="/trades" className="btn-light mt-6">
+                  Explore trades
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </aside>
         </div>
@@ -253,7 +235,7 @@ function DetailItem({
   value: string
 }) {
   return (
-    <div className="rounded-2xl bg-slate-50 p-4">
+    <div className="mini-card">
       <div className="flex items-center gap-2 text-slate-500">
         {icon}
         <p className="text-xs font-semibold uppercase tracking-wide">{label}</p>
