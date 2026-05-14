@@ -76,28 +76,25 @@ export default async function DashboardPage() {
   const quizResults = (latestQuizResult?.results ?? []) as unknown as QuizResultItem[]
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-            Dashboard
-          </p>
+    <main className="page-shell">
+      <section className="hero-dark">
+        <div className="hero-fade" />
 
-          <div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div className="section-shell relative py-16">
+          <p className="eyebrow-dark">Dashboard</p>
+
+          <div className="mt-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              <h1 className="page-title-dark">
                 Welcome to {siteConfig.name}
               </h1>
 
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+              <p className="lead-text-dark mt-4 max-w-2xl">
                 Continue exploring skilled trades, review your quiz results, and build your career path.
               </p>
             </div>
 
-            <Link
-              href="/trades"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-semibold text-white hover:bg-slate-800"
-            >
+            <Link href="/trades" className="btn-light">
               Explore trades
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -105,9 +102,9 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className="py-12">
-        <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[0.75fr_1.25fr]">
-          <aside className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <section className="section-light pb-20">
+        <div className="section-shell grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
+          <aside className="content-panel -mt-12 self-start">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
               <User className="h-7 w-7" />
             </div>
@@ -128,23 +125,18 @@ export default async function DashboardPage() {
             </div>
           </aside>
 
-          <div className="space-y-8">
-            <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="-mt-12 space-y-8">
+            <section className="content-panel">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                    Career match
-                  </p>
+                  <p className="eyebrow">Career match</p>
 
-                  <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+                  <h2 className="section-title mt-3">
                     Your latest quiz result
                   </h2>
                 </div>
 
-                <Link
-                  href="/quiz"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                >
+                <Link href="/quiz" className="btn-outline px-5 py-2 text-sm">
                   Retake quiz
                 </Link>
               </div>
@@ -157,10 +149,7 @@ export default async function DashboardPage() {
                     if (!trade) return null
 
                     return (
-                      <div
-                        key={result.trade}
-                        className="rounded-3xl border border-slate-200 bg-slate-50 p-6"
-                      >
+                      <div key={result.trade} className="card-soft">
                         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
                           <div>
                             <div className="flex items-center gap-3">
@@ -176,23 +165,20 @@ export default async function DashboardPage() {
                               </div>
                             </div>
 
-                            <p className="mt-5 max-w-3xl leading-7 text-slate-600">
+                            <p className="muted-text mt-5 max-w-3xl">
                               {trade.description}
                             </p>
 
                             <div className="mt-5 flex flex-wrap gap-2">
                               {trade.key_skills.slice(0, 4).map((skill) => (
-                                <span
-                                  key={skill}
-                                  className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200"
-                                >
+                                <span key={skill} className="badge-slate bg-white">
                                   {skill}
                                 </span>
                               ))}
                             </div>
                           </div>
 
-                          <div className="min-w-40 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+                          <div className="mini-card-white min-w-40">
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Match score
                             </p>
@@ -223,52 +209,23 @@ export default async function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8">
-                  <div className="flex items-start gap-4">
-                    <CheckCircle2 className="mt-1 h-6 w-6 text-orange-600" />
-
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-950">
-                        No saved quiz result yet
-                      </h3>
-
-                      <p className="mt-2 leading-7 text-slate-600">
-                        Take the career quiz to get your first personalized trade matches.
-                      </p>
-
-                      <Link
-                        href="/quiz"
-                        className="mt-5 inline-flex items-center gap-2 rounded-full bg-orange-600 px-5 py-3 text-sm font-semibold text-white hover:bg-orange-700"
-                      >
-                        Take career quiz
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                <EmptyState
+                  title="No saved quiz result yet"
+                  description="Take the career quiz to get your first personalized trade matches."
+                  href="/quiz"
+                  action="Take career quiz"
+                  variant="orange"
+                />
               )}
             </section>
 
-            <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                    Saved trades
-                  </p>
-
-                  <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-                    Your bookmarked careers
-                  </h2>
-                </div>
-
-                <Link
-                  href="/trades"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                >
-                  Explore more
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+            <section className="content-panel">
+              <SectionHeader
+                eyebrow="Saved trades"
+                title="Your bookmarked careers"
+                href="/trades"
+                action="Explore more"
+              />
 
               {savedTrades && savedTrades.length > 0 ? (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
@@ -281,7 +238,7 @@ export default async function DashboardPage() {
                       <Link
                         key={trade.slug}
                         href={`/trades/${trade.slug}`}
-                        className="group rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:border-orange-200 hover:bg-orange-50"
+                        className="card card-hover group bg-slate-50"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div>
@@ -292,17 +249,12 @@ export default async function DashboardPage() {
                             <p className="mt-2 text-slate-600">{trade.tagline}</p>
                           </div>
 
-                          <div className="rounded-full bg-white p-3 ring-1 ring-slate-200 transition group-hover:ring-orange-200">
-                            <ArrowRight className="h-5 w-5 text-slate-700 group-hover:text-orange-700" />
-                          </div>
+                          <ArrowCircle />
                         </div>
 
                         <div className="mt-6 flex flex-wrap gap-2">
                           {trade.key_skills.slice(0, 3).map((skill) => (
-                            <span
-                              key={skill}
-                              className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200"
-                            >
+                            <span key={skill} className="badge-slate bg-white">
                               {skill}
                             </span>
                           ))}
@@ -319,59 +271,30 @@ export default async function DashboardPage() {
                             </p>
                           </div>
 
-                          <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
-                            Saved
-                          </span>
+                          <span className="badge-orange">Saved</span>
                         </div>
                       </Link>
                     )
                   })}
                 </div>
               ) : (
-                <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8">
-                  <h3 className="text-xl font-bold text-slate-950">
-                    No saved trades yet
-                  </h3>
-
-                  <p className="mt-2 max-w-2xl leading-7 text-slate-600">
-                    Save trades while exploring career paths to build your personal shortlist.
-                  </p>
-
-                  <Link
-                    href="/trades"
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-                  >
-                    Explore trades
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
+                <EmptyState
+                  title="No saved trades yet"
+                  description="Save trades while exploring career paths to build your personal shortlist."
+                  href="/trades"
+                  action="Explore trades"
+                />
               )}
             </section>
 
-            <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                    Saved programs
-                  </p>
-
-                  <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-                    Your training pathways
-                  </h2>
-
-                  <p className="mt-3 max-w-2xl leading-7 text-slate-600">
-                    Keep track of apprenticeships, workforce programs, and training options you want to revisit.
-                  </p>
-                </div>
-
-                <Link
-                  href="/programs"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                >
-                  Explore programs
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+            <section className="content-panel">
+              <SectionHeader
+                eyebrow="Saved programs"
+                title="Your training pathways"
+                description="Keep track of apprenticeships, workforce programs, and training options you want to revisit."
+                href="/programs"
+                action="Explore programs"
+              />
 
               {savedPrograms && savedPrograms.length > 0 ? (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
@@ -384,11 +307,11 @@ export default async function DashboardPage() {
                       <Link
                         key={savedProgram.program_id}
                         href={`/programs/${program.slug}`}
-                        className="group rounded-3xl border border-slate-200 bg-slate-50 p-6 transition hover:border-orange-200 hover:bg-orange-50"
+                        className="card card-hover group bg-slate-50"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <span className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
+                            <span className="badge-orange">
                               {formatProgramType(program.program_type)}
                             </span>
 
@@ -401,17 +324,15 @@ export default async function DashboardPage() {
                             </p>
                           </div>
 
-                          <div className="rounded-full bg-white p-3 ring-1 ring-slate-200 transition group-hover:ring-orange-200">
-                            <ArrowRight className="h-5 w-5 text-slate-700 group-hover:text-orange-700" />
-                          </div>
+                          <ArrowCircle />
                         </div>
 
-                        <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
+                        <p className="muted-text mt-5 line-clamp-3">
                           {program.description}
                         </p>
 
                         <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                          <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+                          <div className="mini-card-white">
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Location
                             </p>
@@ -421,7 +342,7 @@ export default async function DashboardPage() {
                             </p>
                           </div>
 
-                          <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+                          <div className="mini-card-white">
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Duration
                             </p>
@@ -436,28 +357,92 @@ export default async function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8">
-                  <h3 className="text-xl font-bold text-slate-950">
-                    No saved programs yet
-                  </h3>
-
-                  <p className="mt-2 max-w-2xl leading-7 text-slate-600">
-                    Save programs while browsing training pathways so you can compare them later.
-                  </p>
-
-                  <Link
-                    href="/programs"
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-                  >
-                    Explore programs
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
+                <EmptyState
+                  title="No saved programs yet"
+                  description="Save programs while browsing training pathways so you can compare them later."
+                  href="/programs"
+                  action="Explore programs"
+                />
               )}
             </section>
           </div>
         </div>
       </section>
     </main>
+  )
+}
+
+function SectionHeader({
+  eyebrow,
+  title,
+  description,
+  href,
+  action,
+}: {
+  eyebrow: string
+  title: string
+  description?: string
+  href: string
+  action: string
+}) {
+  return (
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+      <div>
+        <p className="eyebrow">{eyebrow}</p>
+
+        <h2 className="section-title mt-3">{title}</h2>
+
+        {description && <p className="muted-text mt-3 max-w-2xl">{description}</p>}
+      </div>
+
+      <Link href={href} className="btn-outline px-5 py-2 text-sm">
+        {action}
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  )
+}
+
+function EmptyState({
+  title,
+  description,
+  href,
+  action,
+  variant = 'dark',
+}: {
+  title: string
+  description: string
+  href: string
+  action: string
+  variant?: 'dark' | 'orange'
+}) {
+  return (
+    <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8">
+      <div className="flex items-start gap-4">
+        <CheckCircle2 className="mt-1 h-6 w-6 text-orange-600" />
+
+        <div>
+          <h3 className="text-xl font-bold text-slate-950">{title}</h3>
+
+          <p className="muted-text mt-2">{description}</p>
+
+          <Link
+            href={href}
+            className={variant === 'orange' ? 'btn-primary mt-5' : 'btn-dark mt-5'}
+          >
+            {action}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ArrowCircle() {
+  return (
+    <div className="rounded-full bg-white p-3 ring-1 ring-slate-200 transition group-hover:ring-orange-200">
+      <ArrowRight className="h-5 w-5 text-slate-700 group-hover:text-orange-700" />
+    </div>
   )
 }
