@@ -57,24 +57,21 @@ export default async function OpportunitiesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="page-shell">
       <SiteNavbar />
 
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.24),transparent_34rem)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-50 to-transparent" />
+      <section className="hero-dark">
+        <div className="hero-fade" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-24">
+        <div className="section-shell relative py-24">
           <div className="max-w-4xl">
-            <p className="inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-300">
-              Real opportunities
-            </p>
+            <p className="eyebrow-dark">Real opportunities</p>
 
-            <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
+            <h1 className="page-title-dark mt-6">
               Find skilled-trades opportunities when verified listings become available.
             </h1>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className="lead-text-dark mt-6 max-w-3xl">
               This section is designed for real jobs, apprenticeships, trainee roles,
               and pre-apprenticeship opportunities. We will not show fake openings.
             </p>
@@ -82,21 +79,19 @@ export default async function OpportunitiesPage() {
         </div>
       </section>
 
-      <section className="relative bg-slate-50 pb-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="-mt-16 rounded-[2rem] border border-white/70 bg-white p-6 shadow-2xl shadow-slate-900/10">
+      <section className="section-light pb-20">
+        <div className="section-shell">
+          <div className="content-panel -mt-16">
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-orange-600">
-                  Opportunity directory
-                </p>
+                <p className="eyebrow">Opportunity directory</p>
 
-                <h2 className="mt-2 text-3xl font-bold tracking-tight">
+                <h2 className="section-title mt-3">
                   Active skilled-trades listings
                 </h2>
               </div>
 
-              <p className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+              <p className="badge-slate">
                 {opportunities?.length ?? 0} listings
               </p>
             </div>
@@ -113,11 +108,11 @@ export default async function OpportunitiesPage() {
                   <Link
                     key={opportunity.id}
                     href={`/opportunities/${opportunity.slug}`}
-                    className="group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10"
+                    className="card card-hover group"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <span className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
+                        <span className="badge-orange">
                           {formatOpportunityType(opportunity.opportunity_type)}
                         </span>
 
@@ -140,7 +135,7 @@ export default async function OpportunitiesPage() {
                     </p>
 
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl bg-slate-50 p-4">
+                      <div className="mini-card">
                         <div className="flex items-center gap-2 text-slate-500">
                           <MapPin className="h-4 w-4" />
                           <p className="text-xs font-semibold uppercase tracking-wide">
@@ -153,7 +148,7 @@ export default async function OpportunitiesPage() {
                         </p>
                       </div>
 
-                      <div className="rounded-2xl bg-slate-50 p-4">
+                      <div className="mini-card">
                         <div className="flex items-center gap-2 text-slate-500">
                           <BriefcaseBusiness className="h-4 w-4" />
                           <p className="text-xs font-semibold uppercase tracking-wide">
@@ -171,7 +166,7 @@ export default async function OpportunitiesPage() {
               })}
             </div>
           ) : (
-            <div className="mt-10 rounded-[2rem] border border-dashed border-slate-300 bg-white p-10 shadow-sm">
+            <div className="card mt-10 border-dashed p-10">
               <div className="mx-auto max-w-3xl text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
                   <ClipboardList className="h-8 w-8" />
@@ -181,25 +176,19 @@ export default async function OpportunitiesPage() {
                   No active opportunities yet
                 </h3>
 
-                <p className="mt-4 text-lg leading-8 text-slate-600">
+                <p className="lead-text mt-4">
                   We are keeping this section honest. Opportunities will appear here
                   only when real employer listings, apprenticeships, trainee roles,
                   or workforce opportunities are added.
                 </p>
 
                 <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                  <Link
-                    href="/programs"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-semibold text-white hover:bg-slate-800"
-                  >
+                  <Link href="/programs" className="btn-dark">
                     Explore training programs
                     <GraduationCap className="h-4 w-4" />
                   </Link>
 
-                  <Link
-                    href="/for-employers"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 font-semibold text-slate-800 hover:bg-slate-100"
-                  >
+                  <Link href="/for-employers" className="btn-outline">
                     For employers
                     <ArrowRight className="h-4 w-4" />
                   </Link>
