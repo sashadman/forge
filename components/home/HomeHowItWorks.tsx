@@ -23,23 +23,18 @@ const steps = [
 
 export default function HomeHowItWorks() {
   return (
-    <section id="how" className="relative overflow-hidden bg-slate-950 py-24 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.18),transparent_30rem)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(15,23,42,0),rgba(15,23,42,1))]" />
-
-      <div className="relative mx-auto max-w-7xl px-6">
+    <section id="how" className="section-dark section-padding">
+      <div className="section-shell relative">
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
           <div>
-            <p className="inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-300">
-              How it works
-            </p>
+            <p className="eyebrow-dark">How it works</p>
 
-            <h2 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+            <h2 className="section-title-dark mt-6">
               A cleaner path from curiosity to opportunity.
             </h2>
           </div>
 
-          <p className="max-w-3xl text-lg leading-8 text-slate-300 lg:justify-self-end">
+          <p className="lead-text-dark max-w-3xl lg:justify-self-end">
             The platform is being built around a simple workforce-development loop:
             help people discover the trades, understand the pathway, and move toward
             real training and employer opportunities.
@@ -51,10 +46,7 @@ export default function HomeHowItWorks() {
             const Icon = step.icon
 
             return (
-              <div
-                key={step.title}
-                className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.09]"
-              >
+              <div key={step.title} className="card-dark group relative overflow-hidden">
                 <div className="absolute right-6 top-6 text-6xl font-bold text-white/5">
                   0{index + 1}
                 </div>

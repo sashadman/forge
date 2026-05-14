@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="page-shell">
       <SiteNavbar />
       <HomeHero />
       <HomeHowItWorks />

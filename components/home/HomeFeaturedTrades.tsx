@@ -34,28 +34,23 @@ const featuredTrades = [
 
 export default function HomeFeaturedTrades() {
   return (
-    <section id="trades" className="bg-slate-50 py-24">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="trades" className="section-light section-padding">
+      <div className="section-shell">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-3xl">
-            <p className="inline-flex rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-orange-700">
-              Explore trades
-            </p>
+            <p className="eyebrow">Explore trades</p>
 
-            <h2 className="mt-6 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+            <h2 className="section-title mt-6">
               Start with high-demand career paths.
             </h2>
 
-            <p className="mt-4 text-lg leading-8 text-slate-600">
+            <p className="lead-text mt-4">
               These are some of the strongest entry points into the skilled trades economy.
               Explore the work, compare pathways, and begin building your shortlist.
             </p>
           </div>
 
-          <Link
-            href="/trades"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-900 shadow-sm hover:bg-slate-100"
-          >
+          <Link href="/trades" className="btn-outline">
             View all trades
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -66,10 +61,7 @@ export default function HomeFeaturedTrades() {
             const Icon = trade.icon
 
             return (
-              <div
-                key={trade.name}
-                className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
-              >
+              <div key={trade.name} className="card card-hover overflow-hidden p-0">
                 <div className={`h-2 w-full bg-gradient-to-r ${trade.accent}`} />
 
                 <div className="p-6">
@@ -86,13 +78,11 @@ export default function HomeFeaturedTrades() {
                   </p>
 
                   <div className="mt-8 flex items-center justify-between">
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                      In demand
-                    </span>
+                    <span className="badge-slate">In demand</span>
 
                     <span className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700">
                       Learn more
-                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                      <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
                 </div>
