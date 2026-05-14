@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import {
   ArrowRight,
   BriefcaseBusiness,
-  CheckCircle2,
   ExternalLink,
   MapPin,
   Plus,
@@ -170,25 +169,26 @@ export default async function EmployerDashboardPage() {
                   value={`${activeOpportunities.length}`}
                 />
               </div>
+
               <div className="mt-8 grid gap-3">
-  <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
-    View public profile
-    <ExternalLink className="h-4 w-4" />
-  </Link>
+                <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
+                  View public profile
+                  <ExternalLink className="h-4 w-4" />
+                </Link>
 
-  <Link href="/employers/profile" className="btn-outline w-full">
-    Edit employer profile
-    <ArrowRight className="h-4 w-4" />
-  </Link>
+                <Link href="/employers/profile" className="btn-outline w-full">
+                  Edit employer profile
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
 
-  <Link
-    href="/employers/opportunities/new"
-    className="btn-primary w-full"
-  >
-    Create opportunity
-    <Plus className="h-4 w-4" />
-  </Link>
-</div>
+                <Link
+                  href="/employers/opportunities/new"
+                  className="btn-primary w-full"
+                >
+                  Create opportunity
+                  <Plus className="h-4 w-4" />
+                </Link>
+              </div>
 
               <p className="mt-5 text-xs leading-6 text-slate-500">
                 Deactivation controls are intentionally hidden for now. We will
@@ -236,28 +236,20 @@ export default async function EmployerDashboardPage() {
               {activeOpportunities.length > 0 ? (
                 <div className="mt-8 grid gap-5">
                   {activeOpportunities.map((opportunity) => (
-                    <Link
-                      key={opportunity.id}
-                      href={`/opportunities/${opportunity.slug}`}
-                      className="card card-hover group bg-slate-50"
-                    >
+                    <div key={opportunity.id} className="card bg-slate-50">
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <span className="badge-orange">
                             {formatOpportunityType(opportunity.opportunity_type)}
                           </span>
 
-                          <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+                          <h3 className="mt-4 text-2xl font-bold text-slate-950">
                             {opportunity.title}
                           </h3>
 
                           <p className="mt-2 font-semibold text-slate-600">
                             {opportunity.trade_slug}
                           </p>
-                        </div>
-
-                        <div className="rounded-full bg-white p-3 ring-1 ring-slate-200 transition group-hover:ring-orange-200">
-                          <ArrowRight className="h-5 w-5 text-slate-700 group-hover:text-orange-700" />
                         </div>
                       </div>
 
@@ -266,11 +258,40 @@ export default async function EmployerDashboardPage() {
                       </p>
 
                       <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                        <MiniDetail label="Location" value={`${opportunity.location}, ${opportunity.state}`} />
-                        <MiniDetail label="Schedule" value={opportunity.schedule || 'See listing'} />
-                        <MiniDetail label="Pay range" value={opportunity.pay_range || 'See listing'} />
+                        <MiniDetail
+                          label="Location"
+                          value={`${opportunity.location}, ${opportunity.state}`}
+                        />
+
+                        <MiniDetail
+                          label="Schedule"
+                          value={opportunity.schedule || 'See listing'}
+                        />
+
+                        <MiniDetail
+                          label="Pay range"
+                          value={opportunity.pay_range || 'See listing'}
+                        />
                       </div>
-                    </Link>
+
+                      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <Link
+                          href={`/opportunities/${opportunity.slug}`}
+                          className="btn-dark px-5 py-3 text-sm"
+                        >
+                          View public listing
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+
+                        <Link
+                          href={`/employers/opportunities/${opportunity.id}/edit`}
+                          className="btn-outline px-5 py-3 text-sm"
+                        >
+                          Edit or deactivate
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -317,7 +338,8 @@ export default async function EmployerDashboardPage() {
                             {opportunity.title}
                           </p>
                           <p className="mt-1 text-sm text-slate-600">
-                            {formatOpportunityType(opportunity.opportunity_type)} · {opportunity.trade_slug}
+                            {formatOpportunityType(opportunity.opportunity_type)} ·{' '}
+                            {opportunity.trade_slug}
                           </p>
                         </div>
 
