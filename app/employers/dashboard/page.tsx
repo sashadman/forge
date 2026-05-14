@@ -170,21 +170,25 @@ export default async function EmployerDashboardPage() {
                   value={`${activeOpportunities.length}`}
                 />
               </div>
-
               <div className="mt-8 grid gap-3">
-                <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
-                  View public profile
-                  <ExternalLink className="h-4 w-4" />
-                </Link>
+  <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
+    View public profile
+    <ExternalLink className="h-4 w-4" />
+  </Link>
 
-                <Link
-                  href="/employers/opportunities/new"
-                  className="btn-primary w-full"
-                >
-                  Create opportunity
-                  <Plus className="h-4 w-4" />
-                </Link>
-              </div>
+  <Link href="/employers/profile" className="btn-outline w-full">
+    Edit employer profile
+    <ArrowRight className="h-4 w-4" />
+  </Link>
+
+  <Link
+    href="/employers/opportunities/new"
+    className="btn-primary w-full"
+  >
+    Create opportunity
+    <Plus className="h-4 w-4" />
+  </Link>
+</div>
 
               <p className="mt-5 text-xs leading-6 text-slate-500">
                 Deactivation controls are intentionally hidden for now. We will
