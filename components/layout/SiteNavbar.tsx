@@ -26,7 +26,9 @@ export default function SiteNavbar() {
           <Link href="/for-programs" className="hover:text-slate-950">
            For Programs
           </Link>
-          
+          <Link href="/for-employers" className="hover:text-slate-950">
+            For Employers
+          </Link> 
           <Link href="/quiz" className="hover:text-slate-950">
             Quiz
           </Link>
@@ -34,13 +36,20 @@ export default function SiteNavbar() {
 
         <div className="flex items-center gap-3">
           <AuthNav />
-
           <Link
-            href="/quiz"
-            className="rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-          >
-            Find your trade
-          </Link>
+  href="/for-employers"
+  className="hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 lg:inline-flex"
+>
+  For employers
+</Link>
+
+<Link
+  href="/quiz"
+  className="rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+>
+  Find your trade
+</Link>
+
         </div>
       </div>
     </nav>
