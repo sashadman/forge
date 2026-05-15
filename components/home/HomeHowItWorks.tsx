@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ArrowRight, Building2, GraduationCap, Search } from 'lucide-react'
 
 const steps = [
@@ -6,18 +7,21 @@ const steps = [
     description:
       'Explore real trade paths, compare daily work, pay potential, training time, and long-term career direction.',
     icon: Search,
+    href: '/trades',
   },
   {
     title: 'Find pathways',
     description:
       'Move from interest to action by connecting trade matches with apprenticeships, schools, and training programs.',
     icon: GraduationCap,
+    href: '/programs',
   },
   {
     title: 'Build the pipeline',
     description:
       'Create a stronger bridge between career seekers, training partners, and employers who need skilled workers.',
     icon: Building2,
+    href: '/for-employers',
   },
 ]
 
@@ -46,7 +50,11 @@ export default function HomeHowItWorks() {
             const Icon = step.icon
 
             return (
-              <div key={step.title} className="card-dark group relative overflow-hidden">
+              <Link
+                key={step.title}
+                href={step.href}
+                className="card-dark group relative overflow-hidden transition hover:-translate-y-1 hover:border-orange-400/30"
+              >
                 <div className="absolute right-6 top-6 text-6xl font-bold text-white/5">
                   0{index + 1}
                 </div>
@@ -67,7 +75,7 @@ export default function HomeHowItWorks() {
                   Step {index + 1}
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>

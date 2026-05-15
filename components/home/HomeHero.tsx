@@ -15,16 +15,19 @@ const marketplaceSteps = [
     title: 'Discover',
     description: 'Explore trade careers and understand what the work really looks like.',
     icon: Search,
+    href: '/trades',
   },
   {
     title: 'Prepare',
     description: 'Compare training pathways, apprenticeships, and career requirements.',
     icon: GraduationCap,
+    href: '/programs',
   },
   {
     title: 'Connect',
     description: 'Move toward programs, employers, and real workforce opportunities.',
     icon: BriefcaseBusiness,
+    href: '/opportunities',
   },
 ]
 
@@ -84,13 +87,22 @@ export default function HomeHero() {
               const Icon = step.icon
 
               return (
-                <div key={step.title} className="card-dark">
+                <Link
+                  key={step.title}
+                  href={step.href}
+                  className="card-dark group transition hover:-translate-y-1 hover:border-orange-400/30"
+                >
                   <Icon className="h-6 w-6 text-orange-300" />
-                  <p className="mt-4 font-bold text-white">{step.title}</p>
+
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <p className="font-bold text-white">{step.title}</p>
+                    <ArrowRight className="h-4 w-4 text-orange-300 transition group-hover:translate-x-1" />
+                  </div>
+
                   <p className="mt-2 text-sm leading-6 text-slate-300">
                     {step.description}
                   </p>
-                </div>
+                </Link>
               )
             })}
           </div>
