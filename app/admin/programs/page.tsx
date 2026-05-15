@@ -79,9 +79,7 @@ export default async function AdminProgramsPage() {
             <div className="max-w-4xl">
               <p className="eyebrow-dark">Admin</p>
 
-              <h1 className="page-title-dark mt-6">
-                Program records.
-              </h1>
+              <h1 className="page-title-dark mt-6">Program records.</h1>
 
               <p className="lead-text-dark mt-6 max-w-3xl">
                 Review training programs, apprenticeships, workforce programs,
@@ -89,10 +87,17 @@ export default async function AdminProgramsPage() {
               </p>
             </div>
 
-            <Link href="/admin" className="btn-light">
-              Back to admin
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link href="/admin/programs/new" className="btn-primary">
+                Add program
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+
+              <Link href="/admin" className="btn-light">
+                Back to admin
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -114,7 +119,10 @@ export default async function AdminProgramsPage() {
                 </p>
               </div>
 
-              <Link href="/admin/opportunities" className="btn-outline px-5 py-2 text-sm">
+              <Link
+                href="/admin/opportunities"
+                className="btn-outline px-5 py-2 text-sm"
+              >
                 Review opportunities
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -217,10 +225,17 @@ export default async function AdminProgramsPage() {
                       is added to the platform.
                     </p>
 
-                    <Link href="/admin" className="btn-dark mt-5">
-                      Back to admin
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                      <Link href="/admin/programs/new" className="btn-primary">
+                        Add program
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+
+                      <Link href="/admin" className="btn-dark">
+                        Back to admin
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
