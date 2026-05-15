@@ -106,38 +106,68 @@ export default async function AdminPage() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            <Link href="/admin/employers" className="card card-hover group">
-              <h2 className="text-2xl font-bold text-slate-950">
-                Manage employers
-              </h2>
+         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+  <Link href="/admin/employers" className="card card-hover group">
+    <h2 className="text-2xl font-bold text-slate-950">
+      Manage employers
+    </h2>
 
-              <p className="muted-text mt-3">
-                Review employer records and access public profile pages.
-              </p>
+    <p className="muted-text mt-3">
+      Review employer records and access public profile pages.
+    </p>
 
-              <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
-                Open employer admin
-                <ArrowRight className="h-4 w-4" />
-              </span>
-            </Link>
+    <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
+      Open employer admin
+      <ArrowRight className="h-4 w-4" />
+    </span>
+  </Link>
 
-            <Link href="/admin/employers/new" className="card card-hover group">
-              <h2 className="text-2xl font-bold text-slate-950">
-                Add real employer
-              </h2>
+  <Link href="/admin/employers/new" className="card card-hover group">
+    <h2 className="text-2xl font-bold text-slate-950">
+      Add real employer
+    </h2>
 
-              <p className="muted-text mt-3">
-                Manually add a real employer after checking the information.
-              </p>
+    <p className="muted-text mt-3">
+      Manually add a real employer after checking the information.
+    </p>
 
-              <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
-                Create employer record
-                <ArrowRight className="h-4 w-4" />
-              </span>
-            </Link>
-          </div>
-        </div>
+    <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
+      Create employer record
+      <ArrowRight className="h-4 w-4" />
+    </span>
+  </Link>
+
+  <Link href="/admin/opportunities" className="card card-hover group">
+    <h2 className="text-2xl font-bold text-slate-950">
+      Review opportunities
+    </h2>
+
+    <p className="muted-text mt-3">
+      Review real opportunity listings connected to employer profiles.
+    </p>
+
+    <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
+      Open opportunity admin
+      <ArrowRight className="h-4 w-4" />
+    </span>
+  </Link>
+
+  <Link href="/admin/programs" className="card card-hover group">
+    <h2 className="text-2xl font-bold text-slate-950">
+      Review programs
+    </h2>
+
+    <p className="muted-text mt-3">
+      Review real training programs and pathway records.
+    </p>
+
+    <span className="mt-6 inline-flex items-center gap-2 font-semibold text-orange-700">
+      Open program admin
+      <ArrowRight className="h-4 w-4" />
+    </span>
+  </Link>
+</div>
+</div>
       </section>
 
       <SiteFooter />
