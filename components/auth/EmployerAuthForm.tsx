@@ -24,44 +24,24 @@ export default function EmployerAuthForm({ mode }: EmployerAuthFormProps) {
   const [successMessage, setSuccessMessage] = useState('')
 
   const isSignUp = mode === 'sign-up'
+  
+async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault()
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  setLoading(true)
+  setError('')
+  setSuccessMessage('')
 
-    setLoading(true)
-    setError('')
-    setSuccessMessage('')
-
-    try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-              role: 'employer',
-            },
-          },
-        })
-
-        if (error) {
-          console.error(error)
-          setError(error.message)
-          setLoading(false)
-          return
-        }
-
-        setSuccessMessage(
-          'Employer account created. Check your email to confirm your account, then sign in to create your employer profile.'
-        )
-
-        return
-      }
-
-      const { data, error } = await supabase.auth.signInWithPassword({
+  try {
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       })
 
       if (error) {
@@ -71,21 +51,33 @@ export default function EmployerAuthForm({ mode }: EmployerAuthFormProps) {
         return
       }
 
-      if (data.user) {
-        await supabase
-          .from('profiles')
-          .update({ role: 'employer' })
-          .eq('id', data.user.id)
-      }
+      setSuccessMessage(
+        'Employer account created. Check your email to confirm your account, then sign in to create your employer profile.'
+      )
 
-      window.location.href = '/employers/dashboard'
-    } catch (error) {
-      console.error(error)
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
+      return
     }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (error) {
+      console.error(error)
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    window.location.href = '/employers/dashboard'
+  } catch (error) {
+    console.error(error)
+    setError('Something went wrong. Please try again.')
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <div className="w-full max-w-5xl">
