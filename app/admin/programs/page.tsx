@@ -179,33 +179,41 @@ export default async function AdminProgramsPage() {
                       </div>
 
                       <div className="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col">
-                        {program.is_active && (
-                          <Link
-                            href={`/programs/${program.slug}`}
-                            className="btn-dark px-5 py-3 text-sm"
-                          >
-                            Public program
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
-                        )}
+  {program.is_active && (
+    <Link
+      href={`/programs/${program.slug}`}
+      className="btn-dark px-5 py-3 text-sm"
+    >
+      Public program
+      <ExternalLink className="h-4 w-4" />
+    </Link>
+  )}
 
-                        {program.website_url && (
-                          <a
-                            href={program.website_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn-outline px-5 py-3 text-sm"
-                          >
-                            Provider site
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
-                        )}
+  {program.website_url && (
+    <a
+      href={program.website_url}
+      target="_blank"
+      rel="noreferrer"
+      className="btn-outline px-5 py-3 text-sm"
+    >
+      Provider site
+      <ExternalLink className="h-4 w-4" />
+    </a>
+  )}
 
-                        <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
-                          <ShieldCheck className="h-4 w-4" />
-                          Admin review
-                        </span>
-                      </div>
+  <Link
+    href={`/admin/programs/${program.id}/edit`}
+    className="btn-outline px-5 py-3 text-sm"
+  >
+    Edit program
+    <ArrowRight className="h-4 w-4" />
+  </Link>
+
+  <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
+    <ShieldCheck className="h-4 w-4" />
+    Admin review
+  </span>
+</div>
                     </div>
                   </div>
                 ))}

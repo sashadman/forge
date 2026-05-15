@@ -129,20 +129,30 @@ export default async function AdminEmployersPage() {
                         </p>
                       </div>
 
-                      <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-                        <Link
-                          href={`/employers/${employer.slug}`}
-                          className="btn-dark px-5 py-3 text-sm"
-                        >
-                          Public profile
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
+                 <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+  {employer.is_active && (
+    <Link
+      href={`/employers/${employer.slug}`}
+      className="btn-dark px-5 py-3 text-sm"
+    >
+      Public profile
+      <ExternalLink className="h-4 w-4" />
+    </Link>
+  )}
 
-                        <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
-                          <ShieldCheck className="h-4 w-4" />
-                          Admin reviewed
-                        </span>
-                      </div>
+  <Link
+    href={`/admin/employers/${employer.id}/edit`}
+    className="btn-outline px-5 py-3 text-sm"
+  >
+    Edit employer
+    <ArrowRight className="h-4 w-4" />
+  </Link>
+
+  <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
+    <ShieldCheck className="h-4 w-4" />
+    Admin reviewed
+  </span>
+</div>
                     </div>
                   </div>
                 ))}

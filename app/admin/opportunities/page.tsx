@@ -118,7 +118,10 @@ export default async function AdminOpportunitiesPage() {
                 </p>
               </div>
 
-              <Link href="/admin/employers" className="btn-outline px-5 py-2 text-sm">
+              <Link
+                href="/admin/employers"
+                className="btn-outline px-5 py-2 text-sm"
+              >
                 Manage employers
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -137,7 +140,9 @@ export default async function AdminOpportunitiesPage() {
                         <div>
                           <div className="flex flex-wrap gap-2">
                             <span className="badge-orange">
-                              {formatOpportunityType(opportunity.opportunity_type)}
+                              {formatOpportunityType(
+                                opportunity.opportunity_type
+                              )}
                             </span>
 
                             <span className="badge-slate">
@@ -204,6 +209,14 @@ export default async function AdminOpportunitiesPage() {
                               <BriefcaseBusiness className="h-4 w-4" />
                             </Link>
                           )}
+
+                          <Link
+                            href={`/admin/opportunities/${opportunity.id}/edit`}
+                            className="btn-outline px-5 py-3 text-sm"
+                          >
+                            Edit opportunity
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
 
                           <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
                             <ShieldCheck className="h-4 w-4" />
