@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 type AuthUser = {
   id: string
   email?: string
+  role?: string | null
 }
 
 export default function AuthNav() {
@@ -23,7 +24,24 @@ export default function AuthNav() {
         data: { user },
       } = await supabase.auth.getUser()
 
-      setUser(user ? { id: user.id, email: user.email ?? undefined } : null)
+      if (!user) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      setUser({
+        id: user.id,
+        email: user.email ?? undefined,
+        role: profile?.role ?? null,
+      })
+
       setLoading(false)
     }
 
@@ -34,12 +52,29 @@ export default function AuthNav() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       const sessionUser = session?.user
 
-      setUser(
-        sessionUser
-          ? { id: sessionUser.id, email: sessionUser.email ?? undefined }
-          : null
-      )
-      setLoading(false)
+      if (!sessionUser) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
+
+      async function loadProfileRole() {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', sessionUser.id)
+          .maybeSingle()
+
+        setUser({
+          id: sessionUser.id,
+          email: sessionUser.email ?? undefined,
+          role: profile?.role ?? null,
+        })
+
+        setLoading(false)
+      }
+
+      loadProfileRole()
     })
 
     return () => {
@@ -71,6 +106,8 @@ export default function AuthNav() {
     )
   }
 
+  const isAdmin = user.role === 'admin'
+
   return (
     <div className="hidden items-center gap-3 sm:flex">
       <Link
@@ -79,6 +116,15 @@ export default function AuthNav() {
       >
         Dashboard
       </Link>
+
+      {isAdmin && (
+        <Link
+          href="/admin"
+          className="rounded-full border border-orange-200 bg-orange-50 px-5 py-2 text-sm font-semibold text-orange-700 hover:bg-orange-100"
+        >
+          Admin
+        </Link>
+      )}
 
       <button
         type="button"
