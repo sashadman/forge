@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {
+  AlertCircle,
   ArrowRight,
   BriefcaseBusiness,
+  CheckCircle2,
   ExternalLink,
   ShieldCheck,
 } from 'lucide-react'
@@ -14,7 +16,7 @@ import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Manage Opportunities — ${siteConfig.name}`,
-  description: 'Admin review page for opportunity listings.',
+  description: 'Admin review page for opportunity listing data quality.',
 }
 
 function formatOpportunityType(type: string) {
@@ -59,6 +61,9 @@ export default async function AdminOpportunitiesPage() {
       pay_range,
       schedule,
       description,
+      requirements,
+      benefits,
+      application_url,
       is_active,
       created_at,
       employers (
@@ -71,6 +76,39 @@ export default async function AdminOpportunitiesPage() {
     )
     .order('created_at', { ascending: false })
 
+  const totalOpportunities = opportunities?.length ?? 0
+  const activeCount =
+    opportunities?.filter((opportunity) => opportunity.is_active).length ?? 0
+  const inactiveCount =
+    opportunities?.filter((opportunity) => !opportunity.is_active).length ?? 0
+
+  const strongQualityCount =
+    opportunities?.filter((opportunity) => {
+      const employer = Array.isArray(opportunity.employers)
+        ? opportunity.employers[0]
+        : opportunity.employers
+
+      const qualityItems = [
+        Boolean(opportunity.title),
+        Boolean(employer?.name),
+        Boolean(opportunity.opportunity_type),
+        Boolean(opportunity.trade_slug),
+        Boolean(opportunity.location && opportunity.state),
+        opportunity.description.trim().length >= 100,
+        Boolean(opportunity.schedule),
+        Boolean(opportunity.pay_range),
+        Boolean(opportunity.requirements && opportunity.requirements.length > 0),
+        Boolean(opportunity.benefits && opportunity.benefits.length > 0),
+        Boolean(opportunity.application_url),
+      ]
+
+      const qualityScore = Math.round(
+        (qualityItems.filter(Boolean).length / qualityItems.length) * 100
+      )
+
+      return qualityScore >= 80
+    }).length ?? 0
+
   return (
     <main className="page-shell">
       <SiteNavbar />
@@ -81,15 +119,16 @@ export default async function AdminOpportunitiesPage() {
         <div className="section-shell relative py-20">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-4xl">
-              <p className="eyebrow-dark">Admin</p>
+              <p className="eyebrow-dark">Admin data quality</p>
 
               <h1 className="page-title-dark mt-6">
-                Opportunity records.
+                Opportunity quality workflow.
               </h1>
 
               <p className="lead-text-dark mt-6 max-w-3xl">
-                Review real opportunity listings connected to employer profiles.
-                This page is for visibility and review only.
+                Review real opportunity listings, employer connection, application
+                details, requirements, benefits, and public visibility before
+                seekers rely on them.
               </p>
             </div>
 
@@ -103,18 +142,32 @@ export default async function AdminOpportunitiesPage() {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <div className="content-panel -mt-12">
+          <div className="-mt-12 grid gap-6 md:grid-cols-4">
+            <StatusPanel
+              label="Total listings"
+              value={`${totalOpportunities}`}
+            />
+            <StatusPanel label="Active" value={`${activeCount}`} />
+            <StatusPanel label="Inactive" value={`${inactiveCount}`} />
+            <StatusPanel
+              label="Strong quality"
+              value={`${strongQualityCount}`}
+            />
+          </div>
+
+          <div className="content-panel mt-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
               <div>
                 <p className="eyebrow">Opportunity directory</p>
 
                 <h2 className="section-title mt-3">
-                  {opportunities?.length ?? 0} opportunity records
+                  {totalOpportunities} opportunity records
                 </h2>
 
                 <p className="muted-text mt-3 max-w-2xl">
-                  Use this page to review listings, employer status, and public
-                  visibility. Do not add fake opportunities.
+                  Use this page to review listing quality. Keep public opportunity
+                  records accurate, useful, and based on real employer information.
+                  Do not add fake opportunities.
                 </p>
               </div>
 
@@ -134,6 +187,30 @@ export default async function AdminOpportunitiesPage() {
                     ? opportunity.employers[0]
                     : opportunity.employers
 
+                  const qualityItems = [
+                    Boolean(opportunity.title),
+                    Boolean(employer?.name),
+                    Boolean(opportunity.opportunity_type),
+                    Boolean(opportunity.trade_slug),
+                    Boolean(opportunity.location && opportunity.state),
+                    opportunity.description.trim().length >= 100,
+                    Boolean(opportunity.schedule),
+                    Boolean(opportunity.pay_range),
+                    Boolean(
+                      opportunity.requirements &&
+                        opportunity.requirements.length > 0
+                    ),
+                    Boolean(opportunity.benefits && opportunity.benefits.length > 0),
+                    Boolean(opportunity.application_url),
+                  ]
+
+                  const qualityScore = Math.round(
+                    (qualityItems.filter(Boolean).length / qualityItems.length) *
+                      100
+                  )
+
+                  const strongQuality = qualityScore >= 80
+
                   return (
                     <div key={opportunity.id} className="card bg-slate-50">
                       <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">
@@ -147,6 +224,14 @@ export default async function AdminOpportunitiesPage() {
 
                             <span className="badge-slate">
                               {opportunity.is_active ? 'Active' : 'Inactive'}
+                            </span>
+
+                            <span
+                              className={
+                                strongQuality ? 'badge-orange' : 'badge-slate'
+                              }
+                            >
+                              {qualityScore}% quality
                             </span>
 
                             {employer && (
@@ -170,6 +255,31 @@ export default async function AdminOpportunitiesPage() {
                           <p className="muted-text mt-4 line-clamp-3">
                             {opportunity.description}
                           </p>
+
+                          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                            <MiniCheck
+                              label="Apply link"
+                              complete={Boolean(opportunity.application_url)}
+                            />
+                            <MiniCheck
+                              label="Pay"
+                              complete={Boolean(opportunity.pay_range)}
+                            />
+                            <MiniCheck
+                              label="Requirements"
+                              complete={Boolean(
+                                opportunity.requirements &&
+                                  opportunity.requirements.length > 0
+                              )}
+                            />
+                            <MiniCheck
+                              label="Benefits"
+                              complete={Boolean(
+                                opportunity.benefits &&
+                                  opportunity.benefits.length > 0
+                              )}
+                            />
+                          </div>
 
                           <div className="mt-6 grid gap-3 sm:grid-cols-3">
                             <MiniDetail
@@ -214,13 +324,17 @@ export default async function AdminOpportunitiesPage() {
                             href={`/admin/opportunities/${opportunity.id}/edit`}
                             className="btn-outline px-5 py-3 text-sm"
                           >
-                            Edit opportunity
+                            Review / edit
                             <ArrowRight className="h-4 w-4" />
                           </Link>
 
                           <span className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600">
-                            <ShieldCheck className="h-4 w-4" />
-                            Admin review
+                            {strongQuality ? (
+                              <ShieldCheck className="h-4 w-4 text-orange-600" />
+                            ) : (
+                              <AlertCircle className="h-4 w-4 text-slate-500" />
+                            )}
+                            {strongQuality ? 'Strong listing' : 'Needs detail'}
                           </span>
                         </div>
                       </div>
@@ -251,6 +365,37 @@ export default async function AdminOpportunitiesPage() {
 
       <SiteFooter />
     </main>
+  )
+}
+
+function StatusPanel({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="content-panel">
+      <p className="eyebrow">{label}</p>
+      <h2 className="mt-3 text-3xl font-bold text-slate-950">{value}</h2>
+    </div>
+  )
+}
+
+function MiniCheck({
+  label,
+  complete,
+}: {
+  label: string
+  complete: boolean
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-3">
+      <div className="flex items-center gap-2">
+        {complete ? (
+          <CheckCircle2 className="h-4 w-4 text-orange-600" />
+        ) : (
+          <AlertCircle className="h-4 w-4 text-slate-400" />
+        )}
+
+        <p className="text-sm font-semibold text-slate-700">{label}</p>
+      </div>
+    </div>
   )
 }
 
