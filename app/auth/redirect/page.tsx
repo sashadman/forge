@@ -1,8 +1,15 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export default async function AuthRedirectPage() {
+type PageProps = {
+  searchParams?: {
+    intent?: string
+  }
+}
+
+export default async function AuthRedirectPage({ searchParams }: PageProps) {
   const supabase = createClient()
+  const intent = searchParams?.intent
 
   const {
     data: { user },
@@ -22,8 +29,8 @@ export default async function AuthRedirectPage() {
     redirect('/admin')
   }
 
-  const { data: employer } = await supabase//Does this user own an active employer profile?
-    .from('employers')//The role check is only a fallback if later we manually mark someone as employer but they have not created a profile yet
+  const { data: employer } = await supabase
+    .from('employers')
     .select('id')
     .eq('owner_id', user.id)
     .eq('is_active', true)
@@ -33,7 +40,7 @@ export default async function AuthRedirectPage() {
     redirect('/employers/dashboard')
   }
 
-  if (profile?.role === 'employer') {
+  if (intent === 'employer') {
     redirect('/employers/new')
   }
 

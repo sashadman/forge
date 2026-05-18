@@ -70,7 +70,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
       return
     }
 
-    window.location.href = '/auth/redirect'//here where employee sing in goes through the smart route that checks if they have a profile and redirects to the right place
+    window.location.href = '/auth/redirect?intent=employer'//here where employee sing in goes through the smart route that checks if they have a profile and redirects to the right place
   } catch (error) {
     console.error(error)
     setError('Something went wrong. Please try again.')
