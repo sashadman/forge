@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { siteConfig } from '@/config/site'
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react'
 import {
@@ -199,12 +200,15 @@ export default function CareerQuiz() {
       <div className="content-panel">
         <div className="max-w-3xl">
           <p className="eyebrow">Latest quiz result</p>
+         
+         <h2 className="section-title mt-3">
+  You have a recent quiz result on this device.
+</h2>
 
-          <h2 className="section-title mt-3">Welcome back.</h2>
-
-          <p className="muted-text mt-4">
-            {`Forge`} found trade paths that matched your previous answers.
-          </p>
+ <p className="muted-text mt-4">
+  Your previous answers matched with several trade paths. Sign in or create an
+  account to save future results to your dashboard.
+</p>
         </div>
 
         <div className="mt-10 grid gap-6">
@@ -266,11 +270,18 @@ export default function CareerQuiz() {
             />
           ))}
         </div>
+<div className="mt-8 flex flex-col gap-3 sm:flex-row">
+  <button type="button" onClick={restartQuiz} className="btn-outline">
+    <RotateCcw className="h-4 w-4" />
+    Retake quiz
+  </button>
 
-        <button type="button" onClick={restartQuiz} className="btn-outline mt-8">
-          <RotateCcw className="h-4 w-4" />
-          Retake quiz
-        </button>
+  <Link href="/auth/sign-up" className="btn-primary">
+    Create account to save results
+    <ArrowRight className="h-4 w-4" />
+  </Link>
+</div>
+       
       </div>
     )
   }
