@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   ArrowRight,
   BriefcaseBusiness,
-  CheckCircle2,
   ExternalLink,
   Facebook,
   Globe,
@@ -171,9 +170,21 @@ export default async function EmployerDetailPage({ params }: PageProps) {
           </Link>
 
           <div className="mt-10 max-w-4xl">
-            <p className="eyebrow-dark">
-              {employer.is_verified ? 'Verified employer' : 'Employer profile'}
-            </p>
+            <div className="inline-flex flex-wrap items-center gap-3">
+              <p className="eyebrow-dark">
+                {employer.is_verified ? 'Verified employer' : 'Employer profile'}
+              </p>
+
+              <span
+                className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide ${
+                  employer.is_verified
+                    ? 'bg-green-400/15 text-green-200 ring-1 ring-green-300/30'
+                    : 'bg-white/10 text-slate-200 ring-1 ring-white/15'
+                }`}
+              >
+                {employer.is_verified ? 'Admin reviewed' : 'Not yet verified'}
+              </span>
+            </div>
 
             <h1 className="page-title-dark mt-6">{employer.name}</h1>
 
@@ -216,7 +227,11 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                 <DetailItem
                   icon={<ShieldCheck className="h-5 w-5" />}
                   label="Verification"
-                  value={employer.is_verified ? 'Verified profile' : 'Not verified yet'}
+                  value={
+                    employer.is_verified
+                      ? 'Verified profile'
+                      : 'Not verified yet'
+                  }
                 />
 
                 <DetailItem
@@ -237,7 +252,10 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   </h2>
                 </div>
 
-                <Link href="/opportunities" className="btn-outline px-5 py-2 text-sm">
+                <Link
+                  href="/opportunities"
+                  className="btn-outline px-5 py-2 text-sm"
+                >
                   View all opportunities
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -254,7 +272,9 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <span className="badge-orange">
-                            {formatOpportunityType(opportunity.opportunity_type)}
+                            {formatOpportunityType(
+                              opportunity.opportunity_type
+                            )}
                           </span>
 
                           <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
@@ -306,8 +326,8 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   </h3>
 
                   <p className="muted-text mt-2">
-                    This employer does not have active opportunities listed right now.
-                    We do not show fake openings.
+                    This employer does not have active opportunities listed right
+                    now. We do not show fake openings.
                   </p>
 
                   <Link href="/opportunities" className="btn-dark mt-5">
@@ -386,10 +406,25 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                 </div>
               )}
 
-              <p className="mt-5 text-xs leading-6 text-slate-500">
-                Employer information can change. Always confirm details directly
-                with the employer before applying or making career decisions.
-              </p>
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+
+                  <div>
+                    <p className="font-semibold text-slate-950">
+                      {employer.is_verified
+                        ? 'Verified profile'
+                        : 'Verification pending'}
+                    </p>
+
+                    <p className="mt-1 text-sm leading-6 text-slate-500">
+                      {employer.is_verified
+                        ? 'This employer profile has been reviewed by an admin. Always confirm current details directly with the employer before applying.'
+                        : 'This employer profile has not been verified yet. Review the employer website, contact information, and listing details before making career decisions.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="dark-panel p-6">

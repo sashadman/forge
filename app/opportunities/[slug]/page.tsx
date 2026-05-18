@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ExternalLink,
   MapPin,
+  ShieldCheck,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
@@ -130,9 +131,25 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
 
             <h1 className="page-title-dark mt-6">{opportunity.title}</h1>
 
-            <p className="mt-5 text-xl font-semibold text-orange-300">
-              {employer?.name || 'Employer listing'}
-            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <p className="text-xl font-semibold text-orange-300">
+                {employer?.name || 'Employer listing'}
+              </p>
+
+              {employer && (
+                <span
+                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide ${
+                    employer.is_verified
+                      ? 'bg-green-400/15 text-green-200 ring-1 ring-green-300/30'
+                      : 'bg-white/10 text-slate-200 ring-1 ring-white/15'
+                  }`}
+                >
+                  {employer.is_verified
+                    ? 'Verified employer'
+                    : 'Employer not yet verified'}
+                </span>
+              )}
+            </div>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
               {opportunity.description}
@@ -191,7 +208,23 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
               <section className="content-panel">
                 <p className="eyebrow">Employer</p>
 
-                <h2 className="section-title mt-3">{employer.name}</h2>
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                  <div>
+                    <h2 className="section-title mt-3">{employer.name}</h2>
+
+                    <p className="mt-2 font-semibold text-slate-600">
+                      {employer.industry || 'Employer profile'}
+                    </p>
+                  </div>
+
+                  <Link
+                    href={`/employers/${employer.slug}`}
+                    className="btn-outline px-5 py-2 text-sm"
+                  >
+                    View employer profile
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
 
                 {employer.description && (
                   <p className="lead-text mt-5">{employer.description}</p>
@@ -235,9 +268,33 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                   value={opportunity.pay_range || 'See listing'}
                 />
               </div>
-<div className="mt-8">
-  <SaveOpportunityButton opportunityId={opportunity.id} />
-</div>
+
+              {employer && (
+                <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+
+                    <div>
+                      <p className="font-semibold text-slate-950">
+                        {employer.is_verified
+                          ? 'Verified employer'
+                          : 'Employer not yet verified'}
+                      </p>
+
+                      <p className="mt-1 text-sm leading-6 text-slate-500">
+                        {employer.is_verified
+                          ? 'This employer profile has been reviewed by an admin. Still confirm pay, schedule, requirements, and application details before applying.'
+                          : 'This employer profile has not been verified yet. Review the employer website, application page, and listing details carefully before applying.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-8">
+                <SaveOpportunityButton opportunityId={opportunity.id} />
+              </div>
+
               {opportunity.application_url && (
                 <a
                   href={opportunity.application_url}
@@ -252,8 +309,8 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
 
               <p className="mt-5 text-xs leading-6 text-slate-500">
                 This is a public opportunity listing. Always confirm pay,
-                schedule, requirements, and application details directly with
-                the employer or listing provider.
+                schedule, requirements, and application details directly with the
+                employer or listing provider.
               </p>
             </div>
 
