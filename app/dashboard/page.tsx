@@ -6,6 +6,9 @@ import { siteConfig } from '@/config/site'
 import { TRADE_MAP, formatSalary } from '@/utils/trades'
 import type { TradeCategory } from '@/types'
 import ProfileForm from '@/components/dashboard/ProfileForm'
+import RemoveSavedTradeButton from '@/components/dashboard/RemoveSavedTradeButton'
+import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
+import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
 
 type QuizResultItem = {
   trade: TradeCategory
@@ -371,19 +374,22 @@ const readinessScore = Math.round(
                           ))}
                         </div>
 
-                        <div className="mt-6 flex items-center justify-between">
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Median salary
-                            </p>
+                   <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                   <div>
+                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                         Median salary
+                     </p>
 
-                            <p className="mt-1 font-bold text-slate-950">
-                              {formatSalary(trade.median_salary)}
-                            </p>
-                          </div>
+                     <p className="mt-1 font-bold text-slate-950">
+                      {formatSalary(trade.median_salary)}
+                     </p>
+                   </div>
 
-                          <span className="badge-orange">Saved</span>
-                        </div>
+                   <div className="flex items-center gap-3">
+                     <span className="badge-orange">Saved</span>
+                     <RemoveSavedTradeButton tradeSlug={trade.slug} />
+                       </div>
+                    </div>
                       </Link>
                     )
                   })}
@@ -415,58 +421,66 @@ const readinessScore = Math.round(
                       : savedProgram.programs
 
                     if (!program) return null
-
                     return (
-                      <Link
-                        key={savedProgram.program_id}
-                        href={`/programs/${program.slug}`}
-                        className="card card-hover group bg-slate-50"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="badge-orange">
-                              {formatProgramType(program.program_type)}
-                            </span>
+  <div
+    key={savedProgram.program_id}
+    className="card bg-slate-50"
+  >
+    <Link href={`/programs/${program.slug}`} className="group block">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <span className="badge-orange">
+            {formatProgramType(program.program_type)}
+          </span>
 
-                            <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-                              {program.name}
-                            </h3>
+          <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+            {program.name}
+          </h3>
 
-                            <p className="mt-2 font-semibold text-slate-600">
-                              {program.provider_name}
-                            </p>
-                          </div>
+          <p className="mt-2 font-semibold text-slate-600">
+            {program.provider_name}
+          </p>
+        </div>
 
-                          <ArrowCircle />
-                        </div>
+        <ArrowCircle />
+      </div>
+    </Link>
 
-                        <p className="muted-text mt-5 line-clamp-3">
-                          {program.description}
-                        </p>
+    <p className="muted-text mt-5 line-clamp-3">
+      {program.description}
+    </p>
 
-                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Location
-                            </p>
+    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mini-card-white">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Location
+        </p>
 
-                            <p className="mt-1 font-bold text-slate-950">
-                              {program.location}, {program.state}
-                            </p>
-                          </div>
+        <p className="mt-1 font-bold text-slate-950">
+          {program.location}, {program.state}
+        </p>
+      </div>
 
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Duration
-                            </p>
+      <div className="mini-card-white">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Duration
+        </p>
 
-                            <p className="mt-1 font-bold text-slate-950">
-                              {program.duration || 'See provider'}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    )
+        <p className="mt-1 font-bold text-slate-950">
+          {program.duration || 'See provider'}
+        </p>
+      </div>
+    </div>
+
+    <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <span className="badge-orange">Saved</span>
+
+      <RemoveSavedProgramButton programId={savedProgram.program_id} />
+    </div>
+  </div>
+)
+
+
                   })}
                 </div>
               ) : (
@@ -502,56 +516,65 @@ const readinessScore = Math.round(
                       : opportunity.employers
 
                     return (
-                      <Link
-                        key={savedOpportunity.opportunity_id}
-                        href={`/opportunities/${opportunity.slug}`}
-                        className="card card-hover group bg-slate-50"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="badge-orange">
-                              {formatOpportunityType(opportunity.opportunity_type)}
-                            </span>
+  <div
+    key={savedOpportunity.opportunity_id}
+    className="card bg-slate-50"
+  >
+    <Link href={`/opportunities/${opportunity.slug}`} className="group block">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <span className="badge-orange">
+            {formatOpportunityType(opportunity.opportunity_type)}
+          </span>
 
-                            <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-                              {opportunity.title}
-                            </h3>
+          <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+            {opportunity.title}
+          </h3>
 
-                            <p className="mt-2 font-semibold text-slate-600">
-                              {employer?.name || 'Employer listing'}
-                            </p>
-                          </div>
+          <p className="mt-2 font-semibold text-slate-600">
+            {employer?.name || 'Employer listing'}
+          </p>
+        </div>
 
-                          <ArrowCircle />
-                        </div>
+        <ArrowCircle />
+      </div>
+    </Link>
 
-                        <p className="muted-text mt-5 line-clamp-3">
-                          {opportunity.description}
-                        </p>
+    <p className="muted-text mt-5 line-clamp-3">
+      {opportunity.description}
+    </p>
 
-                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Location
-                            </p>
+    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mini-card-white">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Location
+        </p>
 
-                            <p className="mt-1 font-bold text-slate-950">
-                              {opportunity.location}, {opportunity.state}
-                            </p>
-                          </div>
+        <p className="mt-1 font-bold text-slate-950">
+          {opportunity.location}, {opportunity.state}
+        </p>
+      </div>
 
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Schedule
-                            </p>
+      <div className="mini-card-white">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Schedule
+        </p>
 
-                            <p className="mt-1 font-bold text-slate-950">
-                              {opportunity.schedule || 'See listing'}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    )
+        <p className="mt-1 font-bold text-slate-950">
+          {opportunity.schedule || 'See listing'}
+        </p>
+      </div>
+    </div>
+
+    <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <span className="badge-orange">Saved</span>
+
+      <RemoveSavedOpportunityButton
+        opportunityId={savedOpportunity.opportunity_id}
+      />
+    </div>
+  </div>
+)
                   })}
                 </div>
               ) : (
