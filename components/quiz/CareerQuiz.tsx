@@ -33,7 +33,10 @@ export default function CareerQuiz() {
   const [isComplete, setIsComplete] = useState(false)
   const [savedResult, setSavedResult] = useState<SavedQuizResult | null>(null)
   const [hasLoadedSavedResult, setHasLoadedSavedResult] = useState(false)
-
+  const [userId, setUserId] = useState<string | null>(null)
+  const [savingSavedResult, setSavingSavedResult] = useState(false)
+  const [saveMessage, setSaveMessage] = useState('')
+  const [saveError, setSaveError] = useState('')
   const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex]
   const currentAnswer = answers.find(
     (answer) => answer.question_id === currentQuestion.id
@@ -52,8 +55,15 @@ export default function CareerQuiz() {
     }))
   }, [answers, isComplete])
 
-  useEffect(() => {
+ useEffect(() => {
+  async function loadQuizState() {
     if (typeof window === 'undefined') return
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    setUserId(user?.id ?? null)
 
     const storedResult = window.localStorage.getItem('forge_latest_quiz_result')
 
@@ -71,7 +81,10 @@ export default function CareerQuiz() {
     } finally {
       setHasLoadedSavedResult(true)
     }
-  }, [])
+  }
+
+  loadQuizState()
+}, [supabase])
 
   function updateAnswer(optionId: string) {
     const isMulti = currentQuestion.type === 'multi'
@@ -172,7 +185,35 @@ export default function CareerQuiz() {
     if (currentQuestionIndex === 0) return
     setCurrentQuestionIndex((index) => index - 1)
   }
+async function saveDeviceResultToDashboard() {
+  if (!userId || !savedResult) return
 
+  setSavingSavedResult(true)
+  setSaveMessage('')
+  setSaveError('')
+
+  const { error } = await supabase.from('quiz_results').insert({
+    user_id: userId,
+    answers: savedResult.answers as unknown as Json,
+    results: savedResult.results as unknown as Json,
+    completed_at: savedResult.completedAt,
+  })
+
+  if (error) {
+    console.error('Failed to save device quiz result:', error)
+    setSaveError('Could not save this result. Please try again.')
+    setSavingSavedResult(false)
+    return
+  }
+
+  await supabase
+    .from('profiles')
+    .update({ quiz_completed: true })
+    .eq('id', userId)
+
+  setSaveMessage('Quiz result saved to your dashboard.')
+  setSavingSavedResult(false)
+}
   function restartQuiz() {
     window.localStorage.removeItem('forge_latest_quiz_result')
     setSavedResult(null)
@@ -230,10 +271,41 @@ export default function CareerQuiz() {
           })}
         </div>
 
-        <button type="button" onClick={restartQuiz} className="btn-outline mt-8">
-          <RotateCcw className="h-4 w-4" />
-          Retake quiz
-        </button>
+       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+  <button type="button" onClick={restartQuiz} className="btn-outline">
+    <RotateCcw className="h-4 w-4" />
+    Retake quiz
+  </button>
+
+  {userId ? (
+    <button
+      type="button"
+      onClick={saveDeviceResultToDashboard}
+      disabled={savingSavedResult}
+      className="btn-primary"
+    >
+      {savingSavedResult ? 'Saving result...' : 'Save result to dashboard'}
+      <ArrowRight className="h-4 w-4" />
+    </button>
+  ) : (
+    <Link href="/auth/sign-up" className="btn-primary">
+      Create account to save results
+      <ArrowRight className="h-4 w-4" />
+    </Link>
+  )}
+</div>
+
+{saveMessage && (
+  <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+    {saveMessage}
+  </div>
+)}
+
+{saveError && (
+  <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+    {saveError}
+  </div>
+)}
       </div>
     )
   }
