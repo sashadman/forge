@@ -73,7 +73,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       }
 
       router.refresh()
-      window.location.href = '/dashboard'
+      window.location.href = '/auth/redirect'
     } catch (error) {
       console.error(error)
       setError('Something went wrong. Please try again.')
