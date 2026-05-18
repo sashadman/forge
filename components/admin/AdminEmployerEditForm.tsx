@@ -1,11 +1,13 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   ArrowLeft,
   Building2,
+  CheckCircle2,
+  Circle,
   ExternalLink,
   Save,
   ShieldCheck,
@@ -80,6 +82,74 @@ export default function AdminEmployerEditForm({
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
 
+  const hasSocialLink = Boolean(
+    linkedinUrl ||
+      instagramUrl ||
+      facebookUrl ||
+      xUrl ||
+      youtubeUrl ||
+      tiktokUrl ||
+      otherSocialUrl
+  )
+
+  const verificationItems = useMemo(
+    () => [
+      {
+        label: 'Company name',
+        complete: Boolean(name.trim()),
+        helpText: 'Employer has a clear organization name.',
+      },
+      {
+        label: 'Description quality',
+        complete: description.trim().length >= 80,
+        helpText: 'Description is detailed enough for public review.',
+      },
+      {
+        label: 'Website',
+        complete: Boolean(websiteUrl.trim()),
+        helpText: 'Website is present for external verification.',
+      },
+      {
+        label: 'Contact email',
+        complete: Boolean(contactEmail.trim()),
+        helpText: 'Contact email is present for follow-up.',
+      },
+      {
+        label: 'Location',
+        complete: Boolean(location.trim() && state.trim()),
+        helpText: 'City and state are present.',
+      },
+      {
+        label: 'Social or professional link',
+        complete: hasSocialLink,
+        helpText: 'At least one social/professional link is present.',
+      },
+      {
+        label: 'Public visibility',
+        complete: isActive,
+        helpText: 'Employer is active and can appear publicly.',
+      },
+    ],
+    [
+      contactEmail,
+      description,
+      hasSocialLink,
+      isActive,
+      location,
+      name,
+      state,
+      websiteUrl,
+    ]
+  )
+
+  const completedVerificationItems = verificationItems.filter(
+    (item) => item.complete
+  ).length
+
+  const verificationScore = Math.round(
+    (completedVerificationItems / verificationItems.length) * 100
+  )
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -130,13 +200,13 @@ export default function AdminEmployerEditForm({
           </div>
 
           <div>
-            <p className="eyebrow">Edit employer</p>
+            <p className="eyebrow">Employer verification workflow</p>
 
             <h2 className="section-title mt-3">{employer.name}</h2>
 
             <p className="muted-text mt-3 max-w-3xl">
-              Update verified real employer information. The public slug stays
-              the same for now.
+              Review employer quality, public visibility, and verification
+              status before marking an employer as verified.
             </p>
           </div>
         </div>
@@ -153,6 +223,39 @@ export default function AdminEmployerEditForm({
               <ExternalLink className="h-4 w-4" />
             </Link>
           )}
+        </div>
+      </div>
+
+      <div className="mt-10 rounded-3xl border border-orange-100 bg-orange-50/60 p-6">
+        <div className="flex flex-col justify-between gap-5 md:flex-row md:items-start">
+          <div>
+            <p className="eyebrow">Verification readiness</p>
+
+            <h3 className="mt-3 text-2xl font-bold text-slate-950">
+              {verificationScore}% ready
+            </h3>
+
+            <p className="muted-text mt-3 max-w-3xl">
+              This score is an internal admin aid. It does not automatically
+              verify the employer. Use judgment before changing verification
+              status.
+            </p>
+          </div>
+
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-xl font-bold text-orange-700 shadow-sm">
+            {verificationScore}%
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-2">
+          {verificationItems.map((item) => (
+            <VerificationChecklistItem
+              key={item.label}
+              label={item.label}
+              helpText={item.helpText}
+              complete={item.complete}
+            />
+          ))}
         </div>
       </div>
 
@@ -177,6 +280,9 @@ export default function AdminEmployerEditForm({
             rows={5}
             className="input-field"
           />
+          <p className="mt-2 text-xs text-slate-500">
+            Recommended: at least 80 characters for a useful public profile.
+          </p>
         </div>
 
         <div>
@@ -240,6 +346,11 @@ export default function AdminEmployerEditForm({
             Social links
           </h3>
         </div>
+
+        <p className="muted-text mt-3">
+          Social links are optional, but at least one professional or social link
+          improves trust.
+        </p>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <div>
@@ -318,9 +429,14 @@ export default function AdminEmployerEditForm({
         <div className="flex items-center gap-3">
           <ShieldCheck className="h-5 w-5 text-orange-600" />
           <h3 className="text-2xl font-bold tracking-tight text-slate-950">
-            Admin settings
+            Verification and visibility
           </h3>
         </div>
+
+        <p className="muted-text mt-3">
+          Verification is a trust signal shown publicly. Only mark an employer
+          verified after reviewing the profile information.
+        </p>
 
         <div className="mt-6 grid gap-4">
           <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -333,10 +449,11 @@ export default function AdminEmployerEditForm({
 
             <span>
               <span className="block font-semibold text-slate-950">
-                Verified employer
+                Mark employer as verified
               </span>
               <span className="mt-1 block text-sm leading-6 text-slate-500">
-                Verified employers show as reviewed by admin.
+                Verified employers display public trust signals. This does not
+                guarantee employment quality or current openings.
               </span>
             </span>
           </label>
@@ -351,10 +468,11 @@ export default function AdminEmployerEditForm({
 
             <span>
               <span className="block font-semibold text-slate-950">
-                Active employer
+                Active employer profile
               </span>
               <span className="mt-1 block text-sm leading-6 text-slate-500">
-                Active employers can appear publicly.
+                Active employers can appear publicly. Inactive employers are
+                hidden from public employer detail pages.
               </span>
             </span>
           </label>
@@ -375,7 +493,7 @@ export default function AdminEmployerEditForm({
 
       <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-6 text-slate-500">
-          Changes update this employer record.
+          Changes update this employer record and public trust status.
         </p>
 
         <button type="submit" disabled={saving} className="btn-primary">
@@ -384,5 +502,32 @@ export default function AdminEmployerEditForm({
         </button>
       </div>
     </form>
+  )
+}
+
+function VerificationChecklistItem({
+  label,
+  helpText,
+  complete,
+}: {
+  label: string
+  helpText: string
+  complete: boolean
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="flex items-start gap-3">
+        {complete ? (
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+        ) : (
+          <Circle className="mt-0.5 h-5 w-5 shrink-0 text-slate-400" />
+        )}
+
+        <div>
+          <p className="font-semibold text-slate-950">{label}</p>
+          <p className="mt-1 text-sm leading-6 text-slate-500">{helpText}</p>
+        </div>
+      </div>
+    </div>
   )
 }
