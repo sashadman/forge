@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ArrowRight, CheckCircle2, User } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Circle, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import { TRADE_MAP, formatSalary } from '@/utils/trades'
@@ -106,6 +106,49 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
 
   const quizResults = (latestQuizResult?.results ?? []) as unknown as QuizResultItem[]
+  const readinessItems = [
+  {
+    label: 'Profile name',
+    complete: Boolean(profile?.full_name),
+    helpText: 'Add your name so your profile feels complete.',
+  },
+  {
+    label: 'Location',
+    complete: Boolean(profile?.location),
+    helpText: 'Add your location to compare nearby pathways.',
+  },
+  {
+    label: 'Experience level',
+    complete: Boolean(profile?.experience_level),
+    helpText: 'Add your current experience level.',
+  },
+  {
+    label: 'Career quiz',
+    complete: Boolean(profile?.quiz_completed || quizResults.length > 0),
+    helpText: 'Take the quiz to get personalized trade matches.',
+  },
+  {
+    label: 'Saved trade',
+    complete: Boolean(savedTrades && savedTrades.length > 0),
+    helpText: 'Save at least one trade you want to explore.',
+  },
+  {
+    label: 'Saved program',
+    complete: Boolean(savedPrograms && savedPrograms.length > 0),
+    helpText: 'Save at least one training pathway.',
+  },
+  {
+    label: 'Saved opportunity',
+    complete: Boolean(savedOpportunities && savedOpportunities.length > 0),
+    helpText: 'Save at least one real opportunity when available.',
+  },
+]
+
+const completedReadinessItems = readinessItems.filter((item) => item.complete).length
+
+const readinessScore = Math.round(
+  (completedReadinessItems / readinessItems.length) * 100
+)
 
   return (
     <main className="page-shell">
@@ -155,6 +198,42 @@ export default async function DashboardPage() {
                 experienceLevel={profile?.experience_level || ''}
               />
             </div>
+            <div className="mt-8 border-t border-slate-200 pt-8">
+  <div className="flex items-start justify-between gap-4">
+    <div>
+      <p className="eyebrow">Career readiness</p>
+
+      <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+        {readinessScore}% complete
+      </h3>
+    </div>
+
+    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
+      {readinessScore}%
+    </div>
+  </div>
+
+  <p className="muted-text mt-4">
+    Build a stronger career profile by saving paths, completing the quiz, and
+    tracking real opportunities.
+  </p>
+
+  <div className="mt-6 space-y-3">
+    {readinessItems.map((item) => (
+      <ReadinessItem
+        key={item.label}
+        label={item.label}
+        helpText={item.helpText}
+        complete={item.complete}
+      />
+    ))}
+  </div>
+
+  <Link href="/quiz" className="btn-outline mt-6 w-full">
+    Improve career profile
+    <ArrowRight className="h-4 w-4" />
+  </Link>
+</div>
           </aside>
 
           <div className="-mt-12 space-y-8">
@@ -562,6 +641,33 @@ function ArrowCircle() {
   return (
     <div className="rounded-full bg-white p-3 ring-1 ring-slate-200 transition group-hover:ring-orange-200">
       <ArrowRight className="h-5 w-5 text-slate-700 group-hover:text-orange-700" />
+    </div>
+  )
+}
+
+function ReadinessItem({
+  label,
+  helpText,
+  complete,
+}: {
+  label: string
+  helpText: string
+  complete: boolean
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <div className="flex items-start gap-3">
+        {complete ? (
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+        ) : (
+          <Circle className="mt-0.5 h-5 w-5 shrink-0 text-slate-400" />
+        )}
+
+        <div>
+          <p className="font-semibold text-slate-950">{label}</p>
+          <p className="mt-1 text-sm leading-6 text-slate-500">{helpText}</p>
+        </div>
+      </div>
     </div>
   )
 }
