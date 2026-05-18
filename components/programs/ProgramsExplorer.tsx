@@ -9,8 +9,10 @@ import {
   Search,
   SlidersHorizontal,
 } from 'lucide-react'
+import SaveProgramButton from '@/components/programs/SaveProgramButton'
 
 type Program = {
+  id: string
   slug: string
   name: string
   provider_name: string
@@ -183,30 +185,28 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
       <div className="grid gap-6 lg:grid-cols-2">
         {filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => (
-            <Link
-              key={program.slug}
-              href={`/programs/${program.slug}`}
-              className="card card-hover group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <span className="badge-orange">
-                    {formatProgramType(program.program_type)}
-                  </span>
+            <div key={program.id} className="card">
+              <Link href={`/programs/${program.slug}`} className="group block">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span className="badge-orange">
+                      {formatProgramType(program.program_type)}
+                    </span>
 
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
-                    {program.name}
-                  </h3>
+                    <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
+                      {program.name}
+                    </h3>
 
-                  <p className="mt-2 font-semibold text-slate-600">
-                    {program.provider_name}
-                  </p>
+                    <p className="mt-2 font-semibold text-slate-600">
+                      {program.provider_name}
+                    </p>
+                  </div>
+
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
+                    <ArrowRight className="h-5 w-5" />
+                  </div>
                 </div>
-
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
-                  <ArrowRight className="h-5 w-5" />
-                </div>
-              </div>
+              </Link>
 
               <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
                 {program.description}
@@ -239,7 +239,21 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
                   </p>
                 </div>
               </div>
-            </Link>
+
+              <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <Link
+                  href={`/programs/${program.slug}`}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
+                >
+                  View program
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <div className="sm:min-w-48">
+                  <SaveProgramButton programId={program.id} />
+                </div>
+              </div>
+            </div>
           ))
         ) : (
           <div className="card border-dashed p-10 text-center lg:col-span-2">

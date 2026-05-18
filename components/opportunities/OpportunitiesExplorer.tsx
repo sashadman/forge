@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
 } from 'lucide-react'
+import SaveOpportunityButton from '@/components/opportunities/SaveOpportunityButton'
 
 type EmployerRelation = {
   name: string
@@ -61,9 +62,7 @@ export default function OpportunitiesExplorer({
 
   const opportunityTypes = useMemo(() => {
     return Array.from(
-      new Set(
-        opportunities.map((opportunity) => opportunity.opportunity_type)
-      )
+      new Set(opportunities.map((opportunity) => opportunity.opportunity_type))
     ).sort()
   }, [opportunities])
 
@@ -117,8 +116,7 @@ export default function OpportunitiesExplorer({
       const matchesLocation =
         location === 'all' || opportunityLocation === location
 
-      const matchesVerified =
-        !verifiedOnly || Boolean(employer?.is_verified)
+      const matchesVerified = !verifiedOnly || Boolean(employer?.is_verified)
 
       return (
         matchesSearch &&
@@ -246,39 +244,40 @@ export default function OpportunitiesExplorer({
             const employer = getEmployer(opportunity)
 
             return (
-              <Link
-                key={opportunity.id}
-                href={`/opportunities/${opportunity.slug}`}
-                className="card card-hover group"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="badge-orange">
-                        {formatOpportunityType(opportunity.opportunity_type)}
-                      </span>
-
-                      {employer?.is_verified && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">
-                          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
-                          Verified employer
+              <div key={opportunity.id} className="card">
+                <Link
+                  href={`/opportunities/${opportunity.slug}`}
+                  className="group block"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="badge-orange">
+                          {formatOpportunityType(opportunity.opportunity_type)}
                         </span>
-                      )}
+
+                        {employer?.is_verified && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">
+                            <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+                            Verified employer
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
+                        {opportunity.title}
+                      </h3>
+
+                      <p className="mt-2 font-semibold text-slate-600">
+                        {employer?.name || 'Employer listing'}
+                      </p>
                     </div>
 
-                    <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
-                      {opportunity.title}
-                    </h3>
-
-                    <p className="mt-2 font-semibold text-slate-600">
-                      {employer?.name || 'Employer listing'}
-                    </p>
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
+                      <ArrowRight className="h-5 w-5" />
+                    </div>
                   </div>
-
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
-                    <ArrowRight className="h-5 w-5" />
-                  </div>
-                </div>
+                </Link>
 
                 <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
                   {opportunity.description}
@@ -311,7 +310,21 @@ export default function OpportunitiesExplorer({
                     </p>
                   </div>
                 </div>
-              </Link>
+
+                <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <Link
+                    href={`/opportunities/${opportunity.slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
+                  >
+                    View listing
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+
+                  <div className="sm:min-w-52">
+                    <SaveOpportunityButton opportunityId={opportunity.id} />
+                  </div>
+                </div>
+              </div>
             )
           })}
         </div>

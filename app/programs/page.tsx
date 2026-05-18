@@ -17,8 +17,8 @@ export default async function ProgramsPage() {
   const { data: programs, error } = await supabase
     .from('programs')
     .select(
-      'slug, name, provider_name, program_type, trade_slug, location, state, duration, cost, description'
-    )
+  'id, slug, name, provider_name, program_type, trade_slug, location, state, duration, cost, description'
+)
     .eq('is_active', true)
     .order('provider_name', { ascending: true })
 
