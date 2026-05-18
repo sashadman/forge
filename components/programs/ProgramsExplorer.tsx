@@ -103,8 +103,13 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
             <p className="eyebrow">Program directory</p>
 
             <h2 className="section-title mt-3">
-              Listed San Diego-area pathways
+              Active training pathways
             </h2>
+
+            <p className="muted-text mt-3 max-w-2xl">
+              Search and filter real program records by provider, trade, type,
+              and location.
+            </p>
           </div>
 
           <p className="badge-slate">
@@ -164,7 +169,11 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
             ))}
           </select>
 
-          <button type="button" onClick={clearFilters} className="btn-outline rounded-2xl px-4 py-3">
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="btn-outline rounded-2xl px-4 py-3"
+          >
             <SlidersHorizontal className="h-4 w-4" />
             Clear
           </button>
@@ -234,10 +243,11 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
           ))
         ) : (
           <div className="card border-dashed p-10 text-center lg:col-span-2">
-            <h3 className="text-2xl font-bold">No programs found</h3>
+            <h3 className="text-2xl font-bold">No matching programs found</h3>
 
-            <p className="mt-3 text-slate-600">
-              Try changing your search or clearing the filters.
+            <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+              No active program records match your current filters. Try changing
+              the search, selecting a different trade, or clearing the filters.
             </p>
 
             <button type="button" onClick={clearFilters} className="btn-dark mt-6">
