@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import {
   ArrowRight,
   BriefcaseBusiness,
+  CheckCircle2,
+  Circle,
   ExternalLink,
   MapPin,
   Plus,
@@ -75,6 +77,13 @@ export default async function EmployerDashboardPage() {
       state,
       website_url,
       contact_email,
+      linkedin_url,
+      instagram_url,
+      facebook_url,
+      x_url,
+      youtube_url,
+      tiktok_url,
+      other_social_url,
       is_verified,
       is_active,
       opportunities (
@@ -106,6 +115,59 @@ export default async function EmployerDashboardPage() {
 
   const inactiveOpportunities =
     employer.opportunities?.filter((opportunity) => !opportunity.is_active) ?? []
+
+  const hasSocialLink = Boolean(
+    employer.linkedin_url ||
+      employer.instagram_url ||
+      employer.facebook_url ||
+      employer.x_url ||
+      employer.youtube_url ||
+      employer.tiktok_url ||
+      employer.other_social_url
+  )
+
+  const completenessItems = [
+    {
+      label: 'Company description',
+      complete: employer.description.trim().length >= 80,
+      helpText: 'Add a clear company description so seekers understand who you are.',
+    },
+    {
+      label: 'Website',
+      complete: Boolean(employer.website_url),
+      helpText: 'Add your company website for credibility.',
+    },
+    {
+      label: 'Contact email',
+      complete: Boolean(employer.contact_email),
+      helpText: 'Add a contact email for follow-up.',
+    },
+    {
+      label: 'Location',
+      complete: Boolean(employer.location && employer.state),
+      helpText: 'Confirm your city and state.',
+    },
+    {
+      label: 'Social link',
+      complete: hasSocialLink,
+      helpText: 'Add at least one active social or professional link.',
+    },
+    {
+      label: 'Verification',
+      complete: employer.is_verified,
+      helpText: 'Admin verification improves trust.',
+    },
+    {
+      label: 'Active opportunity',
+      complete: activeOpportunities.length > 0,
+      helpText: 'Add a real opportunity when available.',
+    },
+  ]
+
+  const completedItems = completenessItems.filter((item) => item.complete).length
+  const completenessScore = Math.round(
+    (completedItems / completenessItems.length) * 100
+  )
 
   return (
     <main className="page-shell">
@@ -194,6 +256,43 @@ export default async function EmployerDashboardPage() {
                 Deactivation controls are intentionally hidden for now. We will
                 add them later with confirmation and safety checks.
               </p>
+            </div>
+
+            <div className="content-panel">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="eyebrow">Profile quality</p>
+
+                  <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+                    {completenessScore}% complete
+                  </h3>
+                </div>
+
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
+                  {completenessScore}%
+                </div>
+              </div>
+
+              <p className="muted-text mt-4">
+                Strong employer profiles build trust with career seekers and make
+                listings easier to evaluate.
+              </p>
+
+              <div className="mt-6 space-y-3">
+                {completenessItems.map((item) => (
+                  <CompletenessItem
+                    key={item.label}
+                    label={item.label}
+                    helpText={item.helpText}
+                    complete={item.complete}
+                  />
+                ))}
+              </div>
+
+              <Link href="/employers/profile" className="btn-outline mt-6 w-full">
+                Improve profile
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
             <div className="dark-panel p-6">
@@ -388,6 +487,33 @@ function MiniDetail({ label, value }: { label: string; value: string }) {
       </p>
 
       <p className="mt-1 font-bold text-slate-950">{value}</p>
+    </div>
+  )
+}
+
+function CompletenessItem({
+  label,
+  helpText,
+  complete,
+}: {
+  label: string
+  helpText: string
+  complete: boolean
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <div className="flex items-start gap-3">
+        {complete ? (
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+        ) : (
+          <Circle className="mt-0.5 h-5 w-5 shrink-0 text-slate-400" />
+        )}
+
+        <div>
+          <p className="font-semibold text-slate-950">{label}</p>
+          <p className="mt-1 text-sm leading-6 text-slate-500">{helpText}</p>
+        </div>
+      </div>
     </div>
   )
 }
