@@ -27,6 +27,7 @@ type Program = {
 
 type ProgramsExplorerProps = {
   programs: Program[]
+  savedProgramIds: string[]
 }
 
 function formatProgramType(type: string) {
@@ -36,11 +37,18 @@ function formatProgramType(type: string) {
     .join(' ')
 }
 
-export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
+export default function ProgramsExplorer({
+  programs,
+  savedProgramIds,
+}: ProgramsExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [programType, setProgramType] = useState('all')
   const [tradeFocus, setTradeFocus] = useState('all')
   const [location, setLocation] = useState('all')
+
+  const savedProgramIdSet = useMemo(() => {
+    return new Set(savedProgramIds)
+  }, [savedProgramIds])
 
   const programTypes = useMemo(() => {
     return Array.from(new Set(programs.map((program) => program.program_type))).sort()
@@ -250,7 +258,10 @@ export default function ProgramsExplorer({ programs }: ProgramsExplorerProps) {
                 </Link>
 
                 <div className="sm:min-w-48">
-                  <SaveProgramButton programId={program.id} />
+                  <SaveProgramButton
+                    programId={program.id}
+                    initiallySaved={savedProgramIdSet.has(program.id)}
+                  />
                 </div>
               </div>
             </div>

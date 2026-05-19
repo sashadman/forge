@@ -1,26 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 type SaveOpportunityButtonProps = {
   opportunityId: string
+  initiallySaved?: boolean
 }
 
 export default function SaveOpportunityButton({
   opportunityId,
+  initiallySaved,
 }: SaveOpportunityButtonProps) {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+
+  const hasInitialSavedState = typeof initiallySaved === 'boolean'
 
   const [userId, setUserId] = useState<string | null>(null)
-  const [isSaved, setIsSaved] = useState(false)
+  const [isSaved, setIsSaved] = useState(initiallySaved ?? false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
+    let isMounted = true
+
     async function loadSavedState() {
       setLoading(true)
       setError('')
@@ -28,6 +34,8 @@ export default function SaveOpportunityButton({
       const {
         data: { user },
       } = await supabase.auth.getUser()
+
+      if (!isMounted) return
 
       if (!user) {
         setUserId(null)
@@ -38,6 +46,12 @@ export default function SaveOpportunityButton({
 
       setUserId(user.id)
 
+      if (hasInitialSavedState) {
+        setIsSaved(initiallySaved)
+        setLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('saved_opportunities')
         .select('id')
@@ -45,9 +59,13 @@ export default function SaveOpportunityButton({
         .eq('opportunity_id', opportunityId)
         .maybeSingle()
 
+      if (!isMounted) return
+
       if (error) {
         console.error('Failed to load saved opportunity state:', error)
         setError('Could not check saved status.')
+        setLoading(false)
+        return
       }
 
       setIsSaved(Boolean(data))
@@ -55,10 +73,14 @@ export default function SaveOpportunityButton({
     }
 
     loadSavedState()
-  }, [supabase, opportunityId])
+
+    return () => {
+      isMounted = false
+    }
+  }, [supabase, opportunityId, initiallySaved, hasInitialSavedState])
 
   async function toggleSavedOpportunity() {
-    if (!userId) return
+    if (!userId || saving) return
 
     setSaving(true)
     setError('')
@@ -89,6 +111,13 @@ export default function SaveOpportunityButton({
 
     if (error) {
       console.error('Failed to save opportunity:', error)
+
+      if (error.code === '23505') {
+        setIsSaved(true)
+        setSaving(false)
+        return
+      }
+
       setError('Could not save opportunity.')
       setSaving(false)
       return
@@ -100,7 +129,11 @@ export default function SaveOpportunityButton({
 
   if (loading) {
     return (
-      <button type="button" disabled className="btn-outline w-full px-6 py-4 text-slate-400">
+      <button
+        type="button"
+        disabled
+        className="btn-outline w-full px-6 py-4 text-slate-400"
+      >
         Checking...
       </button>
     )
@@ -121,6 +154,7 @@ export default function SaveOpportunityButton({
         type="button"
         onClick={toggleSavedOpportunity}
         disabled={saving}
+        aria-pressed={isSaved}
         className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
           isSaved
             ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
@@ -133,7 +167,11 @@ export default function SaveOpportunityButton({
           <Bookmark className="h-4 w-4" />
         )}
 
-        {saving ? 'Saving...' : isSaved ? 'Saved opportunity' : 'Save opportunity'}
+        {saving
+          ? 'Saving...'
+          : isSaved
+            ? 'Saved opportunity'
+            : 'Save opportunity'}
       </button>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

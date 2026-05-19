@@ -1,24 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 type SaveProgramButtonProps = {
   programId: string
+  initiallySaved?: boolean
 }
 
-export default function SaveProgramButton({ programId }: SaveProgramButtonProps) {
-  const supabase = createClient()
+export default function SaveProgramButton({
+  programId,
+  initiallySaved,
+}: SaveProgramButtonProps) {
+  const supabase = useMemo(() => createClient(), [])
+
+  const hasInitialSavedState = typeof initiallySaved === 'boolean'
 
   const [userId, setUserId] = useState<string | null>(null)
-  const [isSaved, setIsSaved] = useState(false)
+  const [isSaved, setIsSaved] = useState(initiallySaved ?? false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
+    let isMounted = true
+
     async function loadSavedState() {
       setLoading(true)
       setError('')
@@ -26,6 +34,8 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
       const {
         data: { user },
       } = await supabase.auth.getUser()
+
+      if (!isMounted) return
 
       if (!user) {
         setUserId(null)
@@ -36,6 +46,12 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
 
       setUserId(user.id)
 
+      if (hasInitialSavedState) {
+        setIsSaved(initiallySaved)
+        setLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('saved_programs')
         .select('id')
@@ -43,9 +59,13 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
         .eq('program_id', programId)
         .maybeSingle()
 
+      if (!isMounted) return
+
       if (error) {
         console.error('Failed to load saved program state:', error)
         setError('Could not check saved status.')
+        setLoading(false)
+        return
       }
 
       setIsSaved(Boolean(data))
@@ -53,10 +73,14 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
     }
 
     loadSavedState()
-  }, [supabase, programId])
+
+    return () => {
+      isMounted = false
+    }
+  }, [supabase, programId, initiallySaved, hasInitialSavedState])
 
   async function toggleSavedProgram() {
-    if (!userId) return
+    if (!userId || saving) return
 
     setSaving(true)
     setError('')
@@ -87,6 +111,13 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
 
     if (error) {
       console.error('Failed to save program:', error)
+
+      if (error.code === '23505') {
+        setIsSaved(true)
+        setSaving(false)
+        return
+      }
+
       setError('Could not save program.')
       setSaving(false)
       return
@@ -98,7 +129,11 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
 
   if (loading) {
     return (
-      <button type="button" disabled className="btn-outline w-full px-6 py-4 text-slate-400">
+      <button
+        type="button"
+        disabled
+        className="btn-outline w-full px-6 py-4 text-slate-400"
+      >
         Checking...
       </button>
     )
@@ -119,6 +154,7 @@ export default function SaveProgramButton({ programId }: SaveProgramButtonProps)
         type="button"
         onClick={toggleSavedProgram}
         disabled={saving}
+        aria-pressed={isSaved}
         className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
           isSaved
             ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'

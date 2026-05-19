@@ -36,6 +36,7 @@ type Opportunity = {
 
 type OpportunitiesExplorerProps = {
   opportunities: Opportunity[]
+  savedOpportunityIds: string[]
 }
 
 function formatOpportunityType(type: string) {
@@ -53,12 +54,17 @@ function getEmployer(opportunity: Opportunity) {
 
 export default function OpportunitiesExplorer({
   opportunities,
+  savedOpportunityIds,
 }: OpportunitiesExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [opportunityType, setOpportunityType] = useState('all')
   const [tradeFocus, setTradeFocus] = useState('all')
   const [location, setLocation] = useState('all')
   const [verifiedOnly, setVerifiedOnly] = useState(false)
+
+  const savedOpportunityIdSet = useMemo(() => {
+    return new Set(savedOpportunityIds)
+  }, [savedOpportunityIds])
 
   const opportunityTypes = useMemo(() => {
     return Array.from(
@@ -321,7 +327,10 @@ export default function OpportunitiesExplorer({
                   </Link>
 
                   <div className="sm:min-w-52">
-                    <SaveOpportunityButton opportunityId={opportunity.id} />
+                    <SaveOpportunityButton
+                      opportunityId={opportunity.id}
+                      initiallySaved={savedOpportunityIdSet.has(opportunity.id)}
+                    />
                   </div>
                 </div>
               </div>

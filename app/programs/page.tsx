@@ -14,16 +14,36 @@ export const metadata: Metadata = {
 export default async function ProgramsPage() {
   const supabase = createClient()
 
-  const { data: programs, error } = await supabase
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { data: programs, error: programsError } = await supabase
     .from('programs')
     .select(
-  'id, slug, name, provider_name, program_type, trade_slug, location, state, duration, cost, description'
-)
+      'id, slug, name, provider_name, program_type, trade_slug, location, state, duration, cost, description'
+    )
     .eq('is_active', true)
     .order('provider_name', { ascending: true })
 
-  if (error) {
-    console.error('Failed to load programs:', error)
+  if (programsError) {
+    console.error('Failed to load programs:', programsError)
+  }
+
+  let savedProgramIds: string[] = []
+
+  if (user) {
+    const { data: savedPrograms, error: savedProgramsError } = await supabase
+      .from('saved_programs')
+      .select('program_id')
+      .eq('user_id', user.id)
+
+    if (savedProgramsError) {
+      console.error('Failed to load saved program IDs:', savedProgramsError)
+    }
+
+    savedProgramIds =
+      savedPrograms?.map((savedProgram) => savedProgram.program_id) ?? []
   }
 
   return (
@@ -42,8 +62,9 @@ export default async function ProgramsPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Browse listed apprenticeships, workforce programs, and training pathways.
-              These are public directory listings, not verified platform partners yet.
+              Browse listed apprenticeships, workforce programs, and training
+              pathways. These are public directory listings, not verified
+              platform partners yet.
             </p>
           </div>
         </div>
@@ -51,7 +72,10 @@ export default async function ProgramsPage() {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <ProgramsExplorer programs={programs ?? []} />
+          <ProgramsExplorer
+            programs={programs ?? []}
+            savedProgramIds={savedProgramIds}
+          />
         </div>
       </section>
 

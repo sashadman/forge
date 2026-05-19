@@ -14,7 +14,11 @@ export const metadata: Metadata = {
 export default async function OpportunitiesPage() {
   const supabase = createClient()
 
-  const { data: opportunities, error } = await supabase
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { data: opportunities, error: opportunitiesError } = await supabase
     .from('opportunities')
     .select(
       `
@@ -38,8 +42,30 @@ export default async function OpportunitiesPage() {
     .eq('is_active', true)
     .order('created_at', { ascending: false })
 
-  if (error) {
-    console.error('Failed to load opportunities:', error)
+  if (opportunitiesError) {
+    console.error('Failed to load opportunities:', opportunitiesError)
+  }
+
+  let savedOpportunityIds: string[] = []
+
+  if (user) {
+    const { data: savedOpportunities, error: savedOpportunitiesError } =
+      await supabase
+        .from('saved_opportunities')
+        .select('opportunity_id')
+        .eq('user_id', user.id)
+
+    if (savedOpportunitiesError) {
+      console.error(
+        'Failed to load saved opportunity IDs:',
+        savedOpportunitiesError
+      )
+    }
+
+    savedOpportunityIds =
+      savedOpportunities?.map(
+        (savedOpportunity) => savedOpportunity.opportunity_id
+      ) ?? []
   }
 
   return (
@@ -68,7 +94,10 @@ export default async function OpportunitiesPage() {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <OpportunitiesExplorer opportunities={opportunities ?? []} />
+          <OpportunitiesExplorer
+            opportunities={opportunities ?? []}
+            savedOpportunityIds={savedOpportunityIds}
+          />
         </div>
       </section>
 
