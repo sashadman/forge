@@ -79,52 +79,83 @@ export default function SaveOpportunityButton({
     }
   }, [supabase, opportunityId, initiallySaved, hasInitialSavedState])
 
+  async function saveOpportunity() {
+    if (!userId) return
+
+    const { error: savedOpportunityError } = await supabase
+      .from('saved_opportunities')
+      .insert({
+        user_id: userId,
+        opportunity_id: opportunityId,
+      })
+
+    if (savedOpportunityError && savedOpportunityError.code !== '23505') {
+      throw savedOpportunityError
+    }
+
+    const { error: pipelineError } = await supabase
+      .from('opportunity_pipeline')
+      .upsert(
+        {
+          user_id: userId,
+          opportunity_id: opportunityId,
+          status: 'saved',
+          last_action_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'user_id,opportunity_id',
+        }
+      )
+
+    if (pipelineError) {
+      throw pipelineError
+    }
+  }
+
+  async function removeSavedOpportunity() {
+    if (!userId) return
+
+    const { error: savedOpportunityError } = await supabase
+      .from('saved_opportunities')
+      .delete()
+      .eq('user_id', userId)
+      .eq('opportunity_id', opportunityId)
+
+    if (savedOpportunityError) {
+      throw savedOpportunityError
+    }
+
+    const { error: pipelineError } = await supabase
+      .from('opportunity_pipeline')
+      .delete()
+      .eq('user_id', userId)
+      .eq('opportunity_id', opportunityId)
+
+    if (pipelineError) {
+      throw pipelineError
+    }
+  }
+
   async function toggleSavedOpportunity() {
     if (!userId || saving) return
 
     setSaving(true)
     setError('')
 
-    if (isSaved) {
-      const { error } = await supabase
-        .from('saved_opportunities')
-        .delete()
-        .eq('user_id', userId)
-        .eq('opportunity_id', opportunityId)
-
-      if (error) {
-        console.error('Failed to remove saved opportunity:', error)
-        setError('Could not remove saved opportunity.')
-        setSaving(false)
-        return
-      }
-
-      setIsSaved(false)
-      setSaving(false)
-      return
-    }
-
-    const { error } = await supabase.from('saved_opportunities').insert({
-      user_id: userId,
-      opportunity_id: opportunityId,
-    })
-
-    if (error) {
-      console.error('Failed to save opportunity:', error)
-
-      if (error.code === '23505') {
+    try {
+      if (isSaved) {
+        await removeSavedOpportunity()
+        setIsSaved(false)
+      } else {
+        await saveOpportunity()
         setIsSaved(true)
-        setSaving(false)
-        return
       }
-
-      setError('Could not save opportunity.')
+    } catch (error) {
+      console.error('Failed to update saved opportunity:', error)
+      setError('Could not update saved opportunity.')
+    } finally {
       setSaving(false)
-      return
     }
-
-    setIsSaved(true)
-    setSaving(false)
   }
 
   if (loading) {

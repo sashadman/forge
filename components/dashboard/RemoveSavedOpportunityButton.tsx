@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -13,12 +13,14 @@ export default function RemoveSavedOpportunityButton({
   opportunityId,
 }: RemoveSavedOpportunityButtonProps) {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
   const [removing, setRemoving] = useState(false)
   const [error, setError] = useState('')
 
   async function removeSavedOpportunity() {
+    if (removing) return
+
     setRemoving(true)
     setError('')
 
@@ -32,16 +34,30 @@ export default function RemoveSavedOpportunityButton({
       return
     }
 
-    const { error } = await supabase
+    const { error: savedOpportunityError } = await supabase
       .from('saved_opportunities')
       .delete()
       .eq('user_id', user.id)
       .eq('opportunity_id', opportunityId)
 
-    if (error) {
-      console.error(error)
+    if (savedOpportunityError) {
+      console.error('Failed to remove saved opportunity:', savedOpportunityError)
       setError('Could not remove saved opportunity.')
       setRemoving(false)
+      return
+    }
+
+    const { error: pipelineError } = await supabase
+      .from('opportunity_pipeline')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('opportunity_id', opportunityId)
+
+    if (pipelineError) {
+      console.error('Failed to remove opportunity pipeline record:', pipelineError)
+      setError('Saved opportunity was removed, but pipeline cleanup failed.')
+      setRemoving(false)
+      router.refresh()
       return
     }
 
