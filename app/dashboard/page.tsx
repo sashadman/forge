@@ -5,10 +5,12 @@ import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import { TRADE_MAP, formatSalary } from '@/utils/trades'
 import type { TradeCategory } from '@/types'
+import type { OpportunityPipelineStatus } from '@/lib/supabase/app-types'
 import ProfileForm from '@/components/dashboard/ProfileForm'
 import RemoveSavedTradeButton from '@/components/dashboard/RemoveSavedTradeButton'
 import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
 import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
+import OpportunityPipelineStatusSelect from '@/components/dashboard/OpportunityPipelineStatusSelect'
 
 type QuizResultItem = {
   trade: TradeCategory
@@ -108,50 +110,64 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  const { data: opportunityPipelineItems } = await supabase
+    .from('opportunity_pipeline')
+    .select('opportunity_id, status')
+    .eq('user_id', user.id)
+
+  const opportunityPipelineStatusById = new Map(
+    opportunityPipelineItems?.map((item) => [
+      item.opportunity_id,
+      item.status as OpportunityPipelineStatus,
+    ]) ?? []
+  )
+
   const quizResults = (latestQuizResult?.results ?? []) as unknown as QuizResultItem[]
+
   const readinessItems = [
-  {
-    label: 'Profile name',
-    complete: Boolean(profile?.full_name),
-    helpText: 'Add your name so your profile feels complete.',
-  },
-  {
-    label: 'Location',
-    complete: Boolean(profile?.location),
-    helpText: 'Add your location to compare nearby pathways.',
-  },
-  {
-    label: 'Experience level',
-    complete: Boolean(profile?.experience_level),
-    helpText: 'Add your current experience level.',
-  },
-  {
-    label: 'Career quiz',
-    complete: Boolean(profile?.quiz_completed || quizResults.length > 0),
-    helpText: 'Take the quiz to get personalized trade matches.',
-  },
-  {
-    label: 'Saved trade',
-    complete: Boolean(savedTrades && savedTrades.length > 0),
-    helpText: 'Save at least one trade you want to explore.',
-  },
-  {
-    label: 'Saved program',
-    complete: Boolean(savedPrograms && savedPrograms.length > 0),
-    helpText: 'Save at least one training pathway.',
-  },
-  {
-    label: 'Saved opportunity',
-    complete: Boolean(savedOpportunities && savedOpportunities.length > 0),
-    helpText: 'Save at least one real opportunity when available.',
-  },
-]
+    {
+      label: 'Profile name',
+      complete: Boolean(profile?.full_name),
+      helpText: 'Add your name so your profile feels complete.',
+    },
+    {
+      label: 'Location',
+      complete: Boolean(profile?.location),
+      helpText: 'Add your location to compare nearby pathways.',
+    },
+    {
+      label: 'Experience level',
+      complete: Boolean(profile?.experience_level),
+      helpText: 'Add your current experience level.',
+    },
+    {
+      label: 'Career quiz',
+      complete: Boolean(profile?.quiz_completed || quizResults.length > 0),
+      helpText: 'Take the quiz to get personalized trade matches.',
+    },
+    {
+      label: 'Saved trade',
+      complete: Boolean(savedTrades && savedTrades.length > 0),
+      helpText: 'Save at least one trade you want to explore.',
+    },
+    {
+      label: 'Saved program',
+      complete: Boolean(savedPrograms && savedPrograms.length > 0),
+      helpText: 'Save at least one training pathway.',
+    },
+    {
+      label: 'Saved opportunity',
+      complete: Boolean(savedOpportunities && savedOpportunities.length > 0),
+      helpText: 'Save at least one real opportunity when available.',
+    },
+  ]
 
-const completedReadinessItems = readinessItems.filter((item) => item.complete).length
+  const completedReadinessItems = readinessItems.filter((item) => item.complete)
+    .length
 
-const readinessScore = Math.round(
-  (completedReadinessItems / readinessItems.length) * 100
-)
+  const readinessScore = Math.round(
+    (completedReadinessItems / readinessItems.length) * 100
+  )
 
   return (
     <main className="page-shell">
@@ -168,7 +184,8 @@ const readinessScore = Math.round(
               </h1>
 
               <p className="lead-text-dark mt-4 max-w-2xl">
-                Continue exploring skilled trades, review your quiz results, and build your career path.
+                Continue exploring skilled trades, review your quiz results, and
+                build your career path.
               </p>
             </div>
 
@@ -201,42 +218,43 @@ const readinessScore = Math.round(
                 experienceLevel={profile?.experience_level || ''}
               />
             </div>
+
             <div className="mt-8 border-t border-slate-200 pt-8">
-  <div className="flex items-start justify-between gap-4">
-    <div>
-      <p className="eyebrow">Career readiness</p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="eyebrow">Career readiness</p>
 
-      <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
-        {readinessScore}% complete
-      </h3>
-    </div>
+                  <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+                    {readinessScore}% complete
+                  </h3>
+                </div>
 
-    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
-      {readinessScore}%
-    </div>
-  </div>
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
+                  {readinessScore}%
+                </div>
+              </div>
 
-  <p className="muted-text mt-4">
-    Build a stronger career profile by saving paths, completing the quiz, and
-    tracking real opportunities.
-  </p>
+              <p className="muted-text mt-4">
+                Build a stronger career profile by saving paths, completing the
+                quiz, and tracking real opportunities.
+              </p>
 
-  <div className="mt-6 space-y-3">
-    {readinessItems.map((item) => (
-      <ReadinessItem
-        key={item.label}
-        label={item.label}
-        helpText={item.helpText}
-        complete={item.complete}
-      />
-    ))}
-  </div>
+              <div className="mt-6 space-y-3">
+                {readinessItems.map((item) => (
+                  <ReadinessItem
+                    key={item.label}
+                    label={item.label}
+                    helpText={item.helpText}
+                    complete={item.complete}
+                  />
+                ))}
+              </div>
 
-  <Link href="/quiz" className="btn-outline mt-6 w-full">
-    Improve career profile
-    <ArrowRight className="h-4 w-4" />
-  </Link>
-</div>
+              <Link href="/quiz" className="btn-outline mt-6 w-full">
+                Improve career profile
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </aside>
 
           <div className="-mt-12 space-y-8">
@@ -275,7 +293,10 @@ const readinessScore = Math.round(
                                 <h3 className="text-2xl font-bold text-slate-950">
                                   {trade.name}
                                 </h3>
-                                <p className="text-slate-600">{trade.tagline}</p>
+
+                                <p className="text-slate-600">
+                                  {trade.tagline}
+                                </p>
                               </div>
                             </div>
 
@@ -285,7 +306,10 @@ const readinessScore = Math.round(
 
                             <div className="mt-5 flex flex-wrap gap-2">
                               {trade.key_skills.slice(0, 4).map((skill) => (
-                                <span key={skill} className="badge-slate bg-white">
+                                <span
+                                  key={skill}
+                                  className="badge-slate bg-white"
+                                >
                                   {skill}
                                 </span>
                               ))}
@@ -296,6 +320,7 @@ const readinessScore = Math.round(
                             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Match score
                             </p>
+
                             <p className="mt-1 text-3xl font-bold text-orange-600">
                               {result.score}%
                             </p>
@@ -303,6 +328,7 @@ const readinessScore = Math.round(
                             <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Median salary
                             </p>
+
                             <p className="mt-1 font-bold text-slate-950">
                               {formatSalary(trade.median_salary)}
                             </p>
@@ -347,49 +373,54 @@ const readinessScore = Math.round(
                     const trade = TRADE_MAP[savedTrade.trade_slug as TradeCategory]
 
                     if (!trade) return null
-return (
-  <div key={trade.slug} className="card bg-slate-50">
-    <Link href={`/trades/${trade.slug}`} className="group block">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-            {trade.name}
-          </h3>
 
-          <p className="mt-2 text-slate-600">{trade.tagline}</p>
-        </div>
+                    return (
+                      <div key={trade.slug} className="card bg-slate-50">
+                        <Link
+                          href={`/trades/${trade.slug}`}
+                          className="group block"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+                                {trade.name}
+                              </h3>
 
-        <ArrowCircle />
-      </div>
-    </Link>
+                              <p className="mt-2 text-slate-600">
+                                {trade.tagline}
+                              </p>
+                            </div>
 
-    <div className="mt-6 flex flex-wrap gap-2">
-      {trade.key_skills.slice(0, 3).map((skill) => (
-        <span key={skill} className="badge-slate bg-white">
-          {skill}
-        </span>
-      ))}
-    </div>
+                            <ArrowCircle />
+                          </div>
+                        </Link>
 
-    <div className="mt-6 flex flex-col gap-4 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Median salary
-        </p>
+                        <div className="mt-6 flex flex-wrap gap-2">
+                          {trade.key_skills.slice(0, 3).map((skill) => (
+                            <span key={skill} className="badge-slate bg-white">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
 
-        <p className="mt-1 font-bold text-slate-950">
-          {formatSalary(trade.median_salary)}
-        </p>
-      </div>
+                        <div className="mt-6 flex flex-col gap-4 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Median salary
+                            </p>
 
-      <div className="flex items-center gap-3">
-        <span className="badge-orange">Saved</span>
-        <RemoveSavedTradeButton tradeSlug={trade.slug} />
-      </div>
-    </div>
-  </div>
-)
-                    
+                            <p className="mt-1 font-bold text-slate-950">
+                              {formatSalary(trade.median_salary)}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span className="badge-orange">Saved</span>
+                            <RemoveSavedTradeButton tradeSlug={trade.slug} />
+                          </div>
+                        </div>
+                      </div>
+                    )
                   })}
                 </div>
               ) : (
@@ -419,66 +450,70 @@ return (
                       : savedProgram.programs
 
                     if (!program) return null
+
                     return (
-  <div
-    key={savedProgram.program_id}
-    className="card bg-slate-50"
-  >
-    <Link href={`/programs/${program.slug}`} className="group block">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <span className="badge-orange">
-            {formatProgramType(program.program_type)}
-          </span>
+                      <div
+                        key={savedProgram.program_id}
+                        className="card bg-slate-50"
+                      >
+                        <Link
+                          href={`/programs/${program.slug}`}
+                          className="group block"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <span className="badge-orange">
+                                {formatProgramType(program.program_type)}
+                              </span>
 
-          <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-            {program.name}
-          </h3>
+                              <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+                                {program.name}
+                              </h3>
 
-          <p className="mt-2 font-semibold text-slate-600">
-            {program.provider_name}
-          </p>
-        </div>
+                              <p className="mt-2 font-semibold text-slate-600">
+                                {program.provider_name}
+                              </p>
+                            </div>
 
-        <ArrowCircle />
-      </div>
-    </Link>
+                            <ArrowCircle />
+                          </div>
+                        </Link>
 
-    <p className="muted-text mt-5 line-clamp-3">
-      {program.description}
-    </p>
+                        <p className="muted-text mt-5 line-clamp-3">
+                          {program.description}
+                        </p>
 
-    <div className="mt-6 grid gap-3 sm:grid-cols-2">
-      <div className="mini-card-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Location
-        </p>
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Location
+                            </p>
 
-        <p className="mt-1 font-bold text-slate-950">
-          {program.location}, {program.state}
-        </p>
-      </div>
+                            <p className="mt-1 font-bold text-slate-950">
+                              {program.location}, {program.state}
+                            </p>
+                          </div>
 
-      <div className="mini-card-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Duration
-        </p>
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Duration
+                            </p>
 
-        <p className="mt-1 font-bold text-slate-950">
-          {program.duration || 'See provider'}
-        </p>
-      </div>
-    </div>
+                            <p className="mt-1 font-bold text-slate-950">
+                              {program.duration || 'See provider'}
+                            </p>
+                          </div>
+                        </div>
 
-    <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-      <span className="badge-orange">Saved</span>
+                        <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                          <span className="badge-orange">Saved</span>
 
-      <RemoveSavedProgramButton programId={savedProgram.program_id} />
-    </div>
-  </div>
-)
-
-
+                          <RemoveSavedProgramButton
+                            programId={savedProgram.program_id}
+                          />
+                        </div>
+                      </div>
+                    )
                   })}
                 </div>
               ) : (
@@ -495,7 +530,7 @@ return (
               <SectionHeader
                 eyebrow="Saved opportunities"
                 title="Your opportunity shortlist"
-                description="Keep track of jobs, apprenticeships, trainee roles, and other real opportunities you want to revisit."
+                description="Track jobs, apprenticeships, trainee roles, and other real opportunities from saved to applied."
                 href="/opportunities"
                 action="Explore opportunities"
               />
@@ -503,7 +538,9 @@ return (
               {savedOpportunities && savedOpportunities.length > 0 ? (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
                   {savedOpportunities.map((savedOpportunity) => {
-                    const opportunity = Array.isArray(savedOpportunity.opportunities)
+                    const opportunity = Array.isArray(
+                      savedOpportunity.opportunities
+                    )
                       ? savedOpportunity.opportunities[0]
                       : savedOpportunity.opportunities
 
@@ -513,66 +550,84 @@ return (
                       ? opportunity.employers[0]
                       : opportunity.employers
 
+                    const pipelineStatus =
+                      opportunityPipelineStatusById.get(
+                        savedOpportunity.opportunity_id
+                      ) ?? 'saved'
+
                     return (
-  <div
-    key={savedOpportunity.opportunity_id}
-    className="card bg-slate-50"
-  >
-    <Link href={`/opportunities/${opportunity.slug}`} className="group block">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <span className="badge-orange">
-            {formatOpportunityType(opportunity.opportunity_type)}
-          </span>
+                      <div
+                        key={savedOpportunity.opportunity_id}
+                        className="card bg-slate-50"
+                      >
+                        <Link
+                          href={`/opportunities/${opportunity.slug}`}
+                          className="group block"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <span className="badge-orange">
+                                {formatOpportunityType(
+                                  opportunity.opportunity_type
+                                )}
+                              </span>
 
-          <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-            {opportunity.title}
-          </h3>
+                              <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
+                                {opportunity.title}
+                              </h3>
 
-          <p className="mt-2 font-semibold text-slate-600">
-            {employer?.name || 'Employer listing'}
-          </p>
-        </div>
+                              <p className="mt-2 font-semibold text-slate-600">
+                                {employer?.name || 'Employer listing'}
+                              </p>
+                            </div>
 
-        <ArrowCircle />
-      </div>
-    </Link>
+                            <ArrowCircle />
+                          </div>
+                        </Link>
 
-    <p className="muted-text mt-5 line-clamp-3">
-      {opportunity.description}
-    </p>
+                        <p className="muted-text mt-5 line-clamp-3">
+                          {opportunity.description}
+                        </p>
 
-    <div className="mt-6 grid gap-3 sm:grid-cols-2">
-      <div className="mini-card-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Location
-        </p>
+                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Location
+                            </p>
 
-        <p className="mt-1 font-bold text-slate-950">
-          {opportunity.location}, {opportunity.state}
-        </p>
-      </div>
+                            <p className="mt-1 font-bold text-slate-950">
+                              {opportunity.location}, {opportunity.state}
+                            </p>
+                          </div>
 
-      <div className="mini-card-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Schedule
-        </p>
+                          <div className="mini-card-white">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Schedule
+                            </p>
 
-        <p className="mt-1 font-bold text-slate-950">
-          {opportunity.schedule || 'See listing'}
-        </p>
-      </div>
-    </div>
+                            <p className="mt-1 font-bold text-slate-950">
+                              {opportunity.schedule || 'See listing'}
+                            </p>
+                          </div>
+                        </div>
 
-    <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-      <span className="badge-orange">Saved</span>
+                        <div className="mt-6 border-t border-slate-200 pt-5">
+                          <OpportunityPipelineStatusSelect
+                            userId={user.id}
+                            opportunityId={savedOpportunity.opportunity_id}
+                            initialStatus={pipelineStatus}
+                          />
 
-      <RemoveSavedOpportunityButton
-        opportunityId={savedOpportunity.opportunity_id}
-      />
-    </div>
-  </div>
-)
+                          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <span className="badge-orange">Saved</span>
+
+                            <RemoveSavedOpportunityButton
+                              opportunityId={savedOpportunity.opportunity_id}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )
                   })}
                 </div>
               ) : (
@@ -649,7 +704,7 @@ function EmptyState({
             <p className="muted-text mt-2 max-w-2xl">{description}</p>
 
             <p className="mt-4 text-sm leading-6 text-slate-500">
-              Forge only shows real saved items here. As you explore the
+              This dashboard only shows real saved items here. As you explore the
               platform, save the trades, programs, and opportunities you want to
               compare later.
             </p>
@@ -658,7 +713,9 @@ function EmptyState({
 
         <Link
           href={href}
-          className={variant === 'orange' ? 'btn-primary shrink-0' : 'btn-dark shrink-0'}
+          className={
+            variant === 'orange' ? 'btn-primary shrink-0' : 'btn-dark shrink-0'
+          }
         >
           {action}
           <ArrowRight className="h-4 w-4" />
