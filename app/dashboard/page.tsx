@@ -10,8 +10,9 @@ import ProfileForm from '@/components/dashboard/ProfileForm'
 import RemoveSavedTradeButton from '@/components/dashboard/RemoveSavedTradeButton'
 import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
 import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
-import OpportunityPipelineStatusSelect from '@/components/dashboard/OpportunityPipelineStatusSelect'
-import OpportunityPipelineSummary from '@/components/dashboard/OpportunityPipelineSummary'
+import OpportunityPipelineBoard, {
+  type OpportunityPipelineItem,
+} from '@/components/dashboard/OpportunityPipelineBoard'
 
 type QuizResultItem = {
   trade: TradeCategory
@@ -128,13 +129,37 @@ export default async function DashboardPage() {
     item.notes ?? '',
   ]) ?? []
 )
-const savedOpportunityPipelineStatuses =
-  savedOpportunities?.map((savedOpportunity) => {
-    return (
-      opportunityPipelineStatusById.get(savedOpportunity.opportunity_id) ??
-      'saved'
-    )
-  }) ?? []
+const savedOpportunityPipelineItems: OpportunityPipelineItem[] =
+  savedOpportunities
+    ?.map((savedOpportunity) => {
+      const opportunity = Array.isArray(savedOpportunity.opportunities)
+        ? savedOpportunity.opportunities[0]
+        : savedOpportunity.opportunities
+
+      if (!opportunity) return null
+
+      const employer = Array.isArray(opportunity.employers)
+        ? opportunity.employers[0]
+        : opportunity.employers
+
+      const opportunityId = savedOpportunity.opportunity_id
+
+      return {
+        opportunityId,
+        slug: opportunity.slug,
+        title: opportunity.title,
+        opportunityType: opportunity.opportunity_type,
+        tradeSlug: opportunity.trade_slug,
+        location: opportunity.location,
+        state: opportunity.state,
+        schedule: opportunity.schedule,
+        description: opportunity.description,
+        employerName: employer?.name || 'Employer listing',
+        status: opportunityPipelineStatusById.get(opportunityId) ?? 'saved',
+        notes: opportunityPipelineNotesById.get(opportunityId) ?? '',
+      }
+    })
+    .filter((item): item is OpportunityPipelineItem => Boolean(item)) ?? []
   const quizResults = (latestQuizResult?.results ?? []) as unknown as QuizResultItem[]
 
   const readinessItems = [
@@ -538,125 +563,31 @@ const savedOpportunityPipelineStatuses =
                 />
               )}
             </section>
+<section className="content-panel">
+  <SectionHeader
+    eyebrow="Saved opportunities"
+    title="Your opportunity shortlist"
+    description="Track jobs, apprenticeships, trainee roles, and other real opportunities from saved to applied."
+    href="/opportunities"
+    action="Explore opportunities"
+  />
 
-            <section className="content-panel">
-              <SectionHeader
-                eyebrow="Saved opportunities"
-                title="Your opportunity shortlist"
-                description="Track jobs, apprenticeships, trainee roles, and other real opportunities from saved to applied."
-                href="/opportunities"
-                action="Explore opportunities"
-              />
-              {savedOpportunities && savedOpportunities.length > 0 && (
-              <OpportunityPipelineSummary statuses={savedOpportunityPipelineStatuses} />
-)}
-              {savedOpportunities && savedOpportunities.length > 0 ? (
-                <div className="mt-8 grid gap-5 md:grid-cols-2">
-                  {savedOpportunities.map((savedOpportunity) => {
-                    const opportunity = Array.isArray(
-                      savedOpportunity.opportunities
-                    )
-                      ? savedOpportunity.opportunities[0]
-                      : savedOpportunity.opportunities
+  {savedOpportunityPipelineItems.length > 0 ? (
+    <OpportunityPipelineBoard
+      userId={user.id}
+      items={savedOpportunityPipelineItems}
+    />
+  ) : (
+    <EmptyState
+      title="No saved opportunities yet"
+      description="Save real opportunities while browsing listings so you can return to them later."
+      href="/opportunities"
+      action="Explore opportunities"
+    />
+  )}
+</section>
+            
 
-                    if (!opportunity) return null
-
-                    const employer = Array.isArray(opportunity.employers)
-                      ? opportunity.employers[0]
-                      : opportunity.employers
-
-                    const pipelineStatus =
-                      opportunityPipelineStatusById.get(
-                        savedOpportunity.opportunity_id
-                      ) ?? 'saved'
-                      const pipelineNotes =
-                     opportunityPipelineNotesById.get(savedOpportunity.opportunity_id) ?? ''
-
-                    return (
-                      <div
-                        key={savedOpportunity.opportunity_id}
-                        className="card bg-slate-50"
-                      >
-                        <Link
-                          href={`/opportunities/${opportunity.slug}`}
-                          className="group block"
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <span className="badge-orange">
-                                {formatOpportunityType(
-                                  opportunity.opportunity_type
-                                )}
-                              </span>
-
-                              <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-                                {opportunity.title}
-                              </h3>
-
-                              <p className="mt-2 font-semibold text-slate-600">
-                                {employer?.name || 'Employer listing'}
-                              </p>
-                            </div>
-
-                            <ArrowCircle />
-                          </div>
-                        </Link>
-
-                        <p className="muted-text mt-5 line-clamp-3">
-                          {opportunity.description}
-                        </p>
-
-                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Location
-                            </p>
-
-                            <p className="mt-1 font-bold text-slate-950">
-                              {opportunity.location}, {opportunity.state}
-                            </p>
-                          </div>
-
-                          <div className="mini-card-white">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                              Schedule
-                            </p>
-
-                            <p className="mt-1 font-bold text-slate-950">
-                              {opportunity.schedule || 'See listing'}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="mt-6 border-t border-slate-200 pt-5">
-                       <OpportunityPipelineStatusSelect
-                        userId={user.id}
-                        opportunityId={savedOpportunity.opportunity_id}
-                        initialStatus={pipelineStatus}
-                        initialNotes={pipelineNotes}
-                        />  
-
-                          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                            <span className="badge-orange">Saved</span>
-
-                            <RemoveSavedOpportunityButton
-                              opportunityId={savedOpportunity.opportunity_id}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <EmptyState
-                  title="No saved opportunities yet"
-                  description="Save real opportunities while browsing listings so you can return to them later."
-                  href="/opportunities"
-                  action="Explore opportunities"
-                />
-              )}
-            </section>
           </div>
         </div>
       </section>
