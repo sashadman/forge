@@ -113,7 +113,7 @@ export default async function DashboardPage() {
 
   const { data: opportunityPipelineItems } = await supabase
     .from('opportunity_pipeline')
-    .select('opportunity_id, status')
+    .select('opportunity_id, status, notes')
     .eq('user_id', user.id)
 
   const opportunityPipelineStatusById = new Map(
@@ -122,6 +122,12 @@ export default async function DashboardPage() {
       item.status as OpportunityPipelineStatus,
     ]) ?? []
   )
+  const opportunityPipelineNotesById = new Map(
+  opportunityPipelineItems?.map((item) => [
+    item.opportunity_id,
+    item.notes ?? '',
+  ]) ?? []
+)
 const savedOpportunityPipelineStatuses =
   savedOpportunities?.map((savedOpportunity) => {
     return (
@@ -563,6 +569,8 @@ const savedOpportunityPipelineStatuses =
                       opportunityPipelineStatusById.get(
                         savedOpportunity.opportunity_id
                       ) ?? 'saved'
+                      const pipelineNotes =
+                     opportunityPipelineNotesById.get(savedOpportunity.opportunity_id) ?? ''
 
                     return (
                       <div
@@ -621,11 +629,12 @@ const savedOpportunityPipelineStatuses =
                         </div>
 
                         <div className="mt-6 border-t border-slate-200 pt-5">
-                          <OpportunityPipelineStatusSelect
-                            userId={user.id}
-                            opportunityId={savedOpportunity.opportunity_id}
-                            initialStatus={pipelineStatus}
-                          />
+                       <OpportunityPipelineStatusSelect
+                        userId={user.id}
+                        opportunityId={savedOpportunity.opportunity_id}
+                        initialStatus={pipelineStatus}
+                        initialNotes={pipelineNotes}
+                        />  
 
                           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <span className="badge-orange">Saved</span>

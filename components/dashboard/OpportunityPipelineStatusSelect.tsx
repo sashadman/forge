@@ -8,6 +8,7 @@ type OpportunityPipelineStatusSelectProps = {
   userId: string
   opportunityId: string
   initialStatus: OpportunityPipelineStatus
+  initialNotes?: string
 }
 
 const STATUS_OPTIONS: {
@@ -56,19 +57,20 @@ export default function OpportunityPipelineStatusSelect({
   userId,
   opportunityId,
   initialStatus,
+  initialNotes = '',
 }: OpportunityPipelineStatusSelectProps) {
   const supabase = useMemo(() => createClient(), [])
 
   const [status, setStatus] =
     useState<OpportunityPipelineStatus>(initialStatus)
+  const [notes, setNotes] = useState(initialNotes)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   const selectedStatus = STATUS_OPTIONS.find((option) => option.value === status)
 
-  async function updateStatus(nextStatus: OpportunityPipelineStatus) {
-    setStatus(nextStatus)
+  async function savePipelineUpdate(nextStatus: OpportunityPipelineStatus, nextNotes: string) {
     setSaving(true)
     setMessage('')
     setError('')
@@ -78,6 +80,7 @@ export default function OpportunityPipelineStatusSelect({
         user_id: userId,
         opportunity_id: opportunityId,
         status: nextStatus,
+        notes: nextNotes.trim() || null,
         last_action_at: new Date().toISOString(),
       },
       {
@@ -86,15 +89,23 @@ export default function OpportunityPipelineStatusSelect({
     )
 
     if (error) {
-      console.error('Failed to update opportunity pipeline status:', error)
-      setStatus(status)
-      setError('Could not update status. Please try again.')
+      console.error('Failed to update opportunity pipeline:', error)
+      setError('Could not update pipeline. Please try again.')
       setSaving(false)
       return
     }
 
-    setMessage('Status updated.')
+    setMessage('Pipeline updated.')
     setSaving(false)
+  }
+
+  async function updateStatus(nextStatus: OpportunityPipelineStatus) {
+    setStatus(nextStatus)
+    await savePipelineUpdate(nextStatus, notes)
+  }
+
+  async function saveNotes() {
+    await savePipelineUpdate(status, notes)
   }
 
   return (
@@ -130,9 +141,38 @@ export default function OpportunityPipelineStatusSelect({
         </select>
       </div>
 
+      <div className="mt-4 border-t border-slate-200 pt-4">
+        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Private notes
+        </label>
+
+        <textarea
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          rows={3}
+          className="input-field mt-2"
+          placeholder="Add follow-up notes, application details, contacts, or next steps..."
+        />
+
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs leading-5 text-slate-500">
+            Notes are private to your account and help you track next steps.
+          </p>
+
+          <button
+            type="button"
+            onClick={saveNotes}
+            disabled={saving}
+            className="btn-outline px-4 py-2 text-sm"
+          >
+            {saving ? 'Saving...' : 'Save notes'}
+          </button>
+        </div>
+      </div>
+
       {saving && (
         <p className="mt-3 text-sm font-semibold text-slate-500">
-          Saving status...
+          Saving pipeline...
         </p>
       )}
 
