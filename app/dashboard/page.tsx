@@ -11,6 +11,7 @@ import RemoveSavedTradeButton from '@/components/dashboard/RemoveSavedTradeButto
 import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
 import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
 import OpportunityPipelineStatusSelect from '@/components/dashboard/OpportunityPipelineStatusSelect'
+import OpportunityPipelineSummary from '@/components/dashboard/OpportunityPipelineSummary'
 
 type QuizResultItem = {
   trade: TradeCategory
@@ -121,7 +122,13 @@ export default async function DashboardPage() {
       item.status as OpportunityPipelineStatus,
     ]) ?? []
   )
-
+const savedOpportunityPipelineStatuses =
+  savedOpportunities?.map((savedOpportunity) => {
+    return (
+      opportunityPipelineStatusById.get(savedOpportunity.opportunity_id) ??
+      'saved'
+    )
+  }) ?? []
   const quizResults = (latestQuizResult?.results ?? []) as unknown as QuizResultItem[]
 
   const readinessItems = [
@@ -534,7 +541,9 @@ export default async function DashboardPage() {
                 href="/opportunities"
                 action="Explore opportunities"
               />
-
+              {savedOpportunities && savedOpportunities.length > 0 && (
+              <OpportunityPipelineSummary statuses={savedOpportunityPipelineStatuses} />
+)}
               {savedOpportunities && savedOpportunities.length > 0 ? (
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
                   {savedOpportunities.map((savedOpportunity) => {
