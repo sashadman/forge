@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ExternalLink, GraduationCap, ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import type { ProgramType } from '@/lib/supabase/types'
+import type { ProgramType } from '@/lib/supabase/app-types'
 
 const PROGRAM_TYPES: { value: ProgramType; label: string }[] = [
   { value: 'apprenticeship', label: 'Apprenticeship' },

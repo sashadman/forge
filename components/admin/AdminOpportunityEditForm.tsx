@@ -13,7 +13,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import type { OpportunityType } from '@/lib/supabase/types'
+import type { OpportunityType } from '@/lib/supabase/app-types'
 
 type EmployerRelation = {
   name: string

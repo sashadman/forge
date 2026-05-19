@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, ExternalLink, GraduationCap, Save, ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import type { ProgramType } from '@/lib/supabase/types'
+import type { ProgramType } from '@/lib/supabase/app-types'
 
 type Program = {
   id: string
