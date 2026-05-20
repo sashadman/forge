@@ -5,11 +5,14 @@ import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import { TRADE_MAP, formatSalary } from '@/utils/trades'
 import type { TradeCategory } from '@/types'
-import type { OpportunityPipelineStatus } from '@/lib/supabase/app-types'
 import ProfileForm from '@/components/dashboard/ProfileForm'
 import RemoveSavedTradeButton from '@/components/dashboard/RemoveSavedTradeButton'
 import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
 import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
+import type {
+  OpportunityPipelineStatus,
+  ProgramPipelineStatus,
+} from '@/lib/supabase/app-types'
 import OpportunityPipelineBoard, {
   type OpportunityPipelineItem,
 } from '@/components/dashboard/OpportunityPipelineBoard'

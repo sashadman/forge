@@ -252,6 +252,60 @@ export type Database = {
         }
         Relationships: []
       }
+      program_pipeline: {
+        Row: {
+          created_at: string
+          follow_up_on: string | null
+          id: string
+          last_action_at: string | null
+          next_action: string | null
+          notes: string | null
+          program_id: string
+          status: Database["public"]["Enums"]["program_pipeline_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          last_action_at?: string | null
+          next_action?: string | null
+          notes?: string | null
+          program_id: string
+          status?: Database["public"]["Enums"]["program_pipeline_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          last_action_at?: string | null
+          next_action?: string | null
+          notes?: string | null
+          program_id?: string
+          status?: Database["public"]["Enums"]["program_pipeline_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_pipeline_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_pipeline_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       programs: {
         Row: {
           cost: string | null
@@ -470,6 +524,14 @@ export type Database = {
         | "trainee"
         | "internship"
         | "pre_apprenticeship"
+      program_pipeline_status:
+        | "saved"
+        | "researching"
+        | "contacted"
+        | "applying"
+        | "enrolled"
+        | "completed"
+        | "closed"
       program_type:
         | "apprenticeship"
         | "trade_school"
@@ -619,6 +681,15 @@ export const Constants = {
         "trainee",
         "internship",
         "pre_apprenticeship",
+      ],
+      program_pipeline_status: [
+        "saved",
+        "researching",
+        "contacted",
+        "applying",
+        "enrolled",
+        "completed",
+        "closed",
       ],
       program_type: [
         "apprenticeship",
