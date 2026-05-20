@@ -1,17 +1,19 @@
 import 'server-only'
-import type {
-  ReadinessItemRow,
-  ReadinessScoreRow,
-} from '@/app/actions/readiness'
+
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type {
   OpportunityPipelineStatus,
   ProgramPipelineStatus,
 } from '@/lib/supabase/app-types'
+import type {
+  ReadinessItemRow,
+  ReadinessScoreRow,
+} from '@/app/actions/readiness'
 import type { QuizResultItem } from '@/components/dashboard/DashboardQuizResults'
 import type { OpportunityPipelineItem } from '@/components/dashboard/OpportunityPipelineBoard'
 import type { ProgramPipelineItem } from '@/components/dashboard/ProgramPipelineBoard'
+import type { SubmittedApplicationItem } from '@/components/dashboard/SubmittedApplicationsSection'
 
 type ReadinessItemData = {
   label: string
@@ -89,6 +91,20 @@ type ProgramPipelineRow = {
   follow_up_on: string | null
 }
 
+type ApplicationOpportunityRelation = {
+  title: string
+  slug: string
+  employers: EmployerRelation | EmployerRelation[] | null
+}
+
+type ApplicationRelation = {
+  id: string
+  status: SubmittedApplicationItem['status']
+  submitted_at: string
+  readiness_score_at_apply: number
+  opportunities: ApplicationOpportunityRelation | ApplicationOpportunityRelation[] | null
+}
+
 export type DashboardPageData = {
   user: {
     id: string
@@ -99,6 +115,7 @@ export type DashboardPageData = {
   savedTrades: SavedTrade[]
   savedProgramPipelineItems: ProgramPipelineItem[]
   savedOpportunityPipelineItems: OpportunityPipelineItem[]
+  submittedApplications: SubmittedApplicationItem[]
   readinessItems: ReadinessItemData[]
   readinessScore: number
   readinessItemsForWidget: ReadinessItemRow[]
@@ -213,18 +230,44 @@ function normalizeSavedProgramPipelineItems({
     .filter((item): item is ProgramPipelineItem => Boolean(item))
 }
 
+function normalizeSubmittedApplications(
+  applications: ApplicationRelation[]
+): SubmittedApplicationItem[] {
+  return applications
+    .map((application) => {
+      const opportunity = getSingleRelation(application.opportunities)
+
+      if (!opportunity) return null
+
+      const employer = getSingleRelation(opportunity.employers)
+
+      return {
+        id: application.id,
+        status: application.status,
+        submittedAt: application.submitted_at,
+        readinessScoreAtApply: application.readiness_score_at_apply,
+        opportunityTitle: opportunity.title,
+        opportunitySlug: opportunity.slug,
+        employerName: employer?.name || 'Employer listing',
+      }
+    })
+    .filter((item): item is SubmittedApplicationItem => Boolean(item))
+}
+
 function buildReadinessItems({
   profile,
   quizResults,
   savedTrades,
   savedProgramPipelineItems,
   savedOpportunityPipelineItems,
+  submittedApplications,
 }: {
   profile: DashboardProfile | null
   quizResults: QuizResultItem[]
   savedTrades: SavedTrade[]
   savedProgramPipelineItems: ProgramPipelineItem[]
   savedOpportunityPipelineItems: OpportunityPipelineItem[]
+  submittedApplications: SubmittedApplicationItem[]
 }) {
   return [
     {
@@ -262,6 +305,11 @@ function buildReadinessItems({
       complete: savedOpportunityPipelineItems.length > 0,
       helpText: 'Save at least one real opportunity when available.',
     },
+    {
+      label: 'Submitted application',
+      complete: submittedApplications.length > 0,
+      helpText: 'Submit at least one official application.',
+    },
   ]
 }
 
@@ -294,6 +342,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     opportunityPipelineResult,
     readinessItemsResult,
     readinessScoreResult,
+    applicationsResult,
   ] = await Promise.all([
     supabase
       .from('profiles')
@@ -371,7 +420,8 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
       .from('opportunity_pipeline')
       .select('opportunity_id, status, notes, next_action, follow_up_on')
       .eq('user_id', user.id),
-          supabase
+
+    supabase
       .from('seeker_readiness_items')
       .select('*')
       .eq('user_id', user.id)
@@ -382,6 +432,26 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
       .select('*')
       .eq('user_id', user.id)
       .maybeSingle(),
+
+    supabase
+      .from('applications')
+      .select(
+        `
+        id,
+        status,
+        submitted_at,
+        readiness_score_at_apply,
+        opportunities (
+          title,
+          slug,
+          employers (
+            name
+          )
+        )
+      `
+      )
+      .eq('user_id', user.id)
+      .order('submitted_at', { ascending: false }),
   ])
 
   if (profileResult.error) {
@@ -417,7 +487,8 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
       opportunityPipelineResult.error
     )
   }
-    if (readinessItemsResult.error) {
+
+  if (readinessItemsResult.error) {
     console.error(
       'Failed to load readiness items:',
       readinessItemsResult.error
@@ -428,6 +499,13 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     console.error(
       'Failed to load readiness score:',
       readinessScoreResult.error
+    )
+  }
+
+  if (applicationsResult.error) {
+    console.error(
+      'Failed to load submitted applications:',
+      applicationsResult.error
     )
   }
 
@@ -449,6 +527,16 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
   const opportunityPipelineRows = (opportunityPipelineResult.data ??
     []) as OpportunityPipelineRow[]
 
+  const readinessItemsForWidget = (readinessItemsResult.data ??
+    []) as ReadinessItemRow[]
+
+  const readinessScoreForWidget = (readinessScoreResult.data ??
+    null) as ReadinessScoreRow | null
+
+  const submittedApplications = normalizeSubmittedApplications(
+    (applicationsResult.data ?? []) as ApplicationRelation[]
+  )
+
   const savedProgramPipelineItems = normalizeSavedProgramPipelineItems({
     savedPrograms,
     pipelineRows: programPipelineRows,
@@ -465,12 +553,8 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedTrades,
     savedProgramPipelineItems,
     savedOpportunityPipelineItems,
+    submittedApplications,
   })
-    const readinessItemsForWidget = (readinessItemsResult.data ??
-    []) as ReadinessItemRow[]
-
-  const readinessScoreForWidget = (readinessScoreResult.data ??
-    null) as ReadinessScoreRow | null
 
   const readinessScore = calculateReadinessScore(readinessItems)
 
@@ -484,6 +568,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedTrades,
     savedProgramPipelineItems,
     savedOpportunityPipelineItems,
+    submittedApplications,
     readinessItems,
     readinessScore,
     readinessItemsForWidget,

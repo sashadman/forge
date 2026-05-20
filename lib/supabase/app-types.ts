@@ -11,3 +11,4 @@ export type ProgramPipelineStatus = Enums<'program_pipeline_status'>
 export type ReadinessItemType = Enums<'readiness_item_type'>
 
 export type ReadinessItemStatus = Enums<'readiness_item_status'>
+export type ApplicationStatus = Enums<'application_status'>

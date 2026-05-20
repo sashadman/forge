@@ -14,6 +14,203 @@ export type Database = {
   }
   public: {
     Tables: {
+      application_events: {
+        Row: {
+          actor_id: string | null
+          application_id: string
+          created_at: string
+          id: string
+          new_status: Database["public"]["Enums"]["application_status"] | null
+          note: string | null
+          old_status: Database["public"]["Enums"]["application_status"] | null
+        }
+        Insert: {
+          actor_id?: string | null
+          application_id: string
+          created_at?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["application_status"] | null
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["application_status"] | null
+        }
+        Update: {
+          actor_id?: string | null
+          application_id?: string
+          created_at?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["application_status"] | null
+          note?: string | null
+          old_status?: Database["public"]["Enums"]["application_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "application_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "application_events_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      application_readiness_snapshots: {
+        Row: {
+          application_id: string
+          captured_at: string
+          file_mime_type: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size_kb: number | null
+          id: string
+          label: string
+          notes: string | null
+          status: Database["public"]["Enums"]["readiness_item_status"]
+          text_content: string | null
+          type: Database["public"]["Enums"]["readiness_item_type"]
+        }
+        Insert: {
+          application_id: string
+          captured_at?: string
+          file_mime_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size_kb?: number | null
+          id?: string
+          label: string
+          notes?: string | null
+          status: Database["public"]["Enums"]["readiness_item_status"]
+          text_content?: string | null
+          type: Database["public"]["Enums"]["readiness_item_type"]
+        }
+        Update: {
+          application_id?: string
+          captured_at?: string
+          file_mime_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size_kb?: number | null
+          id?: string
+          label?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["readiness_item_status"]
+          text_content?: string | null
+          type?: Database["public"]["Enums"]["readiness_item_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_readiness_snapshots_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      applications: {
+        Row: {
+          contacted_at: string | null
+          created_at: string
+          employer_id: string
+          employer_notes: string | null
+          experience_summary: string | null
+          id: string
+          intro_message: string | null
+          opportunity_id: string
+          readiness_required_completed_at_apply: number
+          readiness_required_total_at_apply: number
+          readiness_score_at_apply: number
+          reviewed_at: string | null
+          seeker_notes: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          submitted_at: string
+          updated_at: string
+          user_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          contacted_at?: string | null
+          created_at?: string
+          employer_id: string
+          employer_notes?: string | null
+          experience_summary?: string | null
+          id?: string
+          intro_message?: string | null
+          opportunity_id: string
+          readiness_required_completed_at_apply?: number
+          readiness_required_total_at_apply?: number
+          readiness_score_at_apply?: number
+          reviewed_at?: string | null
+          seeker_notes?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          contacted_at?: string | null
+          created_at?: string
+          employer_id?: string
+          employer_notes?: string | null
+          experience_summary?: string | null
+          id?: string
+          intro_message?: string | null
+          opportunity_id?: string
+          readiness_required_completed_at_apply?: number
+          readiness_required_total_at_apply?: number
+          readiness_score_at_apply?: number
+          reviewed_at?: string | null
+          seeker_notes?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_employer_id_fkey"
+            columns: ["employer_id"]
+            isOneToOne: false
+            referencedRelation: "employers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       employers: {
         Row: {
           contact_email: string | null
@@ -655,6 +852,14 @@ export type Database = {
       }
     }
     Enums: {
+      application_status:
+        | "submitted"
+        | "reviewed"
+        | "contacted"
+        | "interviewing"
+        | "offered"
+        | "rejected"
+        | "withdrawn"
       opportunity_pipeline_status:
         | "saved"
         | "interested"
@@ -828,6 +1033,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      application_status: [
+        "submitted",
+        "reviewed",
+        "contacted",
+        "interviewing",
+        "offered",
+        "rejected",
+        "withdrawn",
+      ],
       opportunity_pipeline_status: [
         "saved",
         "interested",

@@ -1,4 +1,5 @@
 import SaveOpportunityButton from '@/components/opportunities/SaveOpportunityButton'
+import OpportunityApplicationPanel from '@/components/opportunities/OpportunityApplicationPanel'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
@@ -8,7 +9,6 @@ import {
   ArrowRight,
   BriefcaseBusiness,
   CheckCircle2,
-  ExternalLink,
   MapPin,
   ShieldCheck,
 } from 'lucide-react'
@@ -69,11 +69,16 @@ export async function generateMetadata({
 export default async function OpportunityDetailPage({ params }: PageProps) {
   const supabase = createClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   const { data: opportunity } = await supabase
     .from('opportunities')
     .select(
       `
       id,
+      employer_id,
       title,
       slug,
       opportunity_type,
@@ -107,6 +112,38 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
   const employer = Array.isArray(opportunity.employers)
     ? opportunity.employers[0]
     : opportunity.employers
+
+  const [
+    existingApplicationResult,
+    readinessScoreResult,
+    introMessageResult,
+  ] = user
+    ? await Promise.all([
+        supabase
+          .from('applications')
+          .select('id, status, submitted_at, withdrawn_at')
+          .eq('user_id', user.id)
+          .eq('opportunity_id', opportunity.id)
+          .maybeSingle(),
+
+        supabase
+          .from('seeker_readiness_scores')
+          .select('score_pct')
+          .eq('user_id', user.id)
+          .maybeSingle(),
+
+        supabase
+          .from('seeker_readiness_items')
+          .select('text_content')
+          .eq('user_id', user.id)
+          .eq('type', 'cover_letter_template')
+          .maybeSingle(),
+      ])
+    : [null, null, null]
+
+  const existingApplication = existingApplicationResult?.data ?? null
+  const readinessScore = readinessScoreResult?.data?.score_pct ?? 0
+  const introMessageTemplate = introMessageResult?.data?.text_content ?? ''
 
   return (
     <main className="page-shell">
@@ -295,24 +332,21 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                 <SaveOpportunityButton opportunityId={opportunity.id} />
               </div>
 
-              {opportunity.application_url && (
-                <a
-                  href={opportunity.application_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-primary mt-8 w-full px-6 py-4"
-                >
-                  Apply or learn more
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              )}
-
               <p className="mt-5 text-xs leading-6 text-slate-500">
                 This is a public opportunity listing. Always confirm pay,
                 schedule, requirements, and application details directly with the
                 employer or listing provider.
               </p>
             </div>
+
+            <OpportunityApplicationPanel
+              opportunityId={opportunity.id}
+              applicationUrl={opportunity.application_url}
+              userIsSignedIn={Boolean(user)}
+              readinessScore={readinessScore}
+              introMessageTemplate={introMessageTemplate}
+              existingApplication={existingApplication}
+            />
 
             <div className="dark-panel p-6">
               <div className="dark-panel-content">

@@ -35,7 +35,7 @@ export const READINESS_CONFIG: Record<ReadinessItemType, ReadinessItemConfig> = 
     inputMethod: 'file_upload',
     isRequired: true,
     isSensitive: false,
-    allowedFormats: ['pdf', 'doc', 'docx'],
+    allowedFormats: ['pdf', 'doc', 'docx', 'txt'],
     maxSizeMb: 10,
     expires: false,
     employerLabel: 'Resume',
