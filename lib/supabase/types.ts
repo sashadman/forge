@@ -165,8 +165,10 @@ export type Database = {
       opportunity_pipeline: {
         Row: {
           created_at: string
+          follow_up_on: string | null
           id: string
           last_action_at: string | null
+          next_action: string | null
           notes: string | null
           opportunity_id: string
           status: Database["public"]["Enums"]["opportunity_pipeline_status"]
@@ -175,8 +177,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          follow_up_on?: string | null
           id?: string
           last_action_at?: string | null
+          next_action?: string | null
           notes?: string | null
           opportunity_id: string
           status?: Database["public"]["Enums"]["opportunity_pipeline_status"]
@@ -185,8 +189,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          follow_up_on?: string | null
           id?: string
           last_action_at?: string | null
+          next_action?: string | null
           notes?: string | null
           opportunity_id?: string
           status?: Database["public"]["Enums"]["opportunity_pipeline_status"]

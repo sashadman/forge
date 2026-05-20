@@ -1,5 +1,11 @@
 import Link from 'next/link'
-import { ArrowRight, BriefcaseBusiness, CheckCircle2 } from 'lucide-react'
+import {
+  AlertCircle,
+  ArrowRight,
+  BriefcaseBusiness,
+  CalendarDays,
+  CheckCircle2,
+} from 'lucide-react'
 import type { OpportunityPipelineStatus } from '@/lib/supabase/app-types'
 import OpportunityPipelineStatusSelect from '@/components/dashboard/OpportunityPipelineStatusSelect'
 import RemoveSavedOpportunityButton from '@/components/dashboard/RemoveSavedOpportunityButton'
@@ -17,6 +23,8 @@ export type OpportunityPipelineItem = {
   employerName: string
   status: OpportunityPipelineStatus
   notes: string
+  nextAction: string
+  followUpOn: string
 }
 
 type OpportunityPipelineBoardProps = {
@@ -49,23 +57,108 @@ function formatOpportunityType(type: string) {
     .join(' ')
 }
 
+function getFollowUpPriority(item: OpportunityPipelineItem) {
+  if (!item.followUpOn) return Number.MAX_SAFE_INTEGER
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const followUpDate = new Date(`${item.followUpOn}T00:00:00`)
+  followUpDate.setHours(0, 0, 0, 0)
+
+  return followUpDate.getTime() - today.getTime()
+}
+
+function sortByFollowUpPriority(items: OpportunityPipelineItem[]) {
+  return [...items].sort((a, b) => {
+    const priorityA = getFollowUpPriority(a)
+    const priorityB = getFollowUpPriority(b)
+
+    if (priorityA !== priorityB) return priorityA - priorityB
+
+    return a.title.localeCompare(b.title)
+  })
+}
+
+function getFollowUpLabel(followUpOn: string) {
+  if (!followUpOn) {
+    return {
+      label: 'No follow-up date',
+      tone: 'neutral' as const,
+    }
+  }
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const followUpDate = new Date(`${followUpOn}T00:00:00`)
+  followUpDate.setHours(0, 0, 0, 0)
+
+  const differenceInDays = Math.round(
+    (followUpDate.getTime() - today.getTime()) / 86_400_000
+  )
+
+  if (differenceInDays < 0) {
+    return {
+      label: `Overdue by ${Math.abs(differenceInDays)} day${
+        Math.abs(differenceInDays) === 1 ? '' : 's'
+      }`,
+      tone: 'danger' as const,
+    }
+  }
+
+  if (differenceInDays === 0) {
+    return {
+      label: 'Due today',
+      tone: 'warning' as const,
+    }
+  }
+
+  if (differenceInDays <= 3) {
+    return {
+      label: `Due in ${differenceInDays} day${
+        differenceInDays === 1 ? '' : 's'
+      }`,
+      tone: 'warning' as const,
+    }
+  }
+
+  return {
+    label: `Follow up on ${followUpOn}`,
+    tone: 'neutral' as const,
+  }
+}
+
 export default function OpportunityPipelineBoard({
   userId,
   items,
 }: OpportunityPipelineBoardProps) {
-  const savedForLater = items.filter((item) => item.status === 'saved')
-
-  const activePipeline = items.filter((item) =>
-    ACTIVE_STATUSES.includes(item.status)
+  const savedForLater = sortByFollowUpPriority(
+    items.filter((item) => item.status === 'saved')
   )
 
-  const closedPipeline = items.filter((item) => item.status === 'closed')
+  const activePipeline = sortByFollowUpPriority(
+    items.filter((item) => ACTIVE_STATUSES.includes(item.status))
+  )
+
+  const closedPipeline = sortByFollowUpPriority(
+    items.filter((item) => item.status === 'closed')
+  )
 
   const appliedCount = items.filter((item) => item.status === 'applied').length
   const interviewingCount = items.filter(
     (item) => item.status === 'interviewing'
   ).length
   const offerCount = items.filter((item) => item.status === 'offer').length
+
+  const overdueCount = items.filter(
+    (item) => item.followUpOn && getFollowUpPriority(item) < 0
+  ).length
+
+  const dueSoonCount = items.filter((item) => {
+    const priority = getFollowUpPriority(item)
+    return priority >= 0 && priority <= 86_400_000 * 3
+  }).length
 
   return (
     <div className="mt-8 space-y-8">
@@ -80,9 +173,9 @@ export default function OpportunityPipelineBoard({
             </h3>
 
             <p className="muted-text mt-3 max-w-2xl">
-              Organize saved opportunities by progress stage so you can move
-              from interest to preparation, application, interview, offer, or
-              closeout without losing your shortlist.
+              Organize saved opportunities by progress stage, next action, and
+              follow-up date so your shortlist becomes a real career action
+              system.
             </p>
           </div>
 
@@ -93,7 +186,7 @@ export default function OpportunityPipelineBoard({
           </div>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <PipelineStageSummary
             label="Saved for later"
             count={savedForLater.length}
@@ -111,12 +204,24 @@ export default function OpportunityPipelineBoard({
             count={closedPipeline.length}
             description="No longer active for you"
           />
+
+          <PipelineStageSummary
+            label="Overdue"
+            count={overdueCount}
+            description="Follow-up date passed"
+          />
+
+          <PipelineStageSummary
+            label="Due soon"
+            count={dueSoonCount}
+            description="Due within 3 days"
+          />
         </div>
       </div>
 
       <PipelineGroup
         title="Active pipeline"
-        description="These are opportunities you are actively exploring, preparing for, applying to, interviewing for, or considering."
+        description="Sorted by follow-up urgency first, then title. These are opportunities you are actively exploring, preparing for, applying to, interviewing for, or considering."
         emptyTitle="No active pipeline items yet"
         emptyDescription="Move a saved opportunity to Interested, Preparing, Applied, Interviewing, or Offer when you are ready to work on it."
         items={activePipeline}
@@ -244,6 +349,8 @@ function OpportunityPipelineCard({
   item: OpportunityPipelineItem
   userId: string
 }) {
+  const followUp = getFollowUpLabel(item.followUpOn)
+
   return (
     <div className="card bg-slate-50">
       <Link href={`/opportunities/${item.slug}`} className="group block">
@@ -255,6 +362,23 @@ function OpportunityPipelineCard({
               </span>
 
               <span className="badge-slate">{STATUS_LABELS[item.status]}</span>
+
+              <span
+                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
+                  followUp.tone === 'danger'
+                    ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
+                    : followUp.tone === 'warning'
+                      ? 'bg-orange-50 text-orange-700 ring-1 ring-orange-200'
+                      : 'bg-slate-100 text-slate-700'
+                }`}
+              >
+                {followUp.tone === 'danger' ? (
+                  <AlertCircle className="h-3.5 w-3.5" />
+                ) : (
+                  <CalendarDays className="h-3.5 w-3.5" />
+                )}
+                {followUp.label}
+              </span>
             </div>
 
             <h4 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
@@ -296,12 +420,26 @@ function OpportunityPipelineCard({
         </div>
       </div>
 
+      {item.nextAction && (
+        <div className="mt-4 rounded-2xl border border-orange-200 bg-orange-50 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-orange-900">
+            Next action
+          </p>
+
+          <p className="mt-1 text-sm font-semibold leading-6 text-orange-900">
+            {item.nextAction}
+          </p>
+        </div>
+      )}
+
       <div className="mt-6 border-t border-slate-200 pt-5">
         <OpportunityPipelineStatusSelect
           userId={userId}
           opportunityId={item.opportunityId}
           initialStatus={item.status}
           initialNotes={item.notes}
+          initialNextAction={item.nextAction}
+          initialFollowUpOn={item.followUpOn}
         />
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

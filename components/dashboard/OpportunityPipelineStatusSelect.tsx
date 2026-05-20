@@ -9,6 +9,8 @@ type OpportunityPipelineStatusSelectProps = {
   opportunityId: string
   initialStatus: OpportunityPipelineStatus
   initialNotes?: string
+  initialNextAction?: string
+  initialFollowUpOn?: string
 }
 
 const STATUS_OPTIONS: {
@@ -58,19 +60,33 @@ export default function OpportunityPipelineStatusSelect({
   opportunityId,
   initialStatus,
   initialNotes = '',
+  initialNextAction = '',
+  initialFollowUpOn = '',
 }: OpportunityPipelineStatusSelectProps) {
   const supabase = useMemo(() => createClient(), [])
 
   const [status, setStatus] =
     useState<OpportunityPipelineStatus>(initialStatus)
   const [notes, setNotes] = useState(initialNotes)
+  const [nextAction, setNextAction] = useState(initialNextAction)
+  const [followUpOn, setFollowUpOn] = useState(initialFollowUpOn)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   const selectedStatus = STATUS_OPTIONS.find((option) => option.value === status)
 
-  async function savePipelineUpdate(nextStatus: OpportunityPipelineStatus, nextNotes: string) {
+  async function savePipelineUpdate({
+    nextStatus,
+    nextNotes,
+    nextActionValue,
+    nextFollowUpOn,
+  }: {
+    nextStatus: OpportunityPipelineStatus
+    nextNotes: string
+    nextActionValue: string
+    nextFollowUpOn: string
+  }) {
     setSaving(true)
     setMessage('')
     setError('')
@@ -81,6 +97,8 @@ export default function OpportunityPipelineStatusSelect({
         opportunity_id: opportunityId,
         status: nextStatus,
         notes: nextNotes.trim() || null,
+        next_action: nextActionValue.trim() || null,
+        follow_up_on: nextFollowUpOn || null,
         last_action_at: new Date().toISOString(),
       },
       {
@@ -101,11 +119,22 @@ export default function OpportunityPipelineStatusSelect({
 
   async function updateStatus(nextStatus: OpportunityPipelineStatus) {
     setStatus(nextStatus)
-    await savePipelineUpdate(nextStatus, notes)
+
+    await savePipelineUpdate({
+      nextStatus,
+      nextNotes: notes,
+      nextActionValue: nextAction,
+      nextFollowUpOn: followUpOn,
+    })
   }
 
-  async function saveNotes() {
-    await savePipelineUpdate(status, notes)
+  async function saveDetails() {
+    await savePipelineUpdate({
+      nextStatus: status,
+      nextNotes: notes,
+      nextActionValue: nextAction,
+      nextFollowUpOn: followUpOn,
+    })
   }
 
   return (
@@ -142,30 +171,61 @@ export default function OpportunityPipelineStatusSelect({
       </div>
 
       <div className="mt-4 border-t border-slate-200 pt-4">
-        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Private notes
-        </label>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Next action
+            </label>
 
-        <textarea
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          rows={3}
-          className="input-field mt-2"
-          placeholder="Add follow-up notes, application details, contacts, or next steps..."
-        />
+            <input
+              type="text"
+              value={nextAction}
+              onChange={(event) => setNextAction(event.target.value)}
+              className="input-field mt-2"
+              placeholder="Example: update resume, apply, call employer..."
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Follow-up date
+            </label>
+
+            <input
+              type="date"
+              value={followUpOn}
+              onChange={(event) => setFollowUpOn(event.target.value)}
+              className="input-field mt-2"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Private notes
+          </label>
+
+          <textarea
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+            rows={3}
+            className="input-field mt-2"
+            placeholder="Add follow-up notes, application details, contacts, or next steps..."
+          />
+        </div>
 
         <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs leading-5 text-slate-500">
-            Notes are private to your account and help you track next steps.
+            Notes, next actions, and follow-up dates are private to your account.
           </p>
 
           <button
             type="button"
-            onClick={saveNotes}
+            onClick={saveDetails}
             disabled={saving}
             className="btn-outline px-4 py-2 text-sm"
           >
-            {saving ? 'Saving...' : 'Save notes'}
+            {saving ? 'Saving...' : 'Save pipeline details'}
           </button>
         </div>
       </div>

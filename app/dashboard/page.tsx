@@ -113,20 +113,35 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
 
   const { data: opportunityPipelineItems } = await supabase
-    .from('opportunity_pipeline')
-    .select('opportunity_id, status, notes')
-    .eq('user_id', user.id)
+  .from('opportunity_pipeline')
+  .select('opportunity_id, status, notes, next_action, follow_up_on')
+  .eq('user_id', user.id)
 
-  const opportunityPipelineStatusById = new Map(
-    opportunityPipelineItems?.map((item) => [
-      item.opportunity_id,
-      item.status as OpportunityPipelineStatus,
-    ]) ?? []
-  )
-  const opportunityPipelineNotesById = new Map(
+const opportunityPipelineStatusById = new Map(
+  opportunityPipelineItems?.map((item) => [
+    item.opportunity_id,
+    item.status as OpportunityPipelineStatus,
+  ]) ?? []
+)
+
+const opportunityPipelineNotesById = new Map(
   opportunityPipelineItems?.map((item) => [
     item.opportunity_id,
     item.notes ?? '',
+  ]) ?? []
+)
+
+const opportunityPipelineNextActionById = new Map(
+  opportunityPipelineItems?.map((item) => [
+    item.opportunity_id,
+    item.next_action ?? '',
+  ]) ?? []
+)
+
+const opportunityPipelineFollowUpOnById = new Map(
+  opportunityPipelineItems?.map((item) => [
+    item.opportunity_id,
+    item.follow_up_on ?? '',
   ]) ?? []
 )
 const savedOpportunityPipelineItems: OpportunityPipelineItem[] =
@@ -157,6 +172,8 @@ const savedOpportunityPipelineItems: OpportunityPipelineItem[] =
         employerName: employer?.name || 'Employer listing',
         status: opportunityPipelineStatusById.get(opportunityId) ?? 'saved',
         notes: opportunityPipelineNotesById.get(opportunityId) ?? '',
+        nextAction: opportunityPipelineNextActionById.get(opportunityId) ?? '',
+        followUpOn: opportunityPipelineFollowUpOnById.get(opportunityId) ?? '',
       }
     })
     .filter((item): item is OpportunityPipelineItem => Boolean(item)) ?? []
