@@ -2,6 +2,7 @@ import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
 import DashboardHero from '@/components/dashboard/DashboardHero'
 import DashboardProfilePanel from '@/components/dashboard/DashboardProfilePanel'
 import DashboardActionCenter from '@/components/dashboard/DashboardActionCenter'
+import DashboardReadinessWidget from '@/components/dashboard/DashboardReadinessWidget'
 import DashboardQuizResults from '@/components/dashboard/DashboardQuizResults'
 import SavedTradesSection from '@/components/dashboard/SavedTradesSection'
 import SavedProgramsSection from '@/components/dashboard/SavedProgramsSection'
@@ -17,6 +18,8 @@ export default async function DashboardPage() {
     savedOpportunityPipelineItems,
     readinessItems,
     readinessScore,
+    readinessItemsForWidget,
+    readinessScoreForWidget,
   } = await getDashboardPageData()
 
   return (
@@ -40,6 +43,11 @@ export default async function DashboardPage() {
             <DashboardActionCenter
               programItems={savedProgramPipelineItems}
               opportunityItems={savedOpportunityPipelineItems}
+            />
+
+            <DashboardReadinessWidget
+              items={readinessItemsForWidget}
+              score={readinessScoreForWidget}
             />
 
             <DashboardQuizResults quizResults={quizResults} />

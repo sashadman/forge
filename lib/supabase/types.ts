@@ -92,6 +92,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "employers_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       opportunities: {
@@ -214,6 +221,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "opportunity_pipeline_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       profiles: {
@@ -303,6 +317,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_pipeline_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -399,6 +420,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quiz_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       saved_opportunities: {
@@ -434,6 +462,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_opportunities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -471,6 +506,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "saved_programs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       saved_trades: {
@@ -500,14 +542,117 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "saved_trades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      seeker_readiness_items: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          file_mime_type: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size_kb: number | null
+          id: string
+          notes: string | null
+          status: Database["public"]["Enums"]["readiness_item_status"]
+          text_content: string | null
+          type: Database["public"]["Enums"]["readiness_item_type"]
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          file_mime_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size_kb?: number | null
+          id?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["readiness_item_status"]
+          text_content?: string | null
+          type: Database["public"]["Enums"]["readiness_item_type"]
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          file_mime_type?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size_kb?: number | null
+          id?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["readiness_item_status"]
+          text_content?: string | null
+          type?: Database["public"]["Enums"]["readiness_item_type"]
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seeker_readiness_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seeker_readiness_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "seeker_readiness_items_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seeker_readiness_items_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      seeker_readiness_scores: {
+        Row: {
+          completed_items: number | null
+          required_completed: number | null
+          required_total: number | null
+          score_pct: number | null
+          total_items: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      initialize_user_readiness: {
+        Args: { p_user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       opportunity_pipeline_status:
@@ -538,6 +683,23 @@ export type Database = {
         | "community_college"
         | "workforce_program"
         | "employer_training"
+      readiness_item_status:
+        | "missing"
+        | "in_progress"
+        | "uploaded"
+        | "complete"
+        | "verified"
+      readiness_item_type:
+        | "resume"
+        | "cover_letter_template"
+        | "work_authorization"
+        | "drivers_license"
+        | "certifications"
+        | "experience_summary"
+        | "references"
+        | "background_check_consent"
+        | "drug_test_consent"
+        | "physical_ability_statement"
       user_role: "seeker" | "employer" | "program" | "admin"
     }
     CompositeTypes: {
@@ -697,6 +859,25 @@ export const Constants = {
         "community_college",
         "workforce_program",
         "employer_training",
+      ],
+      readiness_item_status: [
+        "missing",
+        "in_progress",
+        "uploaded",
+        "complete",
+        "verified",
+      ],
+      readiness_item_type: [
+        "resume",
+        "cover_letter_template",
+        "work_authorization",
+        "drivers_license",
+        "certifications",
+        "experience_summary",
+        "references",
+        "background_check_consent",
+        "drug_test_consent",
+        "physical_ability_statement",
       ],
       user_role: ["seeker", "employer", "program", "admin"],
     },

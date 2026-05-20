@@ -1,5 +1,8 @@
 import 'server-only'
-
+import type {
+  ReadinessItemRow,
+  ReadinessScoreRow,
+} from '@/app/actions/readiness'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type {
@@ -98,6 +101,8 @@ export type DashboardPageData = {
   savedOpportunityPipelineItems: OpportunityPipelineItem[]
   readinessItems: ReadinessItemData[]
   readinessScore: number
+  readinessItemsForWidget: ReadinessItemRow[]
+  readinessScoreForWidget: ReadinessScoreRow | null
 }
 
 function getSingleRelation<T>(relation: T | T[] | null | undefined) {
@@ -287,6 +292,8 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedOpportunitiesResult,
     programPipelineResult,
     opportunityPipelineResult,
+    readinessItemsResult,
+    readinessScoreResult,
   ] = await Promise.all([
     supabase
       .from('profiles')
@@ -364,6 +371,17 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
       .from('opportunity_pipeline')
       .select('opportunity_id, status, notes, next_action, follow_up_on')
       .eq('user_id', user.id),
+          supabase
+      .from('seeker_readiness_items')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true }),
+
+    supabase
+      .from('seeker_readiness_scores')
+      .select('*')
+      .eq('user_id', user.id)
+      .maybeSingle(),
   ])
 
   if (profileResult.error) {
@@ -397,6 +415,19 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     console.error(
       'Failed to load opportunity pipeline:',
       opportunityPipelineResult.error
+    )
+  }
+    if (readinessItemsResult.error) {
+    console.error(
+      'Failed to load readiness items:',
+      readinessItemsResult.error
+    )
+  }
+
+  if (readinessScoreResult.error) {
+    console.error(
+      'Failed to load readiness score:',
+      readinessScoreResult.error
     )
   }
 
@@ -435,6 +466,11 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedProgramPipelineItems,
     savedOpportunityPipelineItems,
   })
+    const readinessItemsForWidget = (readinessItemsResult.data ??
+    []) as ReadinessItemRow[]
+
+  const readinessScoreForWidget = (readinessScoreResult.data ??
+    null) as ReadinessScoreRow | null
 
   const readinessScore = calculateReadinessScore(readinessItems)
 
@@ -450,5 +486,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedOpportunityPipelineItems,
     readinessItems,
     readinessScore,
+    readinessItemsForWidget,
+    readinessScoreForWidget,
   }
 }
