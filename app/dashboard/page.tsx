@@ -226,7 +226,9 @@ export default async function DashboardPage() {
         <div className="-mt-12 space-y-8">
           <DashboardQuizResults quizResults={quizResults} />
           <SavedTradesSection savedTrades={savedTrades ?? []} />
-          <SavedProgramsSection savedPrograms={savedPrograms ?? []} />
+          <SavedProgramsSection
+          userId={user.id}
+           savedPrograms={savedPrograms ?? []} />
           <SavedOpportunitiesSection
             userId={user.id}
             items={savedOpportunityPipelineItems}

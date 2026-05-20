@@ -1,8 +1,10 @@
-import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import type { ProgramPipelineStatus } from '@/lib/supabase/app-types'
 import DashboardSectionHeader from '@/components/dashboard/DashboardSectionHeader'
 import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState'
-import DashboardArrowCircle from '@/components/dashboard/ArrowCircle'
-import RemoveSavedProgramButton from '@/components/dashboard/RemoveSavedProgramButton'
+import ProgramPipelineBoard, {
+  type ProgramPipelineItem,
+} from '@/components/dashboard/ProgramPipelineBoard'
 
 type ProgramRelation = {
   slug: string
@@ -23,95 +25,89 @@ type SavedProgram = {
 }
 
 type SavedProgramsSectionProps = {
+  userId: string
   savedPrograms: SavedProgram[] | null
 }
 
-function formatProgramType(type: string) {
-  return type
-    .split('_')
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-export default function SavedProgramsSection({
+export default async function SavedProgramsSection({
+  userId,
   savedPrograms,
 }: SavedProgramsSectionProps) {
+  const supabase = createClient()
+
+  const { data: programPipelineItems } = await supabase
+    .from('program_pipeline')
+    .select('program_id, status, notes, next_action, follow_up_on')
+    .eq('user_id', userId)
+
+  const programPipelineStatusById = new Map(
+    programPipelineItems?.map((item) => [
+      item.program_id,
+      item.status as ProgramPipelineStatus,
+    ]) ?? []
+  )
+
+  const programPipelineNotesById = new Map(
+    programPipelineItems?.map((item) => [item.program_id, item.notes ?? '']) ??
+      []
+  )
+
+  const programPipelineNextActionById = new Map(
+    programPipelineItems?.map((item) => [
+      item.program_id,
+      item.next_action ?? '',
+    ]) ?? []
+  )
+
+  const programPipelineFollowUpOnById = new Map(
+    programPipelineItems?.map((item) => [
+      item.program_id,
+      item.follow_up_on ?? '',
+    ]) ?? []
+  )
+
+  const savedProgramPipelineItems: ProgramPipelineItem[] =
+    savedPrograms
+      ?.map((savedProgram) => {
+        const program = Array.isArray(savedProgram.programs)
+          ? savedProgram.programs[0]
+          : savedProgram.programs
+
+        if (!program) return null
+
+        const programId = savedProgram.program_id
+
+        return {
+          programId,
+          slug: program.slug,
+          name: program.name,
+          providerName: program.provider_name,
+          programType: program.program_type,
+          tradeSlug: program.trade_slug,
+          location: program.location,
+          state: program.state,
+          duration: program.duration,
+          description: program.description,
+          status: programPipelineStatusById.get(programId) ?? 'saved',
+          notes: programPipelineNotesById.get(programId) ?? '',
+          nextAction: programPipelineNextActionById.get(programId) ?? '',
+          followUpOn: programPipelineFollowUpOnById.get(programId) ?? '',
+        }
+      })
+      .filter((item): item is ProgramPipelineItem => Boolean(item)) ?? []
+
   return (
     <section className="content-panel">
       <DashboardSectionHeader
         eyebrow="Saved programs"
         title="Your training pathways"
-        description="Keep track of apprenticeships, workforce programs, and training options you want to revisit."
+        description="Track training programs from saved to researching, applying, enrolled, completed, or closed."
         href="/programs"
         action="Explore programs"
       />
 
-      {savedPrograms && savedPrograms.length > 0 ? (
-        <div className="mt-8 grid gap-5 md:grid-cols-2">
-          {savedPrograms.map((savedProgram) => {
-            const program = Array.isArray(savedProgram.programs)
-              ? savedProgram.programs[0]
-              : savedProgram.programs
-
-            if (!program) return null
-
-            return (
-              <div key={savedProgram.program_id} className="card bg-slate-50">
-                <Link href={`/programs/${program.slug}`} className="group block">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="badge-orange">
-                        {formatProgramType(program.program_type)}
-                      </span>
-
-                      <h3 className="mt-4 text-2xl font-bold text-slate-950 transition group-hover:text-orange-700">
-                        {program.name}
-                      </h3>
-
-                      <p className="mt-2 font-semibold text-slate-600">
-                        {program.provider_name}
-                      </p>
-                    </div>
-
-                    <DashboardArrowCircle />
-                  </div>
-                </Link>
-
-                <p className="muted-text mt-5 line-clamp-3">
-                  {program.description}
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <div className="mini-card-white">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Location
-                    </p>
-
-                    <p className="mt-1 font-bold text-slate-950">
-                      {program.location}, {program.state}
-                    </p>
-                  </div>
-
-                  <div className="mini-card-white">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Duration
-                    </p>
-
-                    <p className="mt-1 font-bold text-slate-950">
-                      {program.duration || 'See provider'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="badge-orange">Saved</span>
-
-                  <RemoveSavedProgramButton programId={savedProgram.program_id} />
-                </div>
-              </div>
-            )
-          })}
-        </div>
+      {savedProgramPipelineItems.length > 0 ? (
+        <ProgramPipelineBoard userId={userId} items={savedProgramPipelineItems} />
       ) : (
         <DashboardEmptyState
           title="No saved programs yet"

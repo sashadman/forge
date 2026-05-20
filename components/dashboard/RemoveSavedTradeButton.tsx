@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -13,12 +13,14 @@ export default function RemoveSavedTradeButton({
   tradeSlug,
 }: RemoveSavedTradeButtonProps) {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
   const [removing, setRemoving] = useState(false)
   const [error, setError] = useState('')
 
   async function removeSavedTrade() {
+    if (removing) return
+
     setRemoving(true)
     setError('')
 
@@ -39,7 +41,7 @@ export default function RemoveSavedTradeButton({
       .eq('trade_slug', tradeSlug)
 
     if (error) {
-      console.error(error)
+      console.error('Failed to remove saved trade:', error)
       setError('Could not remove saved trade.')
       setRemoving(false)
       return

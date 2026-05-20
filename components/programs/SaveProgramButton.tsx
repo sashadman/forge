@@ -79,52 +79,81 @@ export default function SaveProgramButton({
     }
   }, [supabase, programId, initiallySaved, hasInitialSavedState])
 
+  async function saveProgram() {
+    if (!userId) return
+
+    const { error: savedProgramError } = await supabase
+      .from('saved_programs')
+      .insert({
+        user_id: userId,
+        program_id: programId,
+      })
+
+    if (savedProgramError && savedProgramError.code !== '23505') {
+      throw savedProgramError
+    }
+
+    const { error: pipelineError } = await supabase.from('program_pipeline').upsert(
+      {
+        user_id: userId,
+        program_id: programId,
+        status: 'saved',
+        last_action_at: new Date().toISOString(),
+      },
+      {
+        onConflict: 'user_id,program_id',
+      }
+    )
+
+    if (pipelineError) {
+      throw pipelineError
+    }
+  }
+
+  async function removeSavedProgram() {
+    if (!userId) return
+
+    const { error: savedProgramError } = await supabase
+      .from('saved_programs')
+      .delete()
+      .eq('user_id', userId)
+      .eq('program_id', programId)
+
+    if (savedProgramError) {
+      throw savedProgramError
+    }
+
+    const { error: pipelineError } = await supabase
+      .from('program_pipeline')
+      .delete()
+      .eq('user_id', userId)
+      .eq('program_id', programId)
+
+    if (pipelineError) {
+      throw pipelineError
+    }
+  }
+
   async function toggleSavedProgram() {
     if (!userId || saving) return
 
     setSaving(true)
     setError('')
 
-    if (isSaved) {
-      const { error } = await supabase
-        .from('saved_programs')
-        .delete()
-        .eq('user_id', userId)
-        .eq('program_id', programId)
-
-      if (error) {
-        console.error('Failed to remove saved program:', error)
-        setError('Could not remove saved program.')
-        setSaving(false)
-        return
-      }
-
-      setIsSaved(false)
-      setSaving(false)
-      return
-    }
-
-    const { error } = await supabase.from('saved_programs').insert({
-      user_id: userId,
-      program_id: programId,
-    })
-
-    if (error) {
-      console.error('Failed to save program:', error)
-
-      if (error.code === '23505') {
+    try {
+      if (isSaved) {
+        await removeSavedProgram()
+        setIsSaved(false)
+      } else {
+        await saveProgram()
         setIsSaved(true)
-        setSaving(false)
-        return
       }
-
-      setError('Could not save program.')
+    } catch (error) {
+      console.error('Failed to update saved program:', error)
+      setError('Could not update saved program.')
+    } finally {
       setSaving(false)
-      return
     }
-
-    setIsSaved(true)
-    setSaving(false)
   }
 
   if (loading) {

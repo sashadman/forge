@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -13,12 +13,14 @@ export default function RemoveSavedProgramButton({
   programId,
 }: RemoveSavedProgramButtonProps) {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
   const [removing, setRemoving] = useState(false)
   const [error, setError] = useState('')
 
   async function removeSavedProgram() {
+    if (removing) return
+
     setRemoving(true)
     setError('')
 
@@ -32,16 +34,30 @@ export default function RemoveSavedProgramButton({
       return
     }
 
-    const { error } = await supabase
+    const { error: savedProgramError } = await supabase
       .from('saved_programs')
       .delete()
       .eq('user_id', user.id)
       .eq('program_id', programId)
 
-    if (error) {
-      console.error(error)
+    if (savedProgramError) {
+      console.error('Failed to remove saved program:', savedProgramError)
       setError('Could not remove saved program.')
       setRemoving(false)
+      return
+    }
+
+    const { error: pipelineError } = await supabase
+      .from('program_pipeline')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('program_id', programId)
+
+    if (pipelineError) {
+      console.error('Failed to remove program pipeline record:', pipelineError)
+      setError('Saved program was removed, but pipeline cleanup failed.')
+      setRemoving(false)
+      router.refresh()
       return
     }
 
