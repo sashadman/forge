@@ -1,6 +1,7 @@
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
 import DashboardHero from '@/components/dashboard/DashboardHero'
 import DashboardProfilePanel from '@/components/dashboard/DashboardProfilePanel'
+import DashboardActionCenter from '@/components/dashboard/DashboardActionCenter'
 import DashboardQuizResults from '@/components/dashboard/DashboardQuizResults'
 import SavedTradesSection from '@/components/dashboard/SavedTradesSection'
 import SavedProgramsSection from '@/components/dashboard/SavedProgramsSection'
@@ -12,7 +13,7 @@ export default async function DashboardPage() {
     profile,
     quizResults,
     savedTrades,
-    savedPrograms,
+    savedProgramPipelineItems,
     savedOpportunityPipelineItems,
     readinessItems,
     readinessScore,
@@ -36,13 +37,18 @@ export default async function DashboardPage() {
           />
 
           <div className="-mt-12 space-y-8">
+            <DashboardActionCenter
+              programItems={savedProgramPipelineItems}
+              opportunityItems={savedOpportunityPipelineItems}
+            />
+
             <DashboardQuizResults quizResults={quizResults} />
 
             <SavedTradesSection savedTrades={savedTrades} />
 
             <SavedProgramsSection
               userId={user.id}
-              savedPrograms={savedPrograms}
+              items={savedProgramPipelineItems}
             />
 
             <SavedOpportunitiesSection

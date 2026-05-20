@@ -2,10 +2,13 @@ import 'server-only'
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import type { TradeCategory } from '@/types'
-import type { OpportunityPipelineStatus } from '@/lib/supabase/app-types'
+import type {
+  OpportunityPipelineStatus,
+  ProgramPipelineStatus,
+} from '@/lib/supabase/app-types'
 import type { QuizResultItem } from '@/components/dashboard/DashboardQuizResults'
 import type { OpportunityPipelineItem } from '@/components/dashboard/OpportunityPipelineBoard'
+import type { ProgramPipelineItem } from '@/components/dashboard/ProgramPipelineBoard'
 
 type ReadinessItemData = {
   label: string
@@ -75,6 +78,14 @@ type OpportunityPipelineRow = {
   follow_up_on: string | null
 }
 
+type ProgramPipelineRow = {
+  program_id: string
+  status: ProgramPipelineStatus
+  notes: string | null
+  next_action: string | null
+  follow_up_on: string | null
+}
+
 export type DashboardPageData = {
   user: {
     id: string
@@ -83,7 +94,7 @@ export type DashboardPageData = {
   profile: DashboardProfile | null
   quizResults: QuizResultItem[]
   savedTrades: SavedTrade[]
-  savedPrograms: SavedProgram[]
+  savedProgramPipelineItems: ProgramPipelineItem[]
   savedOpportunityPipelineItems: OpportunityPipelineItem[]
   readinessItems: ReadinessItemData[]
   readinessScore: number
@@ -94,23 +105,6 @@ function getSingleRelation<T>(relation: T | T[] | null | undefined) {
   return relation ?? null
 }
 
-function createPipelineLookupMaps(pipelineRows: OpportunityPipelineRow[]) {
-  return {
-    statusById: new Map(
-      pipelineRows.map((item) => [item.opportunity_id, item.status])
-    ),
-    notesById: new Map(
-      pipelineRows.map((item) => [item.opportunity_id, item.notes ?? ''])
-    ),
-    nextActionById: new Map(
-      pipelineRows.map((item) => [item.opportunity_id, item.next_action ?? ''])
-    ),
-    followUpOnById: new Map(
-      pipelineRows.map((item) => [item.opportunity_id, item.follow_up_on ?? ''])
-    ),
-  }
-}
-
 function normalizeSavedOpportunityPipelineItems({
   savedOpportunities,
   pipelineRows,
@@ -118,8 +112,21 @@ function normalizeSavedOpportunityPipelineItems({
   savedOpportunities: SavedOpportunity[]
   pipelineRows: OpportunityPipelineRow[]
 }) {
-  const { statusById, notesById, nextActionById, followUpOnById } =
-    createPipelineLookupMaps(pipelineRows)
+  const statusById = new Map(
+    pipelineRows.map((item) => [item.opportunity_id, item.status])
+  )
+
+  const notesById = new Map(
+    pipelineRows.map((item) => [item.opportunity_id, item.notes ?? ''])
+  )
+
+  const nextActionById = new Map(
+    pipelineRows.map((item) => [item.opportunity_id, item.next_action ?? ''])
+  )
+
+  const followUpOnById = new Map(
+    pipelineRows.map((item) => [item.opportunity_id, item.follow_up_on ?? ''])
+  )
 
   return savedOpportunities
     .map((savedOpportunity) => {
@@ -150,17 +157,68 @@ function normalizeSavedOpportunityPipelineItems({
     .filter((item): item is OpportunityPipelineItem => Boolean(item))
 }
 
+function normalizeSavedProgramPipelineItems({
+  savedPrograms,
+  pipelineRows,
+}: {
+  savedPrograms: SavedProgram[]
+  pipelineRows: ProgramPipelineRow[]
+}) {
+  const statusById = new Map(
+    pipelineRows.map((item) => [item.program_id, item.status])
+  )
+
+  const notesById = new Map(
+    pipelineRows.map((item) => [item.program_id, item.notes ?? ''])
+  )
+
+  const nextActionById = new Map(
+    pipelineRows.map((item) => [item.program_id, item.next_action ?? ''])
+  )
+
+  const followUpOnById = new Map(
+    pipelineRows.map((item) => [item.program_id, item.follow_up_on ?? ''])
+  )
+
+  return savedPrograms
+    .map((savedProgram) => {
+      const program = getSingleRelation(savedProgram.programs)
+
+      if (!program) return null
+
+      const programId = savedProgram.program_id
+
+      return {
+        programId,
+        slug: program.slug,
+        name: program.name,
+        providerName: program.provider_name,
+        programType: program.program_type,
+        tradeSlug: program.trade_slug,
+        location: program.location,
+        state: program.state,
+        duration: program.duration,
+        description: program.description,
+        status: statusById.get(programId) ?? 'saved',
+        notes: notesById.get(programId) ?? '',
+        nextAction: nextActionById.get(programId) ?? '',
+        followUpOn: followUpOnById.get(programId) ?? '',
+      }
+    })
+    .filter((item): item is ProgramPipelineItem => Boolean(item))
+}
+
 function buildReadinessItems({
   profile,
   quizResults,
   savedTrades,
-  savedPrograms,
+  savedProgramPipelineItems,
   savedOpportunityPipelineItems,
 }: {
   profile: DashboardProfile | null
   quizResults: QuizResultItem[]
   savedTrades: SavedTrade[]
-  savedPrograms: SavedProgram[]
+  savedProgramPipelineItems: ProgramPipelineItem[]
   savedOpportunityPipelineItems: OpportunityPipelineItem[]
 }) {
   return [
@@ -191,7 +249,7 @@ function buildReadinessItems({
     },
     {
       label: 'Saved program',
-      complete: savedPrograms.length > 0,
+      complete: savedProgramPipelineItems.length > 0,
       helpText: 'Save at least one training pathway.',
     },
     {
@@ -227,6 +285,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     savedTradesResult,
     savedProgramsResult,
     savedOpportunitiesResult,
+    programPipelineResult,
     opportunityPipelineResult,
   ] = await Promise.all([
     supabase
@@ -297,6 +356,11 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
       .order('created_at', { ascending: false }),
 
     supabase
+      .from('program_pipeline')
+      .select('program_id, status, notes, next_action, follow_up_on')
+      .eq('user_id', user.id),
+
+    supabase
       .from('opportunity_pipeline')
       .select('opportunity_id, status, notes, next_action, follow_up_on')
       .eq('user_id', user.id),
@@ -325,6 +389,10 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     )
   }
 
+  if (programPipelineResult.error) {
+    console.error('Failed to load program pipeline:', programPipelineResult.error)
+  }
+
   if (opportunityPipelineResult.error) {
     console.error(
       'Failed to load opportunity pipeline:',
@@ -344,8 +412,16 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
   const savedOpportunities = (savedOpportunitiesResult.data ??
     []) as SavedOpportunity[]
 
+  const programPipelineRows = (programPipelineResult.data ??
+    []) as ProgramPipelineRow[]
+
   const opportunityPipelineRows = (opportunityPipelineResult.data ??
     []) as OpportunityPipelineRow[]
+
+  const savedProgramPipelineItems = normalizeSavedProgramPipelineItems({
+    savedPrograms,
+    pipelineRows: programPipelineRows,
+  })
 
   const savedOpportunityPipelineItems = normalizeSavedOpportunityPipelineItems({
     savedOpportunities,
@@ -356,7 +432,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     profile,
     quizResults,
     savedTrades,
-    savedPrograms,
+    savedProgramPipelineItems,
     savedOpportunityPipelineItems,
   })
 
@@ -370,7 +446,7 @@ export async function getDashboardPageData(): Promise<DashboardPageData> {
     profile,
     quizResults,
     savedTrades,
-    savedPrograms,
+    savedProgramPipelineItems,
     savedOpportunityPipelineItems,
     readinessItems,
     readinessScore,
