@@ -242,7 +242,10 @@ export default async function EmployerDashboardPage() {
                   Edit employer profile
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-
+                <Link href="/employers/applications" className="btn-outline w-full">
+                    Review applications
+                  <BriefcaseBusiness className="h-4 w-4" />
+                </Link>
                 <Link
                   href="/employers/opportunities/new"
                   className="btn-primary w-full"

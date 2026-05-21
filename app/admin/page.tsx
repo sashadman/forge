@@ -163,7 +163,13 @@ export default async function AdminPage() {
               action="Open source directory"
               featured
             />
-
+<AdminActionCard
+  href="/admin/applications"
+  icon={<BriefcaseBusiness className="h-7 w-7" />}
+  title="Review applications"
+  description="Review seeker applications, readiness snapshots, timeline events, and employer review status."
+  action="Open application review"
+/>
             <AdminActionCard
               href="/admin/opportunities"
               icon={<BriefcaseBusiness className="h-7 w-7" />}
