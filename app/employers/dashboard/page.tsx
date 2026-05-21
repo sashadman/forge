@@ -10,15 +10,19 @@ import {
   MapPin,
   Plus,
   ShieldCheck,
+  UsersRound,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
+import PageHero from '@/components/ui/PageHero'
+import EmptyState from '@/components/ui/EmptyState'
+import NextStepPanel from '@/components/ui/NextStepPanel'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Employer Dashboard — ${siteConfig.name}`,
-  description: 'Manage your employer profile and opportunity listings.',
+  description: 'Manage your employer profile, applicant reviews, and opportunity listings.',
 }
 
 function formatOpportunityType(type: string) {
@@ -26,31 +30,6 @@ function formatOpportunityType(type: string) {
     .split('_')
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ')
-}
-
-/*
-  Hidden foundation for future employer deactivation.
-
-  Do not expose this in the UI yet.
-
-  When we are ready, we can move this into a server action and add owner confirmation:
-  - confirm employer ownership
-  - set employers.is_active = false
-  - optionally set related opportunities.is_active = false
-  - redirect away from the public employer profile
-*/
-async function deactivateEmployerProfile(employerId: string) {
-  const supabase = createClient()
-
-  await supabase
-    .from('opportunities')
-    .update({ is_active: false })
-    .eq('employer_id', employerId)
-
-  await supabase
-    .from('employers')
-    .update({ is_active: false })
-    .eq('id', employerId)
 }
 
 export default async function EmployerDashboardPage() {
@@ -109,6 +88,11 @@ export default async function EmployerDashboardPage() {
   if (!employer) {
     redirect('/employers/new')
   }
+
+  const { count: applicationCount } = await supabase
+    .from('applications')
+    .select('id', { count: 'exact', head: true })
+    .eq('employer_id', employer.id)
 
   const activeOpportunities =
     employer.opportunities?.filter((opportunity) => opportunity.is_active) ?? []
@@ -173,291 +157,323 @@ export default async function EmployerDashboardPage() {
     <main className="page-shell">
       <SiteNavbar />
 
-      <section className="hero-dark">
-        <div className="hero-fade" />
-
-        <div className="section-shell relative py-20">
-          <div className="max-w-4xl">
-            <p className="eyebrow-dark">Employer dashboard</p>
-
-            <h1 className="page-title-dark mt-6">
-              Manage your employer profile.
-            </h1>
-
-            <p className="lead-text-dark mt-6 max-w-3xl">
-              Review your company profile, create real opportunity listings, and
-              manage your employer presence on {siteConfig.name}.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Employer dashboard"
+        title="Manage your employer presence with a clear hiring workflow."
+        description={`Review ${employer.name}, manage real opportunity listings, and follow up with applicants through one employer workspace.`}
+      />
 
       <section className="section-light pb-20">
-        <div className="section-shell grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <aside className="-mt-12 space-y-6">
-            <div className="content-panel">
-              <p className="eyebrow">Employer profile</p>
+        <div className="section-shell">
+          <div className="-mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <EmployerMetricCard
+              label="Active listings"
+              value={activeOpportunities.length}
+              icon={<BriefcaseBusiness className="h-7 w-7" />}
+            />
 
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
-                {employer.name}
-              </h2>
+            <EmployerMetricCard
+              label="Applications"
+              value={applicationCount ?? 0}
+              icon={<UsersRound className="h-7 w-7" />}
+            />
 
-              {employer.industry && (
-                <p className="mt-2 font-semibold text-slate-600">
-                  {employer.industry}
+            <EmployerMetricCard
+              label="Profile quality"
+              value={`${completenessScore}%`}
+              icon={<ShieldCheck className="h-7 w-7" />}
+            />
+
+            <EmployerMetricCard
+              label="Hidden listings"
+              value={inactiveOpportunities.length}
+              icon={<Circle className="h-7 w-7" />}
+            />
+          </div>
+
+          <div className="mt-8">
+            <NextStepPanel
+              title={
+                applicationCount && applicationCount > 0
+                  ? 'Review applicants and keep your hiring pipeline moving.'
+                  : 'Create a real listing when you are ready to receive applicants.'
+              }
+              description={
+                applicationCount && applicationCount > 0
+                  ? 'Applications are waiting for review. Start there before adding more listings.'
+                  : 'A strong employer profile and one real opportunity listing are the best next steps for attracting serious applicants.'
+              }
+              primaryHref={
+                applicationCount && applicationCount > 0
+                  ? '/employers/applications'
+                  : '/employers/opportunities/new'
+              }
+              primaryLabel={
+                applicationCount && applicationCount > 0
+                  ? 'Review applications'
+                  : 'Create opportunity'
+              }
+              secondaryHref="/employers/profile"
+              secondaryLabel="Improve profile"
+              icon={<UsersRound className="h-6 w-6" />}
+            />
+          </div>
+
+          <div className="mt-8 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <aside className="space-y-6">
+              <section className="content-panel">
+                <p className="eyebrow">Employer profile</p>
+
+                <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+                  {employer.name}
+                </h2>
+
+                {employer.industry && (
+                  <p className="mt-2 font-semibold text-slate-600">
+                    {employer.industry}
+                  </p>
+                )}
+
+                <p className="muted-text mt-5 line-clamp-4">
+                  {employer.description}
                 </p>
-              )}
 
-              <p className="muted-text mt-5 line-clamp-4">
-                {employer.description}
-              </p>
+                <div className="mt-6 space-y-4">
+                  <DetailItem
+                    icon={<MapPin className="h-5 w-5" />}
+                    label="Location"
+                    value={`${employer.location}, ${employer.state}`}
+                  />
 
-              <div className="mt-6 space-y-4">
-                <DetailItem
-                  icon={<MapPin className="h-5 w-5" />}
-                  label="Location"
-                  value={`${employer.location}, ${employer.state}`}
-                />
+                  <DetailItem
+                    icon={<ShieldCheck className="h-5 w-5" />}
+                    label="Verification"
+                    value={employer.is_verified ? 'Verified' : 'Not verified yet'}
+                  />
 
-                <DetailItem
-                  icon={<ShieldCheck className="h-5 w-5" />}
-                  label="Verification"
-                  value={employer.is_verified ? 'Verified' : 'Not verified yet'}
-                />
+                  <DetailItem
+                    icon={<BriefcaseBusiness className="h-5 w-5" />}
+                    label="Public listings"
+                    value={`${activeOpportunities.length}`}
+                  />
+                </div>
 
-                <DetailItem
-                  icon={<BriefcaseBusiness className="h-5 w-5" />}
-                  label="Active opportunities"
-                  value={`${activeOpportunities.length}`}
-                />
-              </div>
+                <div className="mt-8 grid gap-3">
+                  <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
+                    View public profile
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
 
-              <div className="mt-8 grid gap-3">
-                <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
-                  View public profile
-                  <ExternalLink className="h-4 w-4" />
-                </Link>
+                  <Link href="/employers/profile" className="btn-outline w-full">
+                    Edit employer profile
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
 
-                <Link href="/employers/profile" className="btn-outline w-full">
-                  Edit employer profile
+                  <Link href="/employers/applications" className="btn-outline w-full">
+                    Review applications
+                    <UsersRound className="h-4 w-4" />
+                  </Link>
+                </div>
+              </section>
+
+              <section className="content-panel">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="eyebrow">Profile quality</p>
+
+                    <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+                      {completenessScore}% complete
+                    </h3>
+                  </div>
+
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
+                    {completenessScore}%
+                  </div>
+                </div>
+
+                <p className="muted-text mt-4">
+                  Strong employer profiles build trust with career seekers and make
+                  listings easier to evaluate.
+                </p>
+
+                <div className="mt-6 space-y-3">
+                  {completenessItems.map((item) => (
+                    <CompletenessItem
+                      key={item.label}
+                      label={item.label}
+                      helpText={item.helpText}
+                      complete={item.complete}
+                    />
+                  ))}
+                </div>
+
+                <Link href="/employers/profile" className="btn-outline mt-6 w-full">
+                  Improve profile
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/employers/applications" className="btn-outline w-full">
-                    Review applications
-                  <BriefcaseBusiness className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/employers/opportunities/new"
-                  className="btn-primary w-full"
-                >
-                  Create opportunity
-                  <Plus className="h-4 w-4" />
-                </Link>
-              </div>
+              </section>
+            </aside>
 
-              <p className="mt-5 text-xs leading-6 text-slate-500">
-                Deactivation controls are intentionally hidden for now. We will
-                add them later with confirmation and safety checks.
-              </p>
-            </div>
+            <div className="space-y-8">
+              <section className="content-panel">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                  <div>
+                    <p className="eyebrow">Listings</p>
 
-            <div className="content-panel">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="eyebrow">Profile quality</p>
+                    <h2 className="section-title mt-3">
+                      Active opportunity listings
+                    </h2>
 
-                  <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
-                    {completenessScore}% complete
-                  </h3>
+                    <p className="muted-text mt-3 max-w-2xl">
+                      These listings appear in the public opportunities directory.
+                      Keep them real, current, and easy for applicants to understand.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-lg font-bold text-orange-700">
-                  {completenessScore}%
-                </div>
-              </div>
+                {activeOpportunities.length > 0 ? (
+                  <div className="mt-8 grid gap-5">
+                    {activeOpportunities.map((opportunity) => (
+                      <div key={opportunity.id} className="card bg-slate-50">
+                        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                          <div>
+                            <span className="badge-orange">
+                              {formatOpportunityType(opportunity.opportunity_type)}
+                            </span>
 
-              <p className="muted-text mt-4">
-                Strong employer profiles build trust with career seekers and make
-                listings easier to evaluate.
-              </p>
+                            <h3 className="mt-4 text-2xl font-bold text-slate-950">
+                              {opportunity.title}
+                            </h3>
 
-              <div className="mt-6 space-y-3">
-                {completenessItems.map((item) => (
-                  <CompletenessItem
-                    key={item.label}
-                    label={item.label}
-                    helpText={item.helpText}
-                    complete={item.complete}
-                  />
-                ))}
-              </div>
+                            <p className="mt-2 font-semibold text-slate-600">
+                              {opportunity.trade_slug}
+                            </p>
+                          </div>
 
-              <Link href="/employers/profile" className="btn-outline mt-6 w-full">
-                Improve profile
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+                          <span className="badge-slate">Public</span>
+                        </div>
 
-            <div className="dark-panel p-6">
-              <div className="dark-panel-content">
-                <h3 className="text-2xl font-bold">Profile visibility</h3>
+                        <p className="muted-text mt-5 line-clamp-3">
+                          {opportunity.description}
+                        </p>
 
-                <p className="mt-3 leading-7 text-slate-300">
-                  Your employer profile can be viewed publicly while active.
-                  Opportunity listings should only be real openings or real
-                  training opportunities.
-                </p>
-              </div>
-            </div>
-          </aside>
+                        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                          <MiniDetail
+                            label="Location"
+                            value={`${opportunity.location}, ${opportunity.state}`}
+                          />
 
-          <div className="-mt-12 space-y-8">
-            <section className="content-panel">
-              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div>
-                  <p className="eyebrow">Listings</p>
+                          <MiniDetail
+                            label="Schedule"
+                            value={opportunity.schedule || 'See listing'}
+                          />
+
+                          <MiniDetail
+                            label="Pay range"
+                            value={opportunity.pay_range || 'See listing'}
+                          />
+                        </div>
+
+                        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                          <Link
+                            href={`/opportunities/${opportunity.slug}`}
+                            className="btn-dark px-5 py-3 text-sm"
+                          >
+                            View public listing
+                            <ExternalLink className="h-4 w-4" />
+                          </Link>
+
+                          <Link
+                            href={`/employers/opportunities/${opportunity.id}/edit`}
+                            className="btn-outline px-5 py-3 text-sm"
+                          >
+                            Edit listing
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-8">
+                    <EmptyState
+                      icon={<BriefcaseBusiness className="h-6 w-6" />}
+                      title="No active listings yet"
+                      description="Create your first real opportunity listing when you have a job, apprenticeship, trainee role, or pre-apprenticeship that someone can actually review or apply for."
+                      primaryHref="/employers/opportunities/new"
+                      primaryLabel="Create opportunity"
+                      secondaryHref="/employers/profile"
+                      secondaryLabel="Improve profile first"
+                    />
+                  </div>
+                )}
+              </section>
+
+              {inactiveOpportunities.length > 0 && (
+                <section className="content-panel">
+                  <p className="eyebrow">Inactive listings</p>
 
                   <h2 className="section-title mt-3">
-                    Active opportunity listings
+                    Hidden opportunity listings
                   </h2>
 
                   <p className="muted-text mt-3 max-w-2xl">
-                    These listings appear in the public opportunities directory.
+                    These listings are not currently active in the public directory.
+                    Edit a listing if it should be made useful and public again.
                   </p>
-                </div>
 
-                <Link
-                  href="/employers/opportunities/new"
-                  className="btn-primary px-5 py-3 text-sm"
-                >
-                  Add listing
-                  <Plus className="h-4 w-4" />
-                </Link>
-              </div>
+                  <div className="mt-8 grid gap-4">
+                    {inactiveOpportunities.map((opportunity) => (
+                      <div key={opportunity.id} className="mini-card">
+                        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                          <div>
+                            <p className="font-bold text-slate-950">
+                              {opportunity.title}
+                            </p>
+                            <p className="mt-1 text-sm text-slate-600">
+                              {formatOpportunityType(opportunity.opportunity_type)} ·{' '}
+                              {opportunity.trade_slug}
+                            </p>
+                          </div>
 
-              {activeOpportunities.length > 0 ? (
-                <div className="mt-8 grid gap-5">
-                  {activeOpportunities.map((opportunity) => (
-                    <div key={opportunity.id} className="card bg-slate-50">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <span className="badge-orange">
-                            {formatOpportunityType(opportunity.opportunity_type)}
-                          </span>
-
-                          <h3 className="mt-4 text-2xl font-bold text-slate-950">
-                            {opportunity.title}
-                          </h3>
-
-                          <p className="mt-2 font-semibold text-slate-600">
-                            {opportunity.trade_slug}
-                          </p>
+                          <Link
+                            href={`/employers/opportunities/${opportunity.id}/edit`}
+                            className="btn-outline px-5 py-3 text-sm"
+                          >
+                            Review listing
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
                         </div>
                       </div>
-
-                      <p className="muted-text mt-5 line-clamp-3">
-                        {opportunity.description}
-                      </p>
-
-                      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                        <MiniDetail
-                          label="Location"
-                          value={`${opportunity.location}, ${opportunity.state}`}
-                        />
-
-                        <MiniDetail
-                          label="Schedule"
-                          value={opportunity.schedule || 'See listing'}
-                        />
-
-                        <MiniDetail
-                          label="Pay range"
-                          value={opportunity.pay_range || 'See listing'}
-                        />
-                      </div>
-
-                      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                        <Link
-                          href={`/opportunities/${opportunity.slug}`}
-                          className="btn-dark px-5 py-3 text-sm"
-                        >
-                          View public listing
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
-
-                        <Link
-                          href={`/employers/opportunities/${opportunity.id}/edit`}
-                          className="btn-outline px-5 py-3 text-sm"
-                        >
-                          Edit or deactivate
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="mt-8 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8">
-                  <h3 className="text-xl font-bold text-slate-950">
-                    No active listings yet
-                  </h3>
-
-                  <p className="muted-text mt-2 max-w-2xl">
-                    Create your first real opportunity listing when you have a
-                    job, apprenticeship, trainee role, or pre-apprenticeship that
-                    someone can actually review or apply for.
-                  </p>
-
-                  <Link
-                    href="/employers/opportunities/new"
-                    className="btn-primary mt-5"
-                  >
-                    Create opportunity
-                    <Plus className="h-4 w-4" />
-                  </Link>
-                </div>
+                    ))}
+                  </div>
+                </section>
               )}
-            </section>
-
-            {inactiveOpportunities.length > 0 && (
-              <section className="content-panel">
-                <p className="eyebrow">Inactive listings</p>
-
-                <h2 className="section-title mt-3">
-                  Hidden opportunity listings
-                </h2>
-
-                <p className="muted-text mt-3 max-w-2xl">
-                  These listings are not currently active in the public directory.
-                </p>
-
-                <div className="mt-8 grid gap-4">
-                  {inactiveOpportunities.map((opportunity) => (
-                    <div key={opportunity.id} className="mini-card">
-                      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                        <div>
-                          <p className="font-bold text-slate-950">
-                            {opportunity.title}
-                          </p>
-                          <p className="mt-1 text-sm text-slate-600">
-                            {formatOpportunityType(opportunity.opportunity_type)} ·{' '}
-                            {opportunity.trade_slug}
-                          </p>
-                        </div>
-
-                        <span className="badge-slate">Inactive</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            </div>
           </div>
         </div>
       </section>
 
       <SiteFooter />
     </main>
+  )
+}
+
+function EmployerMetricCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string
+  value: number | string
+  icon: React.ReactNode
+}) {
+  return (
+    <div className="content-panel">
+      <div className="text-orange-600">{icon}</div>
+      <p className="eyebrow mt-5">{label}</p>
+      <h2 className="mt-3 text-3xl font-bold text-slate-950">{value}</h2>
+    </div>
   )
 }
 
