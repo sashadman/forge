@@ -8,9 +8,12 @@ import {
   Database,
   GraduationCap,
   ShieldCheck,
+  UsersRound,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
+import PageHero from '@/components/ui/PageHero'
+import NextStepPanel from '@/components/ui/NextStepPanel'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 
@@ -80,25 +83,11 @@ export default async function AdminPage() {
     <main className="page-shell">
       <SiteNavbar />
 
-      <section className="hero-dark">
-        <div className="hero-fade" />
-
-        <div className="section-shell relative py-20">
-          <div className="max-w-4xl">
-            <p className="eyebrow-dark">Admin</p>
-
-            <h1 className="page-title-dark mt-6">
-              Manage real platform records.
-            </h1>
-
-            <p className="lead-text-dark mt-6 max-w-3xl">
-              Use this area for verified employers, trusted sources, real
-              opportunity listings, and training pathways. Keep the platform
-              accurate, current, and credible.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Admin command center"
+        title="Manage platform quality with clear operational workflows."
+        description="Use this area to manage trusted sources, real employers, opportunity listings, training pathways, applications, and data-quality operations."
+      />
 
       <section className="section-light pb-20">
         <div className="section-shell">
@@ -107,14 +96,14 @@ export default async function AdminPage() {
               icon={<Building2 className="h-8 w-8" />}
               eyebrow="Employers"
               value={employerCount}
-              description="Employer profiles currently stored in the platform."
+              description="Real employer profiles currently stored."
             />
 
             <AdminMetricCard
               icon={<BriefcaseBusiness className="h-8 w-8" />}
               eyebrow="Opportunities"
               value={opportunityCount}
-              description="Opportunity records connected to employer profiles."
+              description="Opportunity records connected to employers."
             />
 
             <AdminMetricCard
@@ -128,94 +117,94 @@ export default async function AdminPage() {
               icon={<ShieldCheck className="h-8 w-8" />}
               eyebrow="Review due"
               value={reviewDueSourceCount}
-              description="Sources that need admin review or verification."
+              description="Sources that need review or verification."
             />
           </div>
 
-          <div className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
-              <div>
-                <p className="eyebrow">Admin command center</p>
+          <div className="mt-8">
+            <NextStepPanel
+              eyebrow="Recommended next step"
+              title="Keep source quality and listing freshness under control."
+              description="Start with trusted sources, then create or review opportunity listings. This keeps the platform useful without allowing stale or fake records."
+              primaryHref="/admin/data-expansion"
+              primaryLabel="Open data expansion"
+              secondaryHref="/admin/opportunity-sources"
+              secondaryLabel="Manage sources"
+              icon={<Database className="h-6 w-6" />}
+            />
+          </div>
 
-                <h2 className="section-title mt-3">
-                  Build a trustworthy skilled-trades data platform.
-                </h2>
+          <section className="mt-8">
+            <div>
+              <p className="eyebrow">Admin workflows</p>
 
-                <p className="muted-text mt-3 max-w-3xl">
-                  Manage employers, opportunities, training programs, and the
-                  trusted source directory that supports broad listings.
-                </p>
-              </div>
+              <h2 className="section-title mt-3">
+                Choose the workflow you need.
+              </h2>
 
-              <Link href="/admin/opportunity-sources" className="btn-primary">
-                Manage opportunity sources
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <p className="muted-text mt-3 max-w-3xl">
+                Each area has a focused purpose. Avoid jumping between pages
+                randomly; use the workflow that matches the business task.
+              </p>
             </div>
-          </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            <AdminActionCard
-              href="/admin/opportunity-sources"
-              icon={<Database className="h-7 w-7" />}
-              title="Manage sources"
-              description="Add and review public directories, workforce boards, apprenticeship sources, and official career pages."
-              action="Open source directory"
-              featured
-            />
-<AdminActionCard
-  href="/admin/applications"
-  icon={<BriefcaseBusiness className="h-7 w-7" />}
-  title="Review applications"
-  description="Review seeker applications, readiness snapshots, timeline events, and employer review status."
-  action="Open application review"
+            <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <AdminActionCard
+                href="/admin/data-expansion"
+                icon={<Database className="h-7 w-7" />}
+                title="Expand real data"
+                description="Use trusted sources, source review, and freshness rules to grow real listings."
+                action="Open workflow"
+                featured
+              />
 
-/>
-<AdminActionCard
-  href="/admin/data-expansion"
-  icon={<Database className="h-7 w-7" />}
-  title="Expand real data"
-  description="Use trusted sources, review workflow, and freshness rules to grow real opportunity listings."
-  action="Open data expansion"
-/>
-            <AdminActionCard
-              href="/admin/opportunities"
-              icon={<BriefcaseBusiness className="h-7 w-7" />}
-              title="Review opportunities"
-              description="Review real opportunity listings connected to employer profiles and trusted sources."
-              action="Open opportunity admin"
-            />
+              <AdminActionCard
+                href="/admin/opportunity-sources"
+                icon={<ShieldCheck className="h-7 w-7" />}
+                title="Manage sources"
+                description="Add, review, activate, and check trusted opportunity sources."
+                action="Open sources"
+              />
 
-            <AdminActionCard
-              href="/admin/employers"
-              icon={<Building2 className="h-7 w-7" />}
-              title="Manage employers"
-              description="Review employer records, verification status, and public profile pages."
-              action="Open employer admin"
-            />
+              <AdminActionCard
+                href="/admin/opportunities"
+                icon={<BriefcaseBusiness className="h-7 w-7" />}
+                title="Review opportunities"
+                description="Review real listings, source attribution, quality, and public visibility."
+                action="Open opportunities"
+              />
 
-            <AdminActionCard
-              href="/admin/programs"
-              icon={<GraduationCap className="h-7 w-7" />}
-              title="Review programs"
-              description="Review real training programs, apprenticeships, and pathway records."
-              action="Open program admin"
-            />
+              <AdminActionCard
+                href="/admin/applications"
+                icon={<UsersRound className="h-7 w-7" />}
+                title="Review applications"
+                description="Review submitted applications, readiness snapshots, and timeline status."
+                action="Open applications"
+              />
 
-            <AdminActionCard
-              href="/admin/employers/new"
-              icon={<Building2 className="h-7 w-7" />}
-              title="Add real employer"
-              description="Manually add a real employer after checking the organization information."
-              action="Create employer record"
-            />
-          </div>
+              <AdminActionCard
+                href="/admin/employers"
+                icon={<Building2 className="h-7 w-7" />}
+                title="Manage employers"
+                description="Review employer records, verification status, and public profiles."
+                action="Open employers"
+              />
+
+              <AdminActionCard
+                href="/admin/programs"
+                icon={<GraduationCap className="h-7 w-7" />}
+                title="Review programs"
+                description="Review training programs, apprenticeships, and pathway records."
+                action="Open programs"
+              />
+            </div>
+          </section>
 
           <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
-                  Data quality standard
+                  Operating standard
                 </p>
 
                 <h2 className="mt-4 text-3xl font-bold tracking-tight">
@@ -223,9 +212,9 @@ export default async function AdminPage() {
                 </h2>
 
                 <p className="mt-4 leading-7 text-slate-300">
-                  Use source attribution, review dates, verification status, and
-                  official external links so users can trust the opportunities
-                  they find.
+                  Every public record should serve a seeker. Use source
+                  attribution, review dates, verification status, and official
+                  external links so users can trust what they find.
                 </p>
               </div>
 
@@ -236,11 +225,11 @@ export default async function AdminPage() {
                 />
                 <QualityCard
                   title="Verified"
-                  description="Review source quality and active status."
+                  description="Review source quality and public status."
                 />
                 <QualityCard
                   title="Current"
-                  description="Track stale, expired, and review-due records."
+                  description="Monitor stale and expired records."
                 />
               </div>
             </div>

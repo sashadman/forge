@@ -1,12 +1,18 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowLeft, Database, RefreshCw, ShieldCheck } from 'lucide-react'
+import { Database, RefreshCw, ShieldCheck } from 'lucide-react'
+import SiteNavbar from '@/components/layout/SiteNavbar'
+import SiteFooter from '@/components/layout/SiteFooter'
+import PageHero from '@/components/ui/PageHero'
+import BackLink from '@/components/ui/BackLink'
+import EmptyState from '@/components/ui/EmptyState'
+import NextStepPanel from '@/components/ui/NextStepPanel'
 import OpportunitySourceForm from '@/components/admin/opportunity-sources/OpportunitySourceForm'
 import OpportunitySourceCard from '@/components/admin/opportunity-sources/OpportunitySourceCard'
 import { getOpportunitySourcesPageData } from '@/lib/admin/get-opportunity-sources-page-data'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'Opportunity Sources',
+  title: `Opportunity Sources — ${siteConfig.name}`,
   description:
     'Admin source directory for trusted skilled-trades opportunity data.',
 }
@@ -17,41 +23,34 @@ export default async function AdminOpportunitySourcesPage() {
 
   return (
     <main className="page-shell">
-      <section className="section-light min-h-screen py-12">
+      <SiteNavbar />
+
+      <PageHero
+        eyebrow="Opportunity source management"
+        title="Build the trusted source directory before scaling listings."
+        description="Manage official directories, workforce boards, apprenticeship sources, employer career pages, and other trusted sources that support real opportunity discovery."
+        actions={<BackLink href="/admin" label="Back to admin" variant="light" />}
+      />
+
+      <section className="section-light pb-20">
         <div className="section-shell">
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 transition hover:text-orange-800"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to admin
-          </Link>
+          <div className="-mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <StatCard label="Sources" value={stats.totalSources} />
+            <StatCard label="Active" value={stats.activeSources} />
+            <StatCard label="Due review" value={stats.sourcesDueForReview} />
+            <StatCard label="Official" value={stats.officialSources} />
+          </div>
 
-          <div className="mt-8 rounded-[2rem] bg-slate-950 p-8 text-white shadow-xl">
-            <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
-                  Opportunity data foundation
-                </p>
-
-                <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-5xl">
-                  Build a trusted source directory before importing broad listings.
-                </h1>
-
-                <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-                  Manage official directories, workforce boards, apprenticeship
-                  sources, employer career pages, and other trusted sources that
-                  power the platform’s opportunity database.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 sm:min-w-80">
-                <StatCard label="Sources" value={stats.totalSources} />
-                <StatCard label="Active" value={stats.activeSources} />
-                <StatCard label="Due review" value={stats.sourcesDueForReview} />
-                <StatCard label="Official" value={stats.officialSources} />
-              </div>
-            </div>
+          <div className="mt-8">
+            <NextStepPanel
+              title="Add or review sources before creating broad listings."
+              description="Source quality controls the quality of the opportunity database. Review source reliability, region, search URL, and review timing before using a source for public listings."
+              primaryHref="/admin/data-expansion"
+              primaryLabel="Open data expansion"
+              secondaryHref="/admin/opportunities/new"
+              secondaryLabel="Create sourced listing"
+              icon={<ShieldCheck className="h-6 w-6" />}
+            />
           </div>
 
           <div className="mt-8">
@@ -60,11 +59,13 @@ export default async function AdminOpportunitySourcesPage() {
 
           <div className="mt-8 grid gap-8 xl:grid-cols-[1fr_0.45fr]">
             <section className="space-y-5">
-              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                <div>
-                  <p className="eyebrow">Sources</p>
-                  <h2 className="section-title mt-3">Trusted listing sources</h2>
-                </div>
+              <div>
+                <p className="eyebrow">Sources</p>
+                <h2 className="section-title mt-3">Trusted listing sources</h2>
+                <p className="muted-text mt-3 max-w-3xl">
+                  Use these sources to create real opportunity records with
+                  attribution, verification status, and review timing.
+                </p>
               </div>
 
               {sources.length > 0 ? (
@@ -74,18 +75,15 @@ export default async function AdminOpportunitySourcesPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8">
-                  <Database className="h-10 w-10 text-orange-600" />
-
-                  <h3 className="mt-5 text-2xl font-bold text-slate-950">
-                    No sources yet
-                  </h3>
-
-                  <p className="muted-text mt-3 max-w-2xl">
-                    Add trusted opportunity sources first. After sources are in
-                    place, imports and listing review can be added safely.
-                  </p>
-                </div>
+                <EmptyState
+                  icon={<Database className="h-6 w-6" />}
+                  title="No sources yet"
+                  description="Add trusted opportunity sources first. After sources are in place, use data expansion and admin opportunity creation to grow real listings safely."
+                  primaryHref="/admin/data-expansion"
+                  primaryLabel="Open data expansion"
+                  secondaryHref="/admin"
+                  secondaryLabel="Admin home"
+                />
               )}
             </section>
 
@@ -96,23 +94,23 @@ export default async function AdminOpportunitySourcesPage() {
                 </div>
 
                 <h2 className="mt-5 text-2xl font-bold text-slate-950">
-                  Data quality rules
+                  Source quality rules
                 </h2>
 
                 <div className="mt-5 space-y-4 text-sm leading-6 text-slate-600">
                   <p>
-                    Use official and trusted sources whenever possible. Avoid
-                    copying stale listings without external verification.
+                    Prefer official and high-trust sources. Avoid copying stale
+                    listings without external verification.
                   </p>
 
                   <p>
-                    Every imported listing should keep source attribution,
+                    Every public listing should keep source attribution,
                     external URL, verification status, and review timing.
                   </p>
 
                   <p>
-                    Broad listings are valuable only if they stay trustworthy and
-                    current.
+                    Broad listings only help users when they remain trustworthy
+                    and current.
                   </p>
                 </div>
               </section>
@@ -158,7 +156,8 @@ export default async function AdminOpportunitySourcesPage() {
                 ) : (
                   <p className="muted-text mt-5">
                     No import batches yet. Source management comes first; import
-                    workflow comes next.
+                    workflow can be added only after the manual source workflow
+                    is stable.
                   </p>
                 )}
               </section>
@@ -166,18 +165,17 @@ export default async function AdminOpportunitySourcesPage() {
           </div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   )
 }
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-300">
-        {label}
-      </p>
-
-      <p className="mt-2 text-3xl font-bold text-white">{value}</p>
+    <div className="content-panel">
+      <p className="eyebrow">{label}</p>
+      <h2 className="mt-3 text-3xl font-bold text-slate-950">{value}</h2>
     </div>
   )
 }
