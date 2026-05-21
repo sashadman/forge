@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { BriefcaseBusiness, ExternalLink } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 import type { OpportunityType } from '@/lib/supabase/app-types'
 
@@ -214,18 +215,12 @@ export default function OpportunityForm({
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-            placeholder="CA"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div>
           <label className="label">Pay range</label>

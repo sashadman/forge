@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Building2, ExternalLink, Save } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 
 type Employer = {
@@ -195,17 +196,12 @@ export default function EmployerProfileEditForm({
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div className="lg:col-span-2">
           <label className="label">Website</label>
@@ -232,73 +228,18 @@ export default function EmployerProfileEditForm({
         </p>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div>
-            <label className="label">LinkedIn</label>
-            <input
-              type="text"
-              value={linkedinUrl}
-              onChange={(event) => setLinkedinUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">Instagram</label>
-            <input
-              type="text"
-              value={instagramUrl}
-              onChange={(event) => setInstagramUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">Facebook</label>
-            <input
-              type="text"
-              value={facebookUrl}
-              onChange={(event) => setFacebookUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">X / Twitter</label>
-            <input
-              type="text"
-              value={xUrl}
-              onChange={(event) => setXUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">YouTube</label>
-            <input
-              type="text"
-              value={youtubeUrl}
-              onChange={(event) => setYoutubeUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">TikTok</label>
-            <input
-              type="text"
-              value={tiktokUrl}
-              onChange={(event) => setTiktokUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
+          <SocialInput label="LinkedIn" value={linkedinUrl} onChange={setLinkedinUrl} />
+          <SocialInput label="Instagram" value={instagramUrl} onChange={setInstagramUrl} />
+          <SocialInput label="Facebook" value={facebookUrl} onChange={setFacebookUrl} />
+          <SocialInput label="X / Twitter" value={xUrl} onChange={setXUrl} />
+          <SocialInput label="YouTube" value={youtubeUrl} onChange={setYoutubeUrl} />
+          <SocialInput label="TikTok" value={tiktokUrl} onChange={setTiktokUrl} />
 
           <div className="lg:col-span-2">
-            <label className="label">Other social link</label>
-            <input
-              type="text"
+            <SocialInput
+              label="Other social link"
               value={otherSocialUrl}
-              onChange={(event) => setOtherSocialUrl(event.target.value)}
-              className="input-field"
+              onChange={setOtherSocialUrl}
             />
           </div>
         </div>
@@ -327,5 +268,27 @@ export default function EmployerProfileEditForm({
         </button>
       </div>
     </form>
+  )
+}
+
+function SocialInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div>
+      <label className="label">{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="input-field"
+      />
+    </div>
   )
 }

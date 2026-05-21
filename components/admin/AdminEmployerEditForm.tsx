@@ -12,6 +12,7 @@ import {
   Save,
   ShieldCheck,
 } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 
 type Employer = {
@@ -280,6 +281,7 @@ export default function AdminEmployerEditForm({
             rows={5}
             className="input-field"
           />
+
           <p className="mt-2 text-xs text-slate-500">
             Recommended: at least 80 characters for a useful public profile.
           </p>
@@ -316,17 +318,12 @@ export default function AdminEmployerEditForm({
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div className="lg:col-span-2">
           <label className="label">Website</label>
@@ -353,73 +350,18 @@ export default function AdminEmployerEditForm({
         </p>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div>
-            <label className="label">LinkedIn</label>
-            <input
-              type="text"
-              value={linkedinUrl}
-              onChange={(event) => setLinkedinUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">Instagram</label>
-            <input
-              type="text"
-              value={instagramUrl}
-              onChange={(event) => setInstagramUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">Facebook</label>
-            <input
-              type="text"
-              value={facebookUrl}
-              onChange={(event) => setFacebookUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">X / Twitter</label>
-            <input
-              type="text"
-              value={xUrl}
-              onChange={(event) => setXUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">YouTube</label>
-            <input
-              type="text"
-              value={youtubeUrl}
-              onChange={(event) => setYoutubeUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
-
-          <div>
-            <label className="label">TikTok</label>
-            <input
-              type="text"
-              value={tiktokUrl}
-              onChange={(event) => setTiktokUrl(event.target.value)}
-              className="input-field"
-            />
-          </div>
+          <SocialInput label="LinkedIn" value={linkedinUrl} onChange={setLinkedinUrl} />
+          <SocialInput label="Instagram" value={instagramUrl} onChange={setInstagramUrl} />
+          <SocialInput label="Facebook" value={facebookUrl} onChange={setFacebookUrl} />
+          <SocialInput label="X / Twitter" value={xUrl} onChange={setXUrl} />
+          <SocialInput label="YouTube" value={youtubeUrl} onChange={setYoutubeUrl} />
+          <SocialInput label="TikTok" value={tiktokUrl} onChange={setTiktokUrl} />
 
           <div className="lg:col-span-2">
-            <label className="label">Other social link</label>
-            <input
-              type="text"
+            <SocialInput
+              label="Other social link"
               value={otherSocialUrl}
-              onChange={(event) => setOtherSocialUrl(event.target.value)}
-              className="input-field"
+              onChange={setOtherSocialUrl}
             />
           </div>
         </div>
@@ -439,43 +381,19 @@ export default function AdminEmployerEditForm({
         </p>
 
         <div className="mt-6 grid gap-4">
-          <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <input
-              type="checkbox"
-              checked={isVerified}
-              onChange={(event) => setIsVerified(event.target.checked)}
-              className="mt-1 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
-            />
+          <AdminCheckbox
+            checked={isVerified}
+            onChange={setIsVerified}
+            title="Mark employer as verified"
+            description="Verified employers display public trust signals. This does not guarantee employment quality or current openings."
+          />
 
-            <span>
-              <span className="block font-semibold text-slate-950">
-                Mark employer as verified
-              </span>
-              <span className="mt-1 block text-sm leading-6 text-slate-500">
-                Verified employers display public trust signals. This does not
-                guarantee employment quality or current openings.
-              </span>
-            </span>
-          </label>
-
-          <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <input
-              type="checkbox"
-              checked={isActive}
-              onChange={(event) => setIsActive(event.target.checked)}
-              className="mt-1 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
-            />
-
-            <span>
-              <span className="block font-semibold text-slate-950">
-                Active employer profile
-              </span>
-              <span className="mt-1 block text-sm leading-6 text-slate-500">
-                Active employers can appear publicly. Inactive employers are
-                hidden from public employer detail pages.
-              </span>
-            </span>
-          </label>
+          <AdminCheckbox
+            checked={isActive}
+            onChange={setIsActive}
+            title="Active employer profile"
+            description="Active employers can appear publicly. Inactive employers are hidden from public employer detail pages."
+          />
         </div>
       </div>
 
@@ -502,6 +420,58 @@ export default function AdminEmployerEditForm({
         </button>
       </div>
     </form>
+  )
+}
+
+function SocialInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div>
+      <label className="label">{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="input-field"
+      />
+    </div>
+  )
+}
+
+function AdminCheckbox({
+  checked,
+  onChange,
+  title,
+  description,
+}: {
+  checked: boolean
+  onChange: (checked: boolean) => void
+  title: string
+  description: string
+}) {
+  return (
+    <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(event) => onChange(event.target.checked)}
+        className="mt-1 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+      />
+
+      <span>
+        <span className="block font-semibold text-slate-950">{title}</span>
+        <span className="mt-1 block text-sm leading-6 text-slate-500">
+          {description}
+        </span>
+      </span>
+    </label>
   )
 }
 

@@ -3,7 +3,14 @@
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, ExternalLink, GraduationCap, Save, ShieldCheck } from 'lucide-react'
+import {
+  ArrowLeft,
+  ExternalLink,
+  GraduationCap,
+  Save,
+  ShieldCheck,
+} from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 import type { ProgramType } from '@/lib/supabase/app-types'
 
@@ -82,14 +89,18 @@ export default function AdminProgramEditForm({
 
   const [name, setName] = useState(program.name)
   const [providerName, setProviderName] = useState(program.provider_name)
-  const [programType, setProgramType] = useState<ProgramType>(program.program_type)
+  const [programType, setProgramType] = useState<ProgramType>(
+    program.program_type
+  )
   const [tradeSlug, setTradeSlug] = useState(program.trade_slug)
   const [location, setLocation] = useState(program.location)
   const [state, setState] = useState(program.state)
   const [duration, setDuration] = useState(program.duration || '')
   const [cost, setCost] = useState(program.cost || '')
   const [description, setDescription] = useState(program.description)
-  const [requirements, setRequirements] = useState(joinLines(program.requirements))
+  const [requirements, setRequirements] = useState(
+    joinLines(program.requirements)
+  )
   const [outcomes, setOutcomes] = useState(joinLines(program.outcomes))
   const [websiteUrl, setWebsiteUrl] = useState(program.website_url || '')
   const [isActive, setIsActive] = useState(program.is_active)
@@ -150,7 +161,8 @@ export default function AdminProgramEditForm({
             <h2 className="section-title mt-3">{program.name}</h2>
 
             <p className="muted-text mt-3 max-w-3xl">
-              Update real provider and program information. The public slug stays the same for now.
+              Update real provider and program information. The public slug
+              stays the same for now.
             </p>
           </div>
         </div>
@@ -197,7 +209,9 @@ export default function AdminProgramEditForm({
           <label className="label">Program type</label>
           <select
             value={programType}
-            onChange={(event) => setProgramType(event.target.value as ProgramType)}
+            onChange={(event) =>
+              setProgramType(event.target.value as ProgramType)
+            }
             className="input-field"
           >
             {PROGRAM_TYPES.map((type) => (
@@ -234,17 +248,12 @@ export default function AdminProgramEditForm({
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div>
           <label className="label">Duration</label>

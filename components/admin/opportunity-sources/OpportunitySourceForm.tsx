@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { PlusCircle } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import {
   OPPORTUNITY_SOURCE_TYPE_OPTIONS,
   SOURCE_RELIABILITY_OPTIONS,
@@ -18,6 +19,7 @@ export default function OpportunitySourceForm() {
     useState<OpportunitySourceType>('manual_research')
   const [reliabilityLevel, setReliabilityLevel] =
     useState<SourceReliabilityLevel>('needs_review')
+  const [state, setState] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isPending, startTransition] = useTransition()
@@ -30,7 +32,6 @@ export default function OpportunitySourceForm() {
     const websiteUrl = String(formData.get('websiteUrl') ?? '')
     const searchUrl = String(formData.get('searchUrl') ?? '')
     const region = String(formData.get('region') ?? '')
-    const state = String(formData.get('state') ?? '')
     const tradeFocus = String(formData.get('tradeFocus') ?? '')
     const description = String(formData.get('description') ?? '')
     const notes = String(formData.get('notes') ?? '')
@@ -52,6 +53,7 @@ export default function OpportunitySourceForm() {
 
         setSuccess('Opportunity source created.')
         setIsOpen(false)
+        setState('')
       } catch (error) {
         console.error('Failed to create opportunity source:', error)
         setError(
@@ -69,7 +71,9 @@ export default function OpportunitySourceForm() {
         <div>
           <p className="eyebrow">Source directory</p>
 
-          <h2 className="section-title mt-3">Add a trusted opportunity source</h2>
+          <h2 className="section-title mt-3">
+            Add a trusted opportunity source
+          </h2>
 
           <p className="muted-text mt-3 max-w-3xl">
             Add public directories, workforce boards, apprenticeship sources,
@@ -115,11 +119,21 @@ export default function OpportunitySourceForm() {
 
           <div className="grid gap-5 lg:grid-cols-2">
             <Field label="Search URL" name="searchUrl" />
-            <Field label="Region" name="region" placeholder="San Diego, California, National" />
+
+            <Field
+              label="Region"
+              name="region"
+              placeholder="San Diego, California, National"
+            />
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
-            <Field label="State" name="state" placeholder="CA" />
+            <StateSelect
+              value={state}
+              onChange={setState}
+              helperText="Use the official state abbreviation. ZIP autofill will be added through the internal ZIP data layer next."
+            />
+
             <Field
               label="Trade focus"
               name="tradeFocus"
@@ -141,7 +155,8 @@ export default function OpportunitySourceForm() {
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-500">
-              New sources are active by default and scheduled for review in 30 days.
+              New sources are active by default and scheduled for review in 30
+              days.
             </p>
 
             <button

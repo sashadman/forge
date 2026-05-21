@@ -12,6 +12,7 @@ import {
   Save,
   ShieldCheck,
 } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 import type { OpportunityType } from '@/lib/supabase/app-types'
 
@@ -196,7 +197,8 @@ export default function AdminOpportunityEditForm({
     ]
   )
 
-  const completedQualityItems = qualityItems.filter((item) => item.complete).length
+  const completedQualityItems = qualityItems.filter((item) => item.complete)
+    .length
 
   const qualityScore = Math.round(
     (completedQualityItems / qualityItems.length) * 100
@@ -253,9 +255,9 @@ export default function AdminOpportunityEditForm({
             <h2 className="section-title mt-3">{opportunity.title}</h2>
 
             <p className="muted-text mt-3 max-w-3xl">
-              Review real listing information, employer connection, requirements,
-              benefits, application link, and public visibility before keeping
-              this opportunity active.
+              Review real listing information, employer connection,
+              requirements, benefits, application link, and public visibility
+              before keeping this opportunity active.
             </p>
           </div>
         </div>
@@ -407,20 +409,16 @@ export default function AdminOpportunityEditForm({
             onChange={(event) => setLocation(event.target.value)}
             required
             className="input-field"
+            placeholder="San Diego"
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div>
           <label className="label">Pay range</label>

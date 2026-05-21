@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Building2, ExternalLink } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 
 type EmployerProfileFormProps = {
@@ -107,7 +108,7 @@ export default function EmployerProfileForm({
       return
     }
 
-    router.push(`/employers/dashboard`)
+    router.push('/employers/dashboard')
     router.refresh()
   }
 
@@ -191,18 +192,12 @@ export default function EmployerProfileForm({
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-            placeholder="CA"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div className="lg:col-span-2">
           <label className="label">Website</label>
@@ -229,79 +224,18 @@ export default function EmployerProfileForm({
         </p>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div>
-            <label className="label">LinkedIn</label>
-            <input
-              type="text"
-              value={linkedinUrl}
-              onChange={(event) => setLinkedinUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://linkedin.com/company/..."
-            />
-          </div>
-
-          <div>
-            <label className="label">Instagram</label>
-            <input
-              type="text"
-              value={instagramUrl}
-              onChange={(event) => setInstagramUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://instagram.com/..."
-            />
-          </div>
-
-          <div>
-            <label className="label">Facebook</label>
-            <input
-              type="text"
-              value={facebookUrl}
-              onChange={(event) => setFacebookUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://facebook.com/..."
-            />
-          </div>
-
-          <div>
-            <label className="label">X / Twitter</label>
-            <input
-              type="text"
-              value={xUrl}
-              onChange={(event) => setXUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://x.com/..."
-            />
-          </div>
-
-          <div>
-            <label className="label">YouTube</label>
-            <input
-              type="text"
-              value={youtubeUrl}
-              onChange={(event) => setYoutubeUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://youtube.com/..."
-            />
-          </div>
-
-          <div>
-            <label className="label">TikTok</label>
-            <input
-              type="text"
-              value={tiktokUrl}
-              onChange={(event) => setTiktokUrl(event.target.value)}
-              className="input-field"
-              placeholder="https://tiktok.com/@..."
-            />
-          </div>
+          <SocialInput label="LinkedIn" value={linkedinUrl} onChange={setLinkedinUrl} placeholder="https://linkedin.com/company/..." />
+          <SocialInput label="Instagram" value={instagramUrl} onChange={setInstagramUrl} placeholder="https://instagram.com/..." />
+          <SocialInput label="Facebook" value={facebookUrl} onChange={setFacebookUrl} placeholder="https://facebook.com/..." />
+          <SocialInput label="X / Twitter" value={xUrl} onChange={setXUrl} placeholder="https://x.com/..." />
+          <SocialInput label="YouTube" value={youtubeUrl} onChange={setYoutubeUrl} placeholder="https://youtube.com/..." />
+          <SocialInput label="TikTok" value={tiktokUrl} onChange={setTiktokUrl} placeholder="https://tiktok.com/@..." />
 
           <div className="lg:col-span-2">
-            <label className="label">Other social link</label>
-            <input
-              type="text"
+            <SocialInput
+              label="Other social link"
               value={otherSocialUrl}
-              onChange={(event) => setOtherSocialUrl(event.target.value)}
-              className="input-field"
+              onChange={setOtherSocialUrl}
               placeholder="Any other official company social profile"
             />
           </div>
@@ -324,5 +258,30 @@ export default function EmployerProfileForm({
         </button>
       </div>
     </form>
+  )
+}
+
+function SocialInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+}) {
+  return (
+    <div>
+      <label className="label">{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="input-field"
+        placeholder={placeholder}
+      />
+    </div>
   )
 }

@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Save,
 } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 import type { OpportunityType } from '@/lib/supabase/app-types'
 
@@ -191,7 +192,8 @@ export default function OpportunityEditForm({
               <h2 className="section-title mt-3">{opportunity.title}</h2>
 
               <p className="muted-text mt-3 max-w-3xl">
-                Update the details for this real opportunity. The public URL slug stays the same for now to avoid broken links.
+                Update the details for this real opportunity. The public URL
+                slug stays the same for now to avoid broken links.
               </p>
             </div>
           </div>
@@ -266,20 +268,16 @@ export default function OpportunityEditForm({
               onChange={(event) => setLocation(event.target.value)}
               required
               className="input-field"
+              placeholder="San Diego"
             />
           </div>
 
-          <div>
-            <label className="label">State</label>
-            <input
-              type="text"
-              value={state}
-              onChange={(event) => setState(event.target.value.toUpperCase())}
-              required
-              maxLength={2}
-              className="input-field"
-            />
-          </div>
+          <StateSelect
+            value={state}
+            onChange={setState}
+            required
+            helperText="ZIP autofill will be added through the internal ZIP data layer next."
+          />
 
           <div>
             <label className="label">Pay range</label>
@@ -387,7 +385,8 @@ export default function OpportunityEditForm({
               </h2>
 
               <p className="muted-text mt-3 max-w-3xl">
-                Deactivation does not delete the listing. It changes the listing to inactive so it no longer appears publicly.
+                Deactivation does not delete the listing. It changes the listing
+                to inactive so it no longer appears publicly.
               </p>
 
               {confirmDeactivate && (

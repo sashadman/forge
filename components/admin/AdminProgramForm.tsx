@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ExternalLink, GraduationCap, ShieldCheck } from 'lucide-react'
+import StateSelect from '@/components/forms/StateSelect'
 import { createClient } from '@/lib/supabase/client'
 import type { ProgramType } from '@/lib/supabase/app-types'
 
@@ -177,7 +178,9 @@ export default function AdminProgramForm() {
           <label className="label">Program type</label>
           <select
             value={programType}
-            onChange={(event) => setProgramType(event.target.value as ProgramType)}
+            onChange={(event) =>
+              setProgramType(event.target.value as ProgramType)
+            }
             className="input-field"
           >
             {PROGRAM_TYPES.map((type) => (
@@ -215,18 +218,12 @@ export default function AdminProgramForm() {
           />
         </div>
 
-        <div>
-          <label className="label">State</label>
-          <input
-            type="text"
-            value={state}
-            onChange={(event) => setState(event.target.value.toUpperCase())}
-            required
-            maxLength={2}
-            className="input-field"
-            placeholder="CA"
-          />
-        </div>
+        <StateSelect
+          value={state}
+          onChange={setState}
+          required
+          helperText="ZIP autofill will be added through the internal ZIP data layer next."
+        />
 
         <div>
           <label className="label">Duration</label>
