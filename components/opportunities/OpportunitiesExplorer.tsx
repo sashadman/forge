@@ -150,19 +150,19 @@ export default function OpportunitiesExplorer({
   }
 
   return (
-    <div className="space-y-10">
-      <div className="content-panel -mt-16">
+    <div className="space-y-8">
+      <section className="content-panel">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="eyebrow">Opportunity directory</p>
+            <p className="eyebrow">Jobs & apprenticeships directory</p>
 
             <h2 className="section-title mt-3">
-              Active skilled-trades listings
+              Search active skilled-trades openings
             </h2>
 
             <p className="muted-text mt-3 max-w-2xl">
-              Search real opportunity records by employer, trade, listing type,
-              location, schedule, or pay information.
+              Use search here because this page is for action-ready listings.
+              Filter by employer, trade, listing type, location, schedule, or pay.
             </p>
           </div>
 
@@ -179,7 +179,7 @@ export default function OpportunitiesExplorer({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search employer, trade, city, listing..."
+              placeholder="Search employer, trade, city, role..."
               className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-400"
             />
           </div>
@@ -202,7 +202,7 @@ export default function OpportunitiesExplorer({
             onChange={(event) => setTradeFocus(event.target.value)}
             className="select-field"
           >
-            <option value="all">All trades</option>
+            <option value="all">All career paths</option>
             {tradeFocusOptions.map((trade) => (
               <option key={trade} value={trade}>
                 {trade}
@@ -242,7 +242,7 @@ export default function OpportunitiesExplorer({
             Clear
           </button>
         </div>
-      </div>
+      </section>
 
       {filteredOpportunities.length > 0 ? (
         <div className="grid gap-6 lg:grid-cols-2">
@@ -250,7 +250,7 @@ export default function OpportunitiesExplorer({
             const employer = getEmployer(opportunity)
 
             return (
-              <div key={opportunity.id} className="card">
+              <article key={opportunity.id} className="card">
                 <Link
                   href={`/opportunities/${opportunity.slug}`}
                   className="group block"
@@ -333,7 +333,7 @@ export default function OpportunitiesExplorer({
                     />
                   </div>
                 </div>
-              </div>
+              </article>
             )
           })}
         </div>
@@ -344,13 +344,12 @@ export default function OpportunitiesExplorer({
           </div>
 
           <h3 className="mt-6 text-3xl font-bold tracking-tight">
-            No matching opportunities found
+            No matching jobs or apprenticeships found
           </h3>
 
           <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-            No active opportunity records match your current filters. Try
-            changing the search, selecting a different trade, or clearing the
-            verified-employer filter.
+            No active records match your current filters. Try a different career
+            path, location, listing type, or clear the verified-employer filter.
           </p>
 
           <button type="button" onClick={clearFilters} className="btn-dark mt-6">
@@ -365,13 +364,13 @@ export default function OpportunitiesExplorer({
             </div>
 
             <h3 className="mt-6 text-3xl font-bold tracking-tight">
-              No active opportunities yet
+              No active jobs or apprenticeships yet
             </h3>
 
             <p className="lead-text mt-4">
-              We are keeping this section honest. Opportunities will appear here
-              only when real employer listings, apprenticeships, trainee roles,
-              or workforce opportunities are added.
+              We are keeping this section honest. Listings will appear here only
+              when real jobs, apprenticeships, trainee roles, or workforce
+              opportunities are added.
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">

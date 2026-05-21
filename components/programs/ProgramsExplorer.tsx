@@ -106,24 +106,24 @@ export default function ProgramsExplorer({
   }
 
   return (
-    <div className="space-y-10">
-      <div className="content-panel -mt-16">
+    <div className="space-y-8">
+      <section className="content-panel">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="eyebrow">Program directory</p>
+            <p className="eyebrow">Training program directory</p>
 
             <h2 className="section-title mt-3">
-              Active training pathways
+              Search active training programs
             </h2>
 
             <p className="muted-text mt-3 max-w-2xl">
-              Search and filter real program records by provider, trade, type,
-              and location.
+              Use search here because training decisions depend on provider,
+              location, trade focus, program type, duration, and cost.
             </p>
           </div>
 
           <p className="badge-slate">
-            {filteredPrograms.length} of {programs.length} listings
+            {filteredPrograms.length} of {programs.length} programs
           </p>
         </div>
 
@@ -135,7 +135,7 @@ export default function ProgramsExplorer({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search provider, trade, city, program..."
+              placeholder="Search provider, career path, city, program..."
               className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-400"
             />
           </div>
@@ -158,7 +158,7 @@ export default function ProgramsExplorer({
             onChange={(event) => setTradeFocus(event.target.value)}
             className="select-field"
           >
-            <option value="all">All trades</option>
+            <option value="all">All career paths</option>
             {tradeFocusOptions.map((trade) => (
               <option key={trade} value={trade}>
                 {trade}
@@ -188,12 +188,12 @@ export default function ProgramsExplorer({
             Clear
           </button>
         </div>
-      </div>
+      </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {filteredPrograms.length > 0 ? (
           filteredPrograms.map((program) => (
-            <div key={program.id} className="card">
+            <article key={program.id} className="card">
               <Link href={`/programs/${program.slug}`} className="group block">
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -253,7 +253,7 @@ export default function ProgramsExplorer({
                   href={`/programs/${program.slug}`}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
                 >
-                  View program
+                  View training program
                   <ArrowRight className="h-4 w-4" />
                 </Link>
 
@@ -264,15 +264,17 @@ export default function ProgramsExplorer({
                   />
                 </div>
               </div>
-            </div>
+            </article>
           ))
         ) : (
           <div className="card border-dashed p-10 text-center lg:col-span-2">
-            <h3 className="text-2xl font-bold">No matching programs found</h3>
+            <h3 className="text-2xl font-bold">
+              No matching training programs found
+            </h3>
 
             <p className="mx-auto mt-3 max-w-2xl text-slate-600">
               No active program records match your current filters. Try changing
-              the search, selecting a different trade, or clearing the filters.
+              the career path, program type, location, or clearing the filters.
             </p>
 
             <button type="button" onClick={clearFilters} className="btn-dark mt-6">
