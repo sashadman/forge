@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, Circle } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Circle, ShieldCheck } from 'lucide-react'
 import type {
   ReadinessItemRow,
   ReadinessScoreRow,
@@ -35,22 +35,26 @@ export default function DashboardReadinessWidget({
   return (
     <section className="content-panel">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
-        <div>
-          <p className="eyebrow">Profile readiness</p>
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+            <ShieldCheck className="h-6 w-6" />
+          </div>
 
-          <h2 className="section-title mt-3">Get ready to apply</h2>
+          <div>
+            <p className="eyebrow">Profile readiness</p>
 
-          <p className="muted-text mt-3 max-w-2xl">
-            Complete your readiness profile so saved programs and opportunities
-            can turn into real applications.
-          </p>
+            <h2 className="section-title mt-3">Prepare before you apply</h2>
+
+            <p className="muted-text mt-3 max-w-2xl">
+              Your readiness profile becomes part of your application package.
+              Complete the required items before applying to serious opportunities.
+            </p>
+          </div>
         </div>
 
         <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-3xl bg-orange-100 text-orange-700">
           <p className="text-3xl font-bold">{percentage}%</p>
-          <p className="text-xs font-semibold uppercase tracking-wide">
-            Ready
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wide">Ready</p>
         </div>
       </div>
 
@@ -69,9 +73,7 @@ export default function DashboardReadinessWidget({
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         {REQUIRED_READINESS_ITEMS.map((configItem) => {
           const item = itemsByType.get(configItem.type)
-          const complete = item
-            ? isReadinessItemComplete(item.status)
-            : false
+          const complete = item ? isReadinessItemComplete(item.status) : false
           const isNext = nextItem?.type === configItem.type
 
           return (
@@ -100,9 +102,7 @@ export default function DashboardReadinessWidget({
                   </p>
 
                   <p className="mt-1 text-sm text-slate-500">
-                    {item
-                      ? getReadinessStatusLabel(item.status)
-                      : 'Not started'}
+                    {item ? getReadinessStatusLabel(item.status) : 'Not started'}
                   </p>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function DashboardReadinessWidget({
       </div>
 
       <Link href="/dashboard/readiness" className="btn-dark mt-6 w-full">
-        {nextItem ? `Complete: ${nextItem.label}` : 'View readiness profile'}
+        {nextItem ? `Complete: ${nextItem.label}` : 'Review readiness profile'}
         <ArrowRight className="h-4 w-4" />
       </Link>
     </section>

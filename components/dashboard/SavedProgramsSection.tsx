@@ -16,19 +16,21 @@ export default function SavedProgramsSection({
   return (
     <section className="content-panel">
       <DashboardSectionHeader
-        eyebrow="Saved programs"
-        title="Your training pathways"
-        description="Track training programs from saved to researching, applying, enrolled, completed, or closed."
+        eyebrow="Training pathways"
+        title="Saved programs and apprenticeships"
+        description="Use this section to compare programs, track follow-up actions, and decide which pathways are worth applying to."
         href="/programs"
-        action="Explore programs"
+        action={items.length > 0 ? 'Find more programs' : 'Explore programs'}
       />
 
       {items.length > 0 ? (
-        <ProgramPipelineBoard userId={userId} items={items} />
+        <div className="mt-6">
+          <ProgramPipelineBoard userId={userId} items={items} />
+        </div>
       ) : (
         <DashboardEmptyState
           title="No saved programs yet"
-          description="Save programs while browsing training pathways so you can compare them later."
+          description="Save programs while browsing training pathways. Your saved programs become your comparison list for training, apprenticeships, cost, duration, and next steps."
           href="/programs"
           action="Explore programs"
         />

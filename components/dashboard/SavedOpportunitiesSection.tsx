@@ -16,19 +16,23 @@ export default function SavedOpportunitiesSection({
   return (
     <section className="content-panel">
       <DashboardSectionHeader
-        eyebrow="Saved opportunities"
-        title="Your opportunity shortlist"
-        description="Track jobs, apprenticeships, trainee roles, and other real opportunities from saved to applied."
+        eyebrow="Opportunity pipeline"
+        title="Saved jobs and apprenticeships"
+        description="Track real opportunities from saved to researching, applying, interviewing, and closed."
         href="/opportunities"
-        action="Explore opportunities"
+        action={
+          items.length > 0 ? 'Find more opportunities' : 'Explore opportunities'
+        }
       />
 
       {items.length > 0 ? (
-        <OpportunityPipelineBoard userId={userId} items={items} />
+        <div className="mt-6">
+          <OpportunityPipelineBoard userId={userId} items={items} />
+        </div>
       ) : (
         <DashboardEmptyState
           title="No saved opportunities yet"
-          description="Save real opportunities while browsing listings so you can return to them later."
+          description="Save real opportunities while browsing listings. Your saved opportunities become your action list for applications and follow-up."
           href="/opportunities"
           action="Explore opportunities"
         />
