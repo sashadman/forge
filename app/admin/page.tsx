@@ -169,6 +169,14 @@ export default async function AdminPage() {
   title="Review applications"
   description="Review seeker applications, readiness snapshots, timeline events, and employer review status."
   action="Open application review"
+
+/>
+<AdminActionCard
+  href="/admin/data-expansion"
+  icon={<Database className="h-7 w-7" />}
+  title="Expand real data"
+  description="Use trusted sources, review workflow, and freshness rules to grow real opportunity listings."
+  action="Open data expansion"
 />
             <AdminActionCard
               href="/admin/opportunities"
