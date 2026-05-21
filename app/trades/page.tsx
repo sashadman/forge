@@ -3,34 +3,36 @@ import Link from 'next/link'
 import {
   ArrowRight,
   BriefcaseBusiness,
+  Compass,
   GraduationCap,
   Search,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
+import NextStepPanel from '@/components/ui/NextStepPanel'
 import TradesExplorer from '@/components/trades/TradesExplorer'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: `Explore Skilled Trades — ${siteConfig.name}`,
+  title: `Career Paths — ${siteConfig.name}`,
   description:
-    'Compare skilled trade careers, training paths, salaries, and job growth to find the right path for you.',
+    'Compare skilled-trades career paths, training options, earnings, and job growth to find the right direction.',
 }
 
 const heroCards = [
   {
     title: 'Discover',
-    description: 'Learn what each trade actually does.',
+    description: 'Understand what each career path actually does.',
     icon: Search,
   },
   {
     title: 'Prepare',
-    description: 'Understand training and apprenticeship pathways.',
+    description: 'Connect the path to training and apprenticeship options.',
     icon: GraduationCap,
   },
   {
-    title: 'Connect',
-    description: 'Move toward programs and employers as the platform grows.',
+    title: 'Act',
+    description: 'Move toward programs, jobs, apprenticeships, and employers.',
     icon: BriefcaseBusiness,
   },
 ]
@@ -45,16 +47,16 @@ export default function TradesPage() {
 
         <div className="section-shell relative py-24">
           <div className="max-w-4xl">
-            <p className="eyebrow-dark">Skilled trades marketplace</p>
+            <p className="eyebrow-dark">Career paths</p>
 
             <h1 className="page-title-dark mt-6">
-              Compare skilled trade career paths before choosing your next move.
+              Compare skilled-trades career paths before choosing your next move.
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Explore high-demand trades, understand training pathways, compare
-              earning potential, and start building a practical route toward
-              apprenticeships, programs, and employers.
+              Explore high-demand skilled-trades careers, understand training
+              pathways, compare earning potential, and build a practical route
+              toward jobs, apprenticeships, and long-term growth.
             </p>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
@@ -78,7 +80,21 @@ export default function TradesPage() {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <TradesExplorer />
+          <div className="-pt-8">
+            <NextStepPanel
+              title="Start with direction, then move toward training or work."
+              description="Career paths help you choose a direction. Once a path feels right, compare training programs or look for real jobs and apprenticeships."
+              primaryHref="/programs"
+              primaryLabel="Explore training programs"
+              secondaryHref="/opportunities"
+              secondaryLabel="View jobs & apprenticeships"
+              icon={<Compass className="h-6 w-6" />}
+            />
+          </div>
+
+          <div className="mt-8">
+            <TradesExplorer />
+          </div>
         </div>
       </section>
 
@@ -90,12 +106,12 @@ export default function TradesPage() {
                 <p className="eyebrow-dark">Need help choosing?</p>
 
                 <h2 className="section-title-dark mt-4">
-                  Find the trade that fits your strengths.
+                  Match your strengths with a practical career path.
                 </h2>
 
                 <p className="lead-text-dark mt-5 max-w-2xl">
                   Take the career quiz to compare your interests, work style,
-                  and goals with different skilled trade paths.
+                  and goals with different skilled-trades paths.
                 </p>
               </div>
 
