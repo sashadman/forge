@@ -12,6 +12,10 @@ import {
 } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/supabase/app-types'
 import {
+  getApplicationStatusBadgeClass,
+  getApplicationStatusLabel,
+} from '@/lib/applications/application-review-config'
+import {
   submitOpportunityApplication,
   withdrawOpportunityApplication,
 } from '@/app/actions/applications'
@@ -30,16 +34,6 @@ type OpportunityApplicationPanelProps = {
   readinessScore: number
   introMessageTemplate: string
   existingApplication: ExistingApplication | null
-}
-
-const STATUS_LABELS: Record<ApplicationStatus, string> = {
-  submitted: 'Submitted',
-  reviewed: 'Reviewed',
-  contacted: 'Contacted',
-  interviewing: 'Interviewing',
-  offered: 'Offered',
-  rejected: 'Rejected',
-  withdrawn: 'Withdrawn',
 }
 
 function getReadinessMessage(score: number) {
@@ -200,11 +194,17 @@ export default function OpportunityApplicationPanel({
               Application status
             </p>
 
-            <h3 className="mt-2 text-2xl font-bold text-green-950">
-              {STATUS_LABELS[application.status]}
-            </h3>
+            <div className="mt-2">
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${getApplicationStatusBadgeClass(
+                  application.status
+                )}`}
+              >
+                {getApplicationStatusLabel(application.status)}
+              </span>
+            </div>
 
-            <p className="mt-2 text-sm leading-6 text-green-800">
+            <p className="mt-3 text-sm leading-6 text-green-800">
               Submitted on{' '}
               {new Date(application.submitted_at).toLocaleDateString()}. You can
               track this application from your dashboard.
@@ -219,11 +219,15 @@ export default function OpportunityApplicationPanel({
           </p>
         </div>
 
+        <Link href="/dashboard" className="btn-dark mt-5 w-full">
+          Track from dashboard
+        </Link>
+
         <button
           type="button"
           onClick={handleWithdrawApplication}
           disabled={isPending}
-          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-white px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-white px-5 py-3 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <XCircle className="h-4 w-4" />
           {isPending ? 'Withdrawing...' : 'Withdraw application'}

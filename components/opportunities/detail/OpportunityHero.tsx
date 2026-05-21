@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import BackLink from '@/components/ui/BackLink'
 import type {
   OpportunityDetail,
   OpportunityDetailEmployer,
@@ -20,13 +19,11 @@ export default function OpportunityHero({
       <div className="hero-fade" />
 
       <div className="section-shell relative py-20">
-        <Link
+        <BackLink
           href="/opportunities"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 transition hover:text-white"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to opportunities
-        </Link>
+          label="Back to opportunities"
+          variant="light"
+        />
 
         <div className="mt-10 max-w-4xl">
           <p className="eyebrow-dark">
@@ -57,6 +54,12 @@ export default function OpportunityHero({
 
           <p className="lead-text-dark mt-6 max-w-3xl">
             {opportunity.description}
+          </p>
+
+          <p className="mt-6 max-w-3xl text-sm leading-6 text-slate-400">
+            Review the employer, requirements, and application details before
+            submitting. Directory details can change, so confirm external
+            application instructions when provided.
           </p>
         </div>
       </div>
