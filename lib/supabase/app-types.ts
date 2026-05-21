@@ -12,3 +12,11 @@ export type ReadinessItemType = Enums<'readiness_item_type'>
 
 export type ReadinessItemStatus = Enums<'readiness_item_status'>
 export type ApplicationStatus = Enums<'application_status'>
+export type OpportunitySourceType = Enums<'opportunity_source_type'>
+
+export type SourceReliabilityLevel = Enums<'source_reliability_level'>
+
+export type ImportBatchStatus = Enums<'import_batch_status'>
+
+export type OpportunityVerificationStatus =
+  Enums<'opportunity_verification_status'>

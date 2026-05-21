@@ -302,59 +302,101 @@ export type Database = {
         Row: {
           application_url: string | null
           benefits: string[] | null
+          content_hash: string | null
           created_at: string
           description: string
           employer_id: string
+          expires_at: string | null
+          external_id: string | null
+          external_url: string | null
           id: string
+          import_batch_id: string | null
+          imported_at: string | null
           is_active: boolean
+          last_verified_at: string | null
           location: string
           opportunity_type: Database["public"]["Enums"]["opportunity_type"]
           pay_range: string | null
           requirements: string[] | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           schedule: string | null
           slug: string
+          source_attribution: string | null
+          source_id: string | null
+          source_name: string | null
+          source_payload: Json | null
           state: string
           title: string
           trade_slug: string
           updated_at: string
+          verification_status: Database["public"]["Enums"]["opportunity_verification_status"]
         }
         Insert: {
           application_url?: string | null
           benefits?: string[] | null
+          content_hash?: string | null
           created_at?: string
           description: string
           employer_id: string
+          expires_at?: string | null
+          external_id?: string | null
+          external_url?: string | null
           id?: string
+          import_batch_id?: string | null
+          imported_at?: string | null
           is_active?: boolean
+          last_verified_at?: string | null
           location: string
           opportunity_type: Database["public"]["Enums"]["opportunity_type"]
           pay_range?: string | null
           requirements?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           schedule?: string | null
           slug: string
+          source_attribution?: string | null
+          source_id?: string | null
+          source_name?: string | null
+          source_payload?: Json | null
           state: string
           title: string
           trade_slug: string
           updated_at?: string
+          verification_status?: Database["public"]["Enums"]["opportunity_verification_status"]
         }
         Update: {
           application_url?: string | null
           benefits?: string[] | null
+          content_hash?: string | null
           created_at?: string
           description?: string
           employer_id?: string
+          expires_at?: string | null
+          external_id?: string | null
+          external_url?: string | null
           id?: string
+          import_batch_id?: string | null
+          imported_at?: string | null
           is_active?: boolean
+          last_verified_at?: string | null
           location?: string
           opportunity_type?: Database["public"]["Enums"]["opportunity_type"]
           pay_range?: string | null
           requirements?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           schedule?: string | null
           slug?: string
+          source_attribution?: string | null
+          source_id?: string | null
+          source_name?: string | null
+          source_payload?: Json | null
           state?: string
           title?: string
           trade_slug?: string
           updated_at?: string
+          verification_status?: Database["public"]["Enums"]["opportunity_verification_status"]
         }
         Relationships: [
           {
@@ -363,6 +405,107 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "employers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_import_batch_id_fkey"
+            columns: ["import_batch_id"]
+            isOneToOne: false
+            referencedRelation: "opportunity_import_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "opportunities_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "opportunity_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opportunity_import_batches: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_count: number
+          error_summary: string | null
+          id: string
+          imported_count: number
+          notes: string | null
+          skipped_count: number
+          source_id: string | null
+          started_at: string | null
+          started_by: string | null
+          status: Database["public"]["Enums"]["import_batch_status"]
+          updated_at: string
+          updated_count: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_count?: number
+          error_summary?: string | null
+          id?: string
+          imported_count?: number
+          notes?: string | null
+          skipped_count?: number
+          source_id?: string | null
+          started_at?: string | null
+          started_by?: string | null
+          status?: Database["public"]["Enums"]["import_batch_status"]
+          updated_at?: string
+          updated_count?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_count?: number
+          error_summary?: string | null
+          id?: string
+          imported_count?: number
+          notes?: string | null
+          skipped_count?: number
+          source_id?: string | null
+          started_at?: string | null
+          started_by?: string | null
+          status?: Database["public"]["Enums"]["import_batch_status"]
+          updated_at?: string
+          updated_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_import_batches_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "opportunity_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunity_import_batches_started_by_fkey"
+            columns: ["started_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunity_import_batches_started_by_fkey"
+            columns: ["started_by"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -421,6 +564,104 @@ export type Database = {
           {
             foreignKeyName: "opportunity_pipeline_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      opportunity_sources: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          last_checked_at: string | null
+          name: string
+          next_review_at: string | null
+          notes: string | null
+          region: string | null
+          reliability_level: Database["public"]["Enums"]["source_reliability_level"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          search_url: string | null
+          slug: string
+          source_type: Database["public"]["Enums"]["opportunity_source_type"]
+          state: string | null
+          trade_focus: string[] | null
+          updated_at: string
+          website_url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_checked_at?: string | null
+          name: string
+          next_review_at?: string | null
+          notes?: string | null
+          region?: string | null
+          reliability_level?: Database["public"]["Enums"]["source_reliability_level"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          search_url?: string | null
+          slug: string
+          source_type: Database["public"]["Enums"]["opportunity_source_type"]
+          state?: string | null
+          trade_focus?: string[] | null
+          updated_at?: string
+          website_url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          last_checked_at?: string | null
+          name?: string
+          next_review_at?: string | null
+          notes?: string | null
+          region?: string | null
+          reliability_level?: Database["public"]["Enums"]["source_reliability_level"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          search_url?: string | null
+          slug?: string
+          source_type?: Database["public"]["Enums"]["opportunity_source_type"]
+          state?: string | null
+          trade_focus?: string[] | null
+          updated_at?: string
+          website_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_sources_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunity_sources_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "seeker_readiness_scores"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "opportunity_sources_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunity_sources_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "seeker_readiness_scores"
             referencedColumns: ["user_id"]
@@ -850,6 +1091,7 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      mark_stale_opportunities: { Args: never; Returns: number }
     }
     Enums: {
       application_status:
@@ -860,6 +1102,13 @@ export type Database = {
         | "offered"
         | "rejected"
         | "withdrawn"
+      import_batch_status:
+        | "draft"
+        | "running"
+        | "completed"
+        | "completed_with_errors"
+        | "failed"
+        | "cancelled"
       opportunity_pipeline_status:
         | "saved"
         | "interested"
@@ -868,12 +1117,31 @@ export type Database = {
         | "interviewing"
         | "offer"
         | "closed"
+      opportunity_source_type:
+        | "public_job_board"
+        | "apprenticeship_directory"
+        | "workforce_board"
+        | "union_training_center"
+        | "employer_career_page"
+        | "school_program_page"
+        | "government_resource"
+        | "community_partner"
+        | "manual_research"
+        | "other"
       opportunity_type:
         | "job"
         | "apprenticeship"
         | "trainee"
         | "internship"
         | "pre_apprenticeship"
+      opportunity_verification_status:
+        | "unverified"
+        | "source_verified"
+        | "admin_reviewed"
+        | "employer_verified"
+        | "stale"
+        | "expired"
+        | "rejected"
       program_pipeline_status:
         | "saved"
         | "researching"
@@ -905,6 +1173,11 @@ export type Database = {
         | "background_check_consent"
         | "drug_test_consent"
         | "physical_ability_statement"
+      source_reliability_level:
+        | "official"
+        | "trusted"
+        | "needs_review"
+        | "experimental"
       user_role: "seeker" | "employer" | "program" | "admin"
     }
     CompositeTypes: {
@@ -1042,6 +1315,14 @@ export const Constants = {
         "rejected",
         "withdrawn",
       ],
+      import_batch_status: [
+        "draft",
+        "running",
+        "completed",
+        "completed_with_errors",
+        "failed",
+        "cancelled",
+      ],
       opportunity_pipeline_status: [
         "saved",
         "interested",
@@ -1051,12 +1332,33 @@ export const Constants = {
         "offer",
         "closed",
       ],
+      opportunity_source_type: [
+        "public_job_board",
+        "apprenticeship_directory",
+        "workforce_board",
+        "union_training_center",
+        "employer_career_page",
+        "school_program_page",
+        "government_resource",
+        "community_partner",
+        "manual_research",
+        "other",
+      ],
       opportunity_type: [
         "job",
         "apprenticeship",
         "trainee",
         "internship",
         "pre_apprenticeship",
+      ],
+      opportunity_verification_status: [
+        "unverified",
+        "source_verified",
+        "admin_reviewed",
+        "employer_verified",
+        "stale",
+        "expired",
+        "rejected",
       ],
       program_pipeline_status: [
         "saved",
@@ -1092,6 +1394,12 @@ export const Constants = {
         "background_check_consent",
         "drug_test_consent",
         "physical_ability_statement",
+      ],
+      source_reliability_level: [
+        "official",
+        "trusted",
+        "needs_review",
+        "experimental",
       ],
       user_role: ["seeker", "employer", "program", "admin"],
     },
