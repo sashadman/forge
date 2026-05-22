@@ -173,7 +173,7 @@ export default function OpportunityPipelineBoard({
             </h3>
 
             <p className="muted-text mt-3 max-w-2xl">
-              Organize saved opportunities by progress stage, next action, and
+              Organize saved jobs and apprenticeships by progress stage, next action, and
               follow-up date so your shortlist becomes a real career action
               system.
             </p>
@@ -232,7 +232,7 @@ export default function OpportunityPipelineBoard({
         title="Saved for later"
         description="These are opportunities you saved but have not moved into active progress yet."
         emptyTitle="No saved-for-later opportunities"
-        emptyDescription="Newly saved opportunities will appear here first."
+        emptyDescription="Newly saved jobs and apprenticeships will appear here first."
         items={savedForLater}
         userId={userId}
       />

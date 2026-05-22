@@ -71,7 +71,7 @@ export default function OpportunityPipelineSummary({
           </h3>
 
           <p className="muted-text mt-2 max-w-2xl">
-            Use your pipeline to move saved opportunities from interest to
+            Use your pipeline to move saved jobs and apprenticeships from interest to
             application, interview, offer, or closed.
           </p>
         </div>

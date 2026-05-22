@@ -68,7 +68,7 @@ export default function DashboardProfilePanel({
 
         <p className="muted-text mt-4">
           Build a stronger career profile by saving paths, completing the quiz,
-          and tracking real opportunities.
+          and tracking real jobs or apprenticeships.
         </p>
 
         <div className="mt-6 space-y-3">
