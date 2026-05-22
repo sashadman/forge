@@ -82,12 +82,25 @@ export default function SiteFooter() {
                 Provider Overview
               </Link>
 
-              <Link href="/programs" className="hover:text-slate-950">
-                Training Program Directory
+              <Link
+                href="/for-programs#provider-workflow"
+                className="hover:text-slate-950"
+              >
+                Provider Workflow
               </Link>
 
-              <Link href="/auth/sign-in" className="hover:text-slate-950">
-                Sign In
+              <Link
+                href="/for-programs#program-data"
+                className="hover:text-slate-950"
+              >
+                Program Data Model
+              </Link>
+
+              <Link
+                href="/for-programs#provider-insights"
+                className="hover:text-slate-950"
+              >
+                Future Provider Insights
               </Link>
             </div>
           </div>
