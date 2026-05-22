@@ -1,20 +1,31 @@
+import Link from 'next/link'
 import {
+  ArrowRight,
+  BadgeCheck,
   BriefcaseBusiness,
+  ClipboardCheck,
+  Gamepad2,
   GraduationCap,
-  Send,
+  Map,
+  Rocket,
   ShieldCheck,
+  Sparkles,
+  Target,
+  Trophy,
+  UserRound,
 } from 'lucide-react'
+import SiteNavbar from '@/components/layout/SiteNavbar'
+import SiteFooter from '@/components/layout/SiteFooter'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
-import DashboardHero from '@/components/dashboard/DashboardHero'
-import DashboardProfilePanel from '@/components/dashboard/DashboardProfilePanel'
-import DashboardActionCenter from '@/components/dashboard/DashboardActionCenter'
-import DashboardReadinessWidget from '@/components/dashboard/DashboardReadinessWidget'
-import DashboardQuizResults from '@/components/dashboard/DashboardQuizResults'
-import SavedTradesSection from '@/components/dashboard/SavedTradesSection'
-import SavedProgramsSection from '@/components/dashboard/SavedProgramsSection'
-import SavedOpportunitiesSection from '@/components/dashboard/SavedOpportunitiesSection'
-import SubmittedApplicationsSection from '@/components/dashboard/SubmittedApplicationsSection'
-import NextStepPanel from '@/components/ui/NextStepPanel'
+
+type MissionCard = {
+  title: string
+  description: string
+  href: string
+  action: string
+  stat: string
+  icon: React.ComponentType<{ className?: string }>
+}
 
 export default async function DashboardPage() {
   const {
@@ -25,138 +36,341 @@ export default async function DashboardPage() {
     savedProgramPipelineItems,
     savedOpportunityPipelineItems,
     submittedApplications,
-    readinessItems,
     readinessScore,
-    readinessItemsForWidget,
-    readinessScoreForWidget,
   } = await getDashboardPageData()
 
-  const hasApplications = submittedApplications.length > 0
-  const hasSavedOpportunities = savedOpportunityPipelineItems.length > 0
-  const hasSavedPrograms = savedProgramPipelineItems.length > 0
-  const isReadinessStrong = readinessScore >= 80
+  const firstName =
+    profile?.full_name?.trim().split(' ')[0] ||
+    user.email?.split('@')[0] ||
+    'Explorer'
 
-  const nextStep = (() => {
-    if (!isReadinessStrong) {
+  const savedCareerPathCount = savedTrades.length
+  const savedTrainingProgramCount = savedProgramPipelineItems.length
+  const savedJobCount = savedOpportunityPipelineItems.length
+  const applicationCount = submittedApplications.length
+  const quizResultCount = quizResults.length
+
+  const profileStarted = Boolean(
+    profile?.full_name || profile?.location || profile?.experience_level
+  )
+
+  const profileComplete = Boolean(
+    profile?.full_name && profile?.location && profile?.experience_level
+  )
+
+  const level =
+    readinessScore >= 90
+      ? 'Level 5'
+      : readinessScore >= 75
+        ? 'Level 4'
+        : readinessScore >= 50
+          ? 'Level 3'
+          : readinessScore >= 25
+            ? 'Level 2'
+            : 'Level 1'
+
+  const nextMission = (() => {
+    if (!profileComplete) {
       return {
-        title: 'Strengthen your readiness before applying.',
+        title: 'Complete your seeker profile',
         description:
-          'Complete your readiness profile so employers can review a stronger application package when you apply.',
-        primaryHref: '/dashboard/readiness',
-        primaryLabel: 'Improve readiness',
-        secondaryHref: '/opportunities',
-        secondaryLabel: 'View jobs & apprenticeships',
-        icon: <ShieldCheck className="h-6 w-6" />,
+          'Set up your basic profile first so your career journey, readiness work, and applications have a stronger foundation.',
+        href: '/dashboard/profile',
+        action: 'Start profile mission',
+        icon: UserRound,
       }
     }
 
-    if (!hasSavedPrograms) {
+    if (readinessScore < 80) {
       return {
-        title: 'Compare training pathways that match your goals.',
+        title: 'Build your readiness score',
         description:
-          'Save training programs you want to compare. This helps you build a realistic career pathway before applying.',
-        primaryHref: '/programs',
-        primaryLabel: 'Compare training programs',
-        secondaryHref: '/opportunities',
-        secondaryLabel: 'View jobs & apprenticeships',
-        icon: <GraduationCap className="h-6 w-6" />,
+          'Complete readiness items before applying so your application package is stronger.',
+        href: '/dashboard/readiness',
+        action: 'Improve readiness',
+        icon: ShieldCheck,
       }
     }
 
-    if (!hasSavedOpportunities) {
+    if (savedCareerPathCount === 0) {
       return {
-        title: 'Start shortlisting real jobs and apprenticeships.',
+        title: 'Choose career paths to track',
         description:
-          'Save jobs, apprenticeships, trainee roles, or pre-apprenticeships so you can track them and apply when ready.',
-        primaryHref: '/opportunities',
-        primaryLabel: 'View jobs & apprenticeships',
-        secondaryHref: '/programs',
-        secondaryLabel: 'Review training programs',
-        icon: <BriefcaseBusiness className="h-6 w-6" />,
+          'Save career paths that match your interests so you can compare training and jobs with purpose.',
+        href: '/dashboard/career-paths',
+        action: 'Review career paths',
+        icon: Map,
       }
     }
 
-    if (!hasApplications) {
+    if (savedTrainingProgramCount === 0) {
       return {
-        title: 'You are ready to move from tracking to applying.',
+        title: 'Compare training programs',
         description:
-          'Review your saved jobs and apprenticeships and apply when the listing is a real fit. Your readiness snapshot will support your application.',
-        primaryHref: '/opportunities',
-        primaryLabel: 'Apply to Jobs & Apprenticeships',
-        secondaryHref: '/dashboard/readiness',
-        secondaryLabel: 'Review readiness',
-        icon: <Send className="h-6 w-6" />,
+          'Build your training shortlist before applying to jobs or apprenticeships.',
+        href: '/dashboard/training-programs',
+        action: 'Open training mission',
+        icon: GraduationCap,
+      }
+    }
+
+    if (savedJobCount === 0) {
+      return {
+        title: 'Track jobs and apprenticeships',
+        description:
+          'Start saving real listings so you can organize, research, and apply at the right time.',
+        href: '/dashboard/jobs',
+        action: 'Open jobs mission',
+        icon: BriefcaseBusiness,
       }
     }
 
     return {
-      title: 'Track your applications and keep your profile current.',
+      title: 'Track applications and follow-ups',
       description:
-        'You have submitted applications. Watch their status, keep your readiness profile updated, and continue exploring strong fits.',
-      primaryHref: '/opportunities',
-      primaryLabel: 'Find more jobs & apprenticeships',
-      secondaryHref: '/dashboard/readiness',
-      secondaryLabel: 'Update readiness',
-      icon: <Send className="h-6 w-6" />,
+        'Review submitted applications and keep your next actions moving.',
+      href: '/dashboard/applications',
+      action: 'Review applications',
+      icon: ClipboardCheck,
     }
   })()
 
+  const missionCards: MissionCard[] = [
+    {
+      title: 'Profile Setup',
+      description: 'Complete your seeker profile and basic career information.',
+      href: '/dashboard/profile',
+      action: 'Open profile',
+      icon: UserRound,
+      stat: profileComplete ? 'Complete' : profileStarted ? 'Started' : 'New',
+    },
+    {
+      title: 'Readiness Score',
+      description: 'Build the application package you need before applying.',
+      href: '/dashboard/readiness',
+      action: 'Improve readiness',
+      icon: ShieldCheck,
+      stat: `${readinessScore}%`,
+    },
+    {
+      title: 'Career Paths',
+      description: 'Review saved career paths and keep your direction focused.',
+      href: '/dashboard/career-paths',
+      action: 'View paths',
+      icon: Map,
+      stat: `${savedCareerPathCount}`,
+    },
+    {
+      title: 'Training Programs',
+      description: 'Compare saved training programs and preparation pathways.',
+      href: '/dashboard/training-programs',
+      action: 'Compare programs',
+      icon: GraduationCap,
+      stat: `${savedTrainingProgramCount}`,
+    },
+    {
+      title: 'Jobs & Apprenticeships',
+      description: 'Track saved listings from interest to application.',
+      href: '/dashboard/jobs',
+      action: 'Track listings',
+      icon: BriefcaseBusiness,
+      stat: `${savedJobCount}`,
+    },
+    {
+      title: 'Applications',
+      description: 'Review submitted applications and status history.',
+      href: '/dashboard/applications',
+      action: 'View applications',
+      icon: ClipboardCheck,
+      stat: `${applicationCount}`,
+    },
+  ]
+
+  const NextMissionIcon = nextMission.icon
+  const totalSavedItems =
+    savedCareerPathCount + savedTrainingProgramCount + savedJobCount
+
   return (
-    <main className="page-shell">
-      <DashboardHero />
+    <main className="min-h-screen bg-slate-950 text-white">
+      <SiteNavbar />
 
-      <section className="section-light pb-20">
-        <div className="section-shell grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
-          <DashboardProfilePanel
-            userId={user.id}
-            userEmail={user.email}
-            fullName={profile?.full_name || ''}
-            profileEmail={profile?.email}
-            location={profile?.location || ''}
-            experienceLevel={profile?.experience_level || ''}
-            readinessItems={readinessItems}
-            readinessScore={readinessScore}
-          />
+      <section className="relative overflow-hidden bg-slate-950">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-fuchsia-500/10 to-cyan-500/10" />
+        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-orange-500/20 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
 
-          <div className="-pt-8 space-y-8">
-            <NextStepPanel
-              title={nextStep.title}
-              description={nextStep.description}
-              primaryHref={nextStep.primaryHref}
-              primaryLabel={nextStep.primaryLabel}
-              secondaryHref={nextStep.secondaryHref}
-              secondaryLabel={nextStep.secondaryLabel}
-              icon={nextStep.icon}
-            />
+        <div className="section-shell relative py-16 md:py-20">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-4xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-orange-200 shadow-lg shadow-orange-950/20 backdrop-blur">
+                <Gamepad2 className="h-4 w-4" />
+                Career seeker mission hub
+              </div>
 
-            <DashboardActionCenter
-              programItems={savedProgramPipelineItems}
-              opportunityItems={savedOpportunityPipelineItems}
-            />
+              <h1 className="mt-6 text-5xl font-black tracking-tight md:text-7xl">
+                Welcome back,{' '}
+                <span className="bg-gradient-to-r from-orange-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">
+                  {firstName}
+                </span>
+              </h1>
 
-            <DashboardReadinessWidget
-              items={readinessItemsForWidget}
-              score={readinessScoreForWidget}
-            />
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+                Complete one mission at a time. Build your profile, increase
+                readiness, compare training, track listings, and move toward real
+                skilled-trades applications.
+              </p>
+            </div>
 
-            <SubmittedApplicationsSection applications={submittedApplications} />
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-2xl shadow-black/30 backdrop-blur">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400">
+                Current status
+              </p>
 
-            <DashboardQuizResults quizResults={quizResults} />
+              <div className="mt-4 flex items-end gap-4">
+                <p className="text-5xl font-black">{level}</p>
 
-            <SavedTradesSection savedTrades={savedTrades} />
+                <div className="pb-1">
+                  <p className="font-bold text-orange-200">
+                    {readinessScore}% readiness
+                  </p>
+                  <p className="text-sm text-slate-400">
+                    {quizResultCount} quiz result
+                    {quizResultCount === 1 ? '' : 's'}
+                  </p>
+                </div>
+              </div>
 
-            <SavedProgramsSection
-              userId={user.id}
-              items={savedProgramPipelineItems}
-            />
+              <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-orange-400 via-fuchsia-400 to-cyan-300"
+                  style={{ width: `${Math.min(readinessScore, 100)}%` }}
+                />
+              </div>
+            </div>
+          </div>
 
-            <SavedOpportunitiesSection
-              userId={user.id}
-              items={savedOpportunityPipelineItems}
-            />
+          <div className="mt-10 rounded-[2rem] border border-orange-300/20 bg-slate-900/80 p-6 shadow-2xl shadow-orange-950/20 backdrop-blur md:p-8">
+            <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-300 ring-1 ring-orange-300/30">
+                <NextMissionIcon className="h-8 w-8" />
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-orange-300">
+                  <Sparkles className="h-4 w-4" />
+                  Next mission
+                </div>
+
+                <h2 className="mt-3 text-3xl font-black tracking-tight">
+                  {nextMission.title}
+                </h2>
+
+                <p className="mt-3 max-w-3xl leading-7 text-slate-300">
+                  {nextMission.description}
+                </p>
+              </div>
+
+              <Link href={nextMission.href} className="btn-light whitespace-nowrap">
+                {nextMission.action}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
+      <section className="relative bg-slate-950 pb-20">
+        <div className="section-shell">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {missionCards.map((mission) => {
+              const Icon = mission.icon
+
+              return (
+                <Link
+                  key={mission.title}
+                  href={mission.href}
+                  className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-orange-300/40 hover:bg-white/[0.09]"
+                >
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-400 via-fuchsia-400 to-cyan-300 opacity-70" />
+
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/10">
+                      <Icon className="h-7 w-7" />
+                    </div>
+
+                    <div className="rounded-full border border-white/10 bg-slate-950/70 px-4 py-2 text-sm font-black text-cyan-200">
+                      {mission.stat}
+                    </div>
+                  </div>
+
+                  <h3 className="mt-6 text-2xl font-black tracking-tight">
+                    {mission.title}
+                  </h3>
+
+                  <p className="mt-3 min-h-14 leading-7 text-slate-300">
+                    {mission.description}
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-2 text-sm font-bold text-orange-300">
+                    {mission.action}
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
+              <Trophy className="h-7 w-7 text-orange-300" />
+              <p className="mt-4 text-3xl font-black">{applicationCount}</p>
+              <p className="mt-1 text-sm font-semibold text-slate-400">
+                Submitted applications
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
+              <Target className="h-7 w-7 text-fuchsia-300" />
+              <p className="mt-4 text-3xl font-black">{totalSavedItems}</p>
+              <p className="mt-1 text-sm font-semibold text-slate-400">
+                Saved mission items
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
+              <BadgeCheck className="h-7 w-7 text-cyan-300" />
+              <p className="mt-4 text-3xl font-black">{readinessScore}%</p>
+              <p className="mt-1 text-sm font-semibold text-slate-400">
+                Application readiness
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10 rounded-[2rem] border border-white/10 bg-gradient-to-r from-orange-500/10 via-fuchsia-500/10 to-cyan-500/10 p-8">
+            <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-cyan-200">
+                  <Rocket className="h-4 w-4" />
+                  Mission flow
+                </div>
+
+                <p className="mt-3 max-w-3xl text-slate-300">
+                  Use the dashboard as your hub. Each mission opens a focused
+                  page so you are not forced to manage everything in one crowded
+                  screen.
+                </p>
+              </div>
+
+              <Link href={nextMission.href} className="btn-light">
+                Continue mission
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
     </main>
   )
 }
