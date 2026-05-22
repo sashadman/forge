@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
@@ -10,7 +11,7 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: `Training Programs — ${siteConfig.name}`,
   description:
-    'Browse skilled-trades training programs, apprenticeships, and workforce pathways.',
+    'Browse skilled-trades training programs, apprenticeships, pre-apprenticeships, and workforce preparation pathways.',
 }
 
 export default async function ProgramsPage() {
@@ -60,11 +61,11 @@ export default async function ProgramsPage() {
             <p className="eyebrow-dark">Training programs</p>
 
             <h1 className="page-title-dark mt-6">
-              Build skills for skilled-trades careers.
+              Compare training options before you apply.
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Compare apprenticeships, pre-apprenticeships, workforce programs,
+              Browse apprenticeships, pre-apprenticeships, workforce programs,
               and training providers. Use this page when you need preparation
               before applying to jobs or apprenticeships.
             </p>
@@ -74,7 +75,7 @@ export default async function ProgramsPage() {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <div className="-pt-8">
+          <div className="pt-8">
             <NextStepPanel
               title="Training should connect to a real career path."
               description="Use saved training programs to compare cost, duration, requirements, and how each pathway can move you toward real jobs or apprenticeships."
@@ -114,16 +115,16 @@ export default async function ProgramsPage() {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <a href="/opportunities" className="btn-light">
+                  <Link href="/opportunities" className="btn-light">
                     View jobs & apprenticeships
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href="/dashboard/readiness"
                     className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
                   >
                     Build readiness profile
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
