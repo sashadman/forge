@@ -1,240 +1,268 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
 import Link from 'next/link'
-import { Building2, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { BriefcaseBusiness, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { siteConfig } from '@/config/site'
-
-type AuthMode = 'sign-in' | 'sign-up'
+import { getEmployerDestination } from '@/lib/role-flow'
 
 type EmployerAuthFormProps = {
-  mode: AuthMode
+  mode: 'sign-in' | 'sign-up'
 }
 
 export default function EmployerAuthForm({ mode }: EmployerAuthFormProps) {
   const supabase = createClient()
+  const isSignUp = mode === 'sign-up'
 
-  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
-  const [loading, setLoading] = useState(false)
+  const [fullName, setFullName] = useState('')
+  const [organizationName, setOrganizationName] = useState('')
   const [error, setError] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
+  const [notice, setNotice] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const isSignUp = mode === 'sign-up'
-  
-async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault()
+  async function userHasEmployerProfile(userId: string) {
+    const { data: employer, error: employerError } = await supabase
+      .from('employers')
+      .select('id')
+      .eq('owner_id', userId)
+      .maybeSingle()
 
-  setLoading(true)
-  setError('')
-  setSuccessMessage('')
+    if (employerError) {
+      console.error('Failed to check employer profile:', employerError)
+      throw new Error('Could not check employer profile.')
+    }
 
-  try {
-    if (isSignUp) {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
+    return Boolean(employer)
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    setError('')
+    setNotice('')
+    setLoading(true)
+
+    try {
+      if (isSignUp) {
+        const redirectTo = `${window.location.origin}/auth/redirect?intent=employer`
+
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: redirectTo,
+            data: {
+              full_name: fullName,
+              organization_name: organizationName,
+              signup_intent: 'employer',
+            },
           },
-        },
-      })
+        })
 
-      if (error) {
-        console.error(error)
-        setError(error.message)
-        setLoading(false)
+        if (signUpError) {
+          throw signUpError
+        }
+
+        if (!data.user || !data.session) {
+          setNotice(
+            'Check your email to confirm your employer account. After confirmation, you will continue to employer profile setup.'
+          )
+          setLoading(false)
+          return
+        }
+
+        const hasEmployerProfile = await userHasEmployerProfile(data.user.id)
+        window.location.href = getEmployerDestination(hasEmployerProfile)
         return
       }
 
-      setSuccessMessage(
-        'Employer account created. Check your email to confirm your account, then sign in to create your employer profile.'
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+
+      if (signInError) {
+        throw signInError
+      }
+
+      if (!data.user) {
+        throw new Error('Could not load employer account.')
+      }
+
+      const hasEmployerProfile = await userHasEmployerProfile(data.user.id)
+      window.location.href = getEmployerDestination(hasEmployerProfile)
+    } catch (caughtError) {
+      console.error('Employer auth error:', caughtError)
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : 'Something went wrong. Please try again.'
       )
-
-      return
-    }
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (error) {
-      console.error(error)
-      setError(error.message)
       setLoading(false)
-      return
     }
-
-    window.location.href = '/auth/redirect?intent=employer'//here where employee sing in goes through the smart route that checks if they have a profile and redirects to the right place
-  } catch (error) {
-    console.error(error)
-    setError('Something went wrong. Please try again.')
-  } finally {
-    setLoading(false)
   }
-}
 
   return (
-    <div className="w-full max-w-5xl">
-      <div className="grid overflow-hidden rounded-[2.25rem] border border-white/70 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="relative hidden overflow-hidden bg-slate-950 p-10 text-white lg:block">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.28),transparent_28rem)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.14),transparent_24rem)]" />
-
-          <div className="relative flex h-full flex-col justify-between">
-            <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-600 text-white">
-                <Building2 className="h-6 w-6" />
-              </div>
-
-              <p className="eyebrow-dark mt-8">Employer portal</p>
-
-              <h1 className="mt-6 text-4xl font-bold tracking-tight">
-                {isSignUp
-                  ? 'Create your employer account.'
-                  : 'Sign in as an employer.'}
-              </h1>
-
-              <p className="lead-text-dark mt-5">
-                {isSignUp
-                  ? 'Build a real employer profile, connect your website and social links, and prepare to list real skilled-trades opportunities.'
-                  : 'Manage your employer profile and future opportunity listings.'}
-              </p>
+    <section className="section-light min-h-[calc(100vh-5rem)] py-16">
+      <div className="section-shell">
+        <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="content-panel">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+              <BriefcaseBusiness className="h-7 w-7" />
             </div>
 
-            <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur">
-              <p className="font-bold text-white">Separate from job seekers</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                This portal is for employers, contractors, companies, and workforce partners.
-              </p>
-            </div>
-          </div>
-        </div>
+            <p className="eyebrow mt-8">Employer access</p>
 
-        <div className="p-8 sm:p-10">
-          <div>
-            <p className="eyebrow">Employer portal</p>
-
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              {isSignUp ? 'Create employer account' : 'Employer sign in'}
+            <h1 className="section-title mt-4">
+              {isSignUp
+                ? 'Create your employer account.'
+                : 'Sign in to your employer account.'}
             </h1>
 
-            <p className="muted-text mt-3">
+            <p className="lead-text mt-5">
               {isSignUp
-                ? `Create an employer account for ${siteConfig.name}.`
-                : 'Sign in to continue to your employer profile.'}
+                ? 'Start with employer access, then complete your employer profile before creating listings or reviewing applicants.'
+                : 'Sign in to continue to your employer workspace.'}
             </p>
+
+            <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+              <p className="text-sm font-semibold text-slate-950">
+                Correct employer flow
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Employer account → employer profile → employer dashboard →
+                listings and applicants.
+              </p>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-            {isSignUp && (
-              <div>
-                <label className="label">Your name</label>
+          <form onSubmit={handleSubmit} className="card p-8">
+            <h2 className="text-2xl font-bold text-slate-950">
+              {isSignUp ? 'Create employer account' : 'Employer sign in'}
+            </h2>
 
+            <p className="mt-2 text-slate-600">
+              {isSignUp
+                ? 'Use a work email connected to the organization you will manage.'
+                : 'Use the email connected to your employer account.'}
+            </p>
+
+            <div className="mt-8 grid gap-5">
+              {isSignUp && (
+                <>
+                  <label className="grid gap-2">
+                    <span className="text-sm font-semibold text-slate-700">
+                      Your name
+                    </span>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(event) => setFullName(event.target.value)}
+                      className="input-field"
+                      placeholder="Jane Smith"
+                      required
+                    />
+                  </label>
+
+                  <label className="grid gap-2">
+                    <span className="text-sm font-semibold text-slate-700">
+                      Organization name
+                    </span>
+                    <input
+                      type="text"
+                      value={organizationName}
+                      onChange={(event) =>
+                        setOrganizationName(event.target.value)
+                      }
+                      className="input-field"
+                      placeholder="Example Electric"
+                      required
+                    />
+                  </label>
+                </>
+              )}
+
+              <label className="grid gap-2">
+                <span className="text-sm font-semibold text-slate-700">
+                  Email
+                </span>
                 <input
-                  type="text"
-                  value={fullName}
-                  onChange={(event) => setFullName(event.target.value)}
-                  required
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   className="input-field"
-                  placeholder="Your full name"
+                  placeholder="you@company.com"
+                  required
                 />
-              </div>
-            )}
+              </label>
 
-            <div>
-              <label className="label">Work email</label>
-
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                required
-                className="input-field"
-                placeholder="you@company.com"
-              />
-            </div>
-
-            <div>
-              <label className="label">Password</label>
-
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-                minLength={6}
-                className="input-field"
-                placeholder={isSignUp ? 'Create a password' : 'Enter your password'}
-              />
+              <label className="grid gap-2">
+                <span className="text-sm font-semibold text-slate-700">
+                  Password
+                </span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="input-field"
+                  placeholder="At least 6 characters"
+                  required
+                  minLength={6}
+                />
+              </label>
             </div>
 
             {error && (
-              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
                 {error}
               </div>
             )}
 
-            {successMessage && (
-              <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                {successMessage}
+            {notice && (
+              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-700">
+                {notice}
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full rounded-2xl py-4"
+              className="btn-primary mt-8 w-full px-6 py-4 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading
-                ? 'Please wait...'
-                : isSignUp
-                ? 'Create employer account'
-                : 'Sign in to employer portal'}
+              {isSignUp ? 'Create employer account' : 'Sign in to employer workspace'}
             </button>
+
+            <div className="mt-6 text-center text-sm text-slate-600">
+              {isSignUp ? (
+                <>
+                  Already have an employer account?{' '}
+                  <Link
+                    href="/employers/sign-in"
+                    className="font-semibold text-orange-700 hover:text-orange-800"
+                  >
+                    Sign in
+                  </Link>
+                </>
+              ) : (
+                <>
+                  Need an employer account?{' '}
+                  <Link
+                    href="/employers/sign-up"
+                    className="font-semibold text-orange-700 hover:text-orange-800"
+                  >
+                    Create one
+                  </Link>
+                </>
+              )}
+            </div>
           </form>
-
-          <div className="mt-6 text-sm text-slate-600">
-            {isSignUp ? (
-              <p>
-                Already have an employer account?{' '}
-                <Link
-                  href="/employers/sign-in"
-                  className="font-semibold text-orange-600 hover:text-orange-700"
-                >
-                  Sign in
-                </Link>
-              </p>
-            ) : (
-              <p>
-                Need an employer account?{' '}
-                <Link
-                  href="/employers/sign-up"
-                  className="font-semibold text-orange-600 hover:text-orange-700"
-                >
-                  Create one
-                </Link>
-              </p>
-            )}
-          </div>
-
-          <div className="mt-6 border-t border-slate-200 pt-6 text-sm text-slate-500">
-            Looking for a trade career?{' '}
-            <Link
-              href="/auth/sign-in"
-              className="font-semibold text-slate-700 hover:text-slate-950"
-            >
-              Use job seeker sign in
-            </Link>
-          </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

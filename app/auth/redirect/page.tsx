@@ -1,15 +1,53 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import {
+  getDefaultSeekerDestination,
+  getEmployerDestination,
+  getProviderDestination,
+  getSafeNextPath,
+  ROUTES,
+} from '@/lib/role-flow'
 
-type PageProps = {
-  searchParams?: {
+type AuthRedirectPageProps = {
+  searchParams: {
+    code?: string
     intent?: string
+    next?: string
   }
 }
 
-export default async function AuthRedirectPage({ searchParams }: PageProps) {
+async function userHasEmployerProfile(userId: string) {
   const supabase = createClient()
-  const intent = searchParams?.intent
+
+  const { data: employer, error } = await supabase
+    .from('employers')
+    .select('id')
+    .eq('owner_id', userId)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Failed to resolve employer redirect:', error)
+    return false
+  }
+
+  return Boolean(employer)
+}
+
+export default async function AuthRedirectPage({
+  searchParams,
+}: AuthRedirectPageProps) {
+  const supabase = createClient()
+
+  if (searchParams.code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(
+      searchParams.code
+    )
+
+    if (error) {
+      console.error('Failed to exchange auth code:', error)
+      redirect(ROUTES.employerSignIn)
+    }
+  }
 
   const {
     data: { user },
@@ -19,30 +57,20 @@ export default async function AuthRedirectPage({ searchParams }: PageProps) {
     redirect('/auth/sign-in')
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle()
+  const safeNextPath = getSafeNextPath(searchParams.next)
 
-  if (profile?.role === 'admin') {
-    redirect('/admin')
+  if (searchParams.intent === 'employer') {
+    const hasEmployerProfile = await userHasEmployerProfile(user.id)
+    redirect(getEmployerDestination(hasEmployerProfile))
   }
 
-  const { data: employer } = await supabase
-    .from('employers')
-    .select('id')
-    .eq('owner_id', user.id)
-    .eq('is_active', true)
-    .maybeSingle()
-
-  if (employer) {
-    redirect('/employers/dashboard')
+  if (searchParams.intent === 'provider') {
+    redirect(getProviderDestination())
   }
 
-  if (intent === 'employer') {
-    redirect('/employers/new')
+  if (safeNextPath) {
+    redirect(safeNextPath)
   }
 
-  redirect('/dashboard')
+  redirect(getDefaultSeekerDestination())
 }

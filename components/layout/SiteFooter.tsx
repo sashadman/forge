@@ -62,9 +62,9 @@ export default function SiteFooter() {
                 Employer Overview
               </Link>
 
-              <Link href="/employers/new" className="hover:text-slate-950">
-                Create Employer Profile
-              </Link>
+            <Link href="/employers/sign-up" className="hover:text-slate-950">
+                Create Employer Account
+            </Link>
 
               <Link href="/employers/sign-in" className="hover:text-slate-950">
                 Employer Sign In
