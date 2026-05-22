@@ -23,15 +23,14 @@ export default function SiteFooter() {
             </Link>
 
             <p className="mt-4 max-w-xl text-sm leading-6 text-slate-500">
-              Skilled-trades career discovery and workforce pathway platform
-              connecting career seekers with career paths, training programs,
-              jobs, apprenticeships, and employer opportunities.
+              Skilled-trades pathway platform for career seekers, employers, and
+              training providers.
             </p>
           </div>
 
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Career seekers
+              Career Seeker
             </p>
 
             <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
@@ -55,36 +54,40 @@ export default function SiteFooter() {
 
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Partner portals
+              Employer
             </p>
 
             <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
               <Link href="/for-employers" className="hover:text-slate-950">
-                For Employers
+                Employer Overview
               </Link>
 
-              <Link href="/for-programs" className="hover:text-slate-950">
-                For Training Providers
+              <Link href="/employers/new" className="hover:text-slate-950">
+                Create Employer Profile
+              </Link>
+
+              <Link href="/employers/sign-in" className="hover:text-slate-950">
+                Employer Sign In
               </Link>
             </div>
           </div>
 
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Platform
+              Training Provider
             </p>
 
             <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/dashboard" className="hover:text-slate-950">
-                Dashboard
+              <Link href="/for-programs" className="hover:text-slate-950">
+                Provider Overview
+              </Link>
+
+              <Link href="/programs" className="hover:text-slate-950">
+                Training Program Directory
               </Link>
 
               <Link href="/auth/sign-in" className="hover:text-slate-950">
                 Sign In
-              </Link>
-
-              <Link href="/for-employers" className="hover:text-slate-950">
-                Employer Access
               </Link>
             </div>
           </div>

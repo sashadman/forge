@@ -1,27 +1,35 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, GraduationCap, Search } from 'lucide-react'
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  GraduationCap,
+  UserRound,
+} from 'lucide-react'
 
-const steps = [
+const roleSteps = [
   {
-    title: 'Discover trades',
+    title: 'Career Seeker',
     description:
-      'Explore real trade paths, compare daily work, pay potential, training time, and long-term career direction.',
-    icon: Search,
+      'Explore career paths, compare training programs, build readiness, and move toward real jobs or apprenticeships.',
+    icon: UserRound,
     href: '/trades',
+    action: 'Start as seeker',
   },
   {
-    title: 'Find pathways',
+    title: 'Employer',
     description:
-      'Move from interest to action by connecting trade matches with apprenticeships, schools, and training programs.',
-    icon: GraduationCap,
-    href: '/programs',
-  },
-  {
-    title: 'Build the pipeline',
-    description:
-      'Create a stronger bridge between career seekers, training partners, and employers who need skilled workers.',
-    icon: Building2,
+      'Create a profile, publish real listings, and review applicants through a focused employer workflow.',
+    icon: BriefcaseBusiness,
     href: '/for-employers',
+    action: 'Employer path',
+  },
+  {
+    title: 'Training Provider',
+    description:
+      'Help learners understand program requirements, outcomes, and how training connects to career goals.',
+    icon: GraduationCap,
+    href: '/for-programs',
+    action: 'Provider path',
   },
 ]
 
@@ -34,19 +42,19 @@ export default function HomeHowItWorks() {
             <p className="eyebrow-dark">How it works</p>
 
             <h2 className="section-title-dark mt-6">
-              A cleaner path from curiosity to opportunity.
+              Start by choosing your role.
             </h2>
           </div>
 
           <p className="lead-text-dark max-w-3xl lg:justify-self-end">
-            The platform is being built around a simple workforce-development loop:
-            help people discover the trades, understand the pathway, and move toward
-            real training and employer opportunities.
+            The platform works best when each user enters the right journey.
+            Career seekers should not be mixed with employer tools, and employers
+            should not have to navigate through seeker pages to manage hiring.
           </p>
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {steps.map((step, index) => {
+          {roleSteps.map((step, index) => {
             const Icon = step.icon
 
             return (
@@ -72,7 +80,7 @@ export default function HomeHowItWorks() {
                 </p>
 
                 <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-orange-300">
-                  Step {index + 1}
+                  {step.action}
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </div>
               </Link>

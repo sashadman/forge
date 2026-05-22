@@ -4,48 +4,36 @@ import {
   BriefcaseBusiness,
   GraduationCap,
   Hammer,
-  Search,
   ShieldCheck,
   Sparkles,
+  UserRound,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 
-const marketplaceSteps = [
+const audiencePaths = [
   {
-    title: 'Discover',
-    description: 'Explore trade careers and understand what the work really looks like.',
-    icon: Search,
+    title: 'Career Seeker',
+    description:
+      'Explore career paths, compare training programs, build readiness, and find jobs or apprenticeships.',
     href: '/trades',
+    action: 'Start exploring',
+    icon: UserRound,
   },
   {
-    title: 'Prepare',
-    description: 'Compare training pathways, apprenticeships, and career requirements.',
-    icon: GraduationCap,
-    href: '/programs',
-  },
-  {
-    title: 'Connect',
-    description: 'Move toward programs, employers, and real workforce opportunities.',
+    title: 'Employer',
+    description:
+      'Create an employer profile, publish real jobs or apprenticeships, and review applicants.',
+    href: '/for-employers',
+    action: 'Employer overview',
     icon: BriefcaseBusiness,
-    href: '/opportunities',
-  },
-]
-
-const platformLayers = [
-  {
-    title: 'Personalized trade matches',
-    description: 'Take the quiz, compare trades, and save career paths.',
-    icon: ShieldCheck,
   },
   {
-    title: 'Training pathway layer',
-    description: 'Explore real programs, apprenticeships, and workforce pathways.',
+    title: 'Training Provider',
+    description:
+      'Help future skilled workers understand your program, requirements, and outcomes.',
+    href: '/for-programs',
+    action: 'Provider overview',
     icon: GraduationCap,
-  },
-  {
-    title: 'Employer ecosystem',
-    description: 'Prepare for future employer opportunities and workforce connections.',
-    icon: BriefcaseBusiness,
   },
 ]
 
@@ -54,57 +42,32 @@ export default function HomeHero() {
     <section className="hero-dark">
       <div className="hero-fade" />
 
-      <div className="section-shell relative grid gap-12 py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-28">
+      <div className="section-shell relative grid gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
         <div>
           <p className="eyebrow-dark items-center gap-2">
             <Sparkles className="h-4 w-4" />
-            Skilled trades workforce marketplace
+            Skilled-trades pathway platform
           </p>
 
           <h1 className="mt-6 max-w-4xl text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Build a real path into the skilled trades.
+            Choose the right path into skilled-trades work.
           </h1>
 
           <p className="lead-text-dark mt-6 max-w-3xl">
-            {siteConfig.name} helps career seekers discover skilled trades, take a
-            career-fit quiz, save promising paths, and prepare for training,
-            apprenticeships, and employer opportunities.
+            {siteConfig.name} organizes the journey for career seekers,
+            employers, and training providers so each user sees the next step
+            that matches their role.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link href="/quiz" className="btn-primary px-7 py-4">
-              Start career quiz
+            <Link href="/trades" className="btn-primary px-7 py-4">
+              I am a career seeker
               <ArrowRight className="h-4 w-4" />
             </Link>
 
-            <Link href="/trades" className="btn-outline-dark px-7 py-4">
-              Explore trades
+            <Link href="/for-employers" className="btn-outline-dark px-7 py-4">
+              I am an employer
             </Link>
-          </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            {marketplaceSteps.map((step) => {
-              const Icon = step.icon
-
-              return (
-                <Link
-                  key={step.title}
-                  href={step.href}
-                  className="card-dark group transition hover:-translate-y-1 hover:border-orange-400/30"
-                >
-                  <Icon className="h-6 w-6 text-orange-300" />
-
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <p className="font-bold text-white">{step.title}</p>
-                    <ArrowRight className="h-4 w-4 text-orange-300 transition group-hover:translate-x-1" />
-                  </div>
-
-                  <p className="mt-2 text-sm leading-6 text-slate-300">
-                    {step.description}
-                  </p>
-                </Link>
-              )
-            })}
           </div>
         </div>
 
@@ -116,30 +79,59 @@ export default function HomeHero() {
               </div>
 
               <div>
-                <p className="font-bold">Marketplace foundation</p>
+                <p className="font-bold">Choose your path</p>
                 <p className="text-sm text-slate-500">
-                  Career seekers · programs · employers
+                  Career seeker · employer · training provider
                 </p>
               </div>
             </div>
 
             <div className="mt-6 space-y-4">
-              {platformLayers.map((layer) => {
-                const Icon = layer.icon
+              {audiencePaths.map((path) => {
+                const Icon = path.icon
 
                 return (
-                  <div key={layer.title} className="mini-card">
-                    <div className="flex items-center gap-3">
-                      <Icon className="h-5 w-5 text-orange-600" />
-                      <p className="font-semibold">{layer.title}</p>
-                    </div>
+                  <Link
+                    key={path.title}
+                    href={path.href}
+                    className="mini-card group block transition hover:border-orange-200 hover:bg-orange-50"
+                  >
+                    <div className="flex items-start gap-3">
+                      <Icon className="mt-1 h-5 w-5 shrink-0 text-orange-600" />
 
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      {layer.description}
-                    </p>
-                  </div>
+                      <div>
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="font-semibold text-slate-950">
+                            {path.title}
+                          </p>
+
+                          <ArrowRight className="h-4 w-4 text-orange-600 transition group-hover:translate-x-1" />
+                        </div>
+
+                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                          {path.description}
+                        </p>
+
+                        <p className="mt-3 text-sm font-semibold text-orange-700">
+                          {path.action}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
                 )
               })}
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+
+                <p className="text-sm leading-6 text-slate-600">
+                  Each role has a separate journey. Career seekers see career
+                  tools, employers see hiring tools, and training providers see
+                  program-focused information.
+                </p>
+              </div>
             </div>
           </div>
         </div>

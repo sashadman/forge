@@ -2,26 +2,53 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Hammer, Menu, X } from 'lucide-react'
+import {
+  BriefcaseBusiness,
+  ChevronDown,
+  GraduationCap,
+  Hammer,
+  Menu,
+  UserRound,
+  X,
+} from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import AuthNav from '@/components/layout/AuthNav'
+
+const roleLinks = [
+  {
+    href: '/trades',
+    label: 'Career Seeker',
+    description: 'Explore paths, training programs, and jobs.',
+    icon: UserRound,
+  },
+  {
+    href: '/for-employers',
+    label: 'Employer',
+    description: 'Create a profile and manage hiring listings.',
+    icon: BriefcaseBusiness,
+  },
+  {
+    href: '/for-programs',
+    label: 'Training Provider',
+    description: 'Help seekers compare training programs.',
+    icon: GraduationCap,
+  },
+]
 
 const seekerLinks = [
   { href: '/trades', label: 'Career Paths' },
   { href: '/programs', label: 'Training Programs' },
   { href: '/opportunities', label: 'Jobs & Apprenticeships' },
-]
-
-const partnerLinks = [
-  { href: '/for-employers', label: 'For Employers' },
-  { href: '/for-programs', label: 'For Training Providers' },
+  { href: '/quiz', label: 'Career Quiz' },
 ]
 
 export default function SiteNavbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false)
 
   function closeMenu() {
     setIsOpen(false)
+    setIsRoleMenuOpen(false)
   }
 
   return (
@@ -39,7 +66,7 @@ export default function SiteNavbar() {
           </Link>
 
           <div className="hidden items-center gap-6 text-sm font-semibold text-slate-600 lg:flex">
-            {seekerLinks.map((link) => (
+            {seekerLinks.slice(0, 3).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -51,18 +78,60 @@ export default function SiteNavbar() {
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <Link
-              href="/for-employers"
-              className="text-sm font-semibold text-slate-600 transition hover:text-slate-950"
-            >
-              For Employers
-            </Link>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsRoleMenuOpen((current) => !current)}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"
+                aria-expanded={isRoleMenuOpen}
+              >
+                Choose your path
+                <ChevronDown className="h-4 w-4" />
+              </button>
+
+              {isRoleMenuOpen && (
+                <div className="absolute right-0 mt-3 w-80 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-950/10">
+                  <div className="px-3 py-2">
+                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                      Select your role
+                    </p>
+                  </div>
+
+                  <div className="grid gap-2">
+                    {roleLinks.map((link) => {
+                      const Icon = link.icon
+
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={closeMenu}
+                          className="group rounded-2xl p-3 transition hover:bg-orange-50"
+                        >
+                          <div className="flex gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
+                              <Icon className="h-5 w-5" />
+                            </div>
+
+                            <div>
+                              <p className="font-bold text-slate-950 group-hover:text-orange-700">
+                                {link.label}
+                              </p>
+
+                              <p className="mt-1 text-sm leading-5 text-slate-500">
+                                {link.description}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <AuthNav />
-
-            <Link href="/quiz" className="btn-dark px-5 py-2 text-sm">
-              Find your path
-            </Link>
           </div>
 
           <button
@@ -80,36 +149,41 @@ export default function SiteNavbar() {
           <div className="border-t border-slate-200 py-4 lg:hidden">
             <div className="grid gap-2">
               <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-400">
-                Explore
+                Choose your path
               </p>
 
-              {seekerLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={closeMenu}
-                  className="rounded-2xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {roleLinks.map((link) => {
+                const Icon = link.icon
 
-              <Link
-                href="/quiz"
-                onClick={closeMenu}
-                className="rounded-2xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-              >
-                Career Quiz
-              </Link>
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMenu}
+                    className="rounded-2xl px-4 py-3 hover:bg-slate-100"
+                  >
+                    <div className="flex items-start gap-3">
+                      <Icon className="mt-0.5 h-5 w-5 text-orange-600" />
+
+                      <div>
+                        <p className="font-bold text-slate-800">{link.label}</p>
+                        <p className="mt-1 text-sm leading-5 text-slate-500">
+                          {link.description}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
 
             <div className="mt-4 border-t border-slate-200 pt-4">
               <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-400">
-                Partner portals
+                Career seeker tools
               </p>
 
               <div className="mt-2 grid gap-2">
-                {partnerLinks.map((link) => (
+                {seekerLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -122,18 +196,8 @@ export default function SiteNavbar() {
               </div>
             </div>
 
-            <div className="mt-4 border-t border-slate-200 pt-4">
-              <div className="px-4">
-                <AuthNav />
-              </div>
-
-              <Link
-                href="/quiz"
-                onClick={closeMenu}
-                className="btn-dark mt-4 w-full px-5 py-3 text-sm"
-              >
-                Find your path
-              </Link>
+            <div className="mt-4 border-t border-slate-200 px-4 pt-4">
+              <AuthNav />
             </div>
           </div>
         )}
