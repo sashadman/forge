@@ -10,7 +10,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="section-shell py-10">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr]">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white">
@@ -23,7 +23,9 @@ export default function SiteFooter() {
             </Link>
 
             <p className="mt-4 max-w-xl text-sm leading-6 text-slate-500">
-              Skilled trades career discovery and workforce pipeline platform.
+              Skilled-trades career discovery and workforce pathway platform
+              connecting career seekers with career paths, training programs,
+              jobs, apprenticeships, and employer opportunities.
             </p>
           </div>
 
@@ -34,19 +36,19 @@ export default function SiteFooter() {
 
             <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
               <Link href="/trades" className="hover:text-slate-950">
-                Trades
+                Career Paths
               </Link>
 
               <Link href="/programs" className="hover:text-slate-950">
-                Programs
+                Training Programs
               </Link>
 
               <Link href="/opportunities" className="hover:text-slate-950">
-                Opportunities
+                Jobs & Apprenticeships
               </Link>
 
               <Link href="/quiz" className="hover:text-slate-950">
-                Career quiz
+                Career Quiz
               </Link>
             </div>
           </div>
@@ -58,11 +60,31 @@ export default function SiteFooter() {
 
             <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
               <Link href="/for-employers" className="hover:text-slate-950">
-                Employer portal
+                For Employers
               </Link>
 
               <Link href="/for-programs" className="hover:text-slate-950">
-                Training provider portal
+                For Training Providers
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
+              Platform
+            </p>
+
+            <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
+              <Link href="/dashboard" className="hover:text-slate-950">
+                Dashboard
+              </Link>
+
+              <Link href="/auth/sign-in" className="hover:text-slate-950">
+                Sign In
+              </Link>
+
+              <Link href="/for-employers" className="hover:text-slate-950">
+                Employer Access
               </Link>
             </div>
           </div>

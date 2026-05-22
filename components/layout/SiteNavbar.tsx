@@ -7,15 +7,14 @@ import { siteConfig } from '@/config/site'
 import AuthNav from '@/components/layout/AuthNav'
 
 const seekerLinks = [
-  { href: '/trades', label: 'Trades' },
-  { href: '/programs', label: 'Programs' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/quiz', label: 'Quiz' },
+  { href: '/trades', label: 'Career Paths' },
+  { href: '/programs', label: 'Training Programs' },
+  { href: '/opportunities', label: 'Jobs & Apprenticeships' },
 ]
 
 const partnerLinks = [
-  { href: '/for-employers', label: 'Employer portal' },
-  { href: '/for-programs', label: 'Training provider portal' },
+  { href: '/for-employers', label: 'For Employers' },
+  { href: '/for-programs', label: 'For Training Providers' },
 ]
 
 export default function SiteNavbar() {
@@ -39,7 +38,7 @@ export default function SiteNavbar() {
             </span>
           </Link>
 
-          <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
+          <div className="hidden items-center gap-6 text-sm font-semibold text-slate-600 lg:flex">
             {seekerLinks.map((link) => (
               <Link
                 key={link.href}
@@ -51,18 +50,25 @@ export default function SiteNavbar() {
             ))}
           </div>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link
+              href="/for-employers"
+              className="text-sm font-semibold text-slate-600 transition hover:text-slate-950"
+            >
+              For Employers
+            </Link>
+
             <AuthNav />
 
             <Link href="/quiz" className="btn-dark px-5 py-2 text-sm">
-              Find your trade
+              Find your path
             </Link>
           </div>
 
           <button
             type="button"
             onClick={() => setIsOpen((current) => !current)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm lg:hidden"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
@@ -71,8 +77,12 @@ export default function SiteNavbar() {
         </div>
 
         {isOpen && (
-          <div className="border-t border-slate-200 py-4 md:hidden">
+          <div className="border-t border-slate-200 py-4 lg:hidden">
             <div className="grid gap-2">
+              <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-400">
+                Explore
+              </p>
+
               {seekerLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -83,6 +93,14 @@ export default function SiteNavbar() {
                   {link.label}
                 </Link>
               ))}
+
+              <Link
+                href="/quiz"
+                onClick={closeMenu}
+                className="rounded-2xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+              >
+                Career Quiz
+              </Link>
             </div>
 
             <div className="mt-4 border-t border-slate-200 pt-4">
@@ -114,7 +132,7 @@ export default function SiteNavbar() {
                 onClick={closeMenu}
                 className="btn-dark mt-4 w-full px-5 py-3 text-sm"
               >
-                Find your trade
+                Find your path
               </Link>
             </div>
           </div>
