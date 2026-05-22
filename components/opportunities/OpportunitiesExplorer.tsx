@@ -162,7 +162,8 @@ export default function OpportunitiesExplorer({
 
             <p className="muted-text mt-3 max-w-2xl">
               Use search here because this page is for action-ready listings.
-              Filter by employer, career path, listing type, location, schedule, or pay.
+              Filter by employer, career path, listing type, location, schedule,
+              or pay.
             </p>
           </div>
 
@@ -370,20 +371,19 @@ export default function OpportunitiesExplorer({
             <p className="lead-text mt-4">
               We are keeping this section honest. Listings will appear here only
               when real jobs, apprenticeships, trainee roles, or workforce
-              jobs and apprenticeships are added.
+              opportunities are added.
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
               <Link href="/programs" className="btn-dark">
-                Explore training programs
+                Compare training programs
                 <CheckCircle2 className="h-4 w-4" />
               </Link>
 
-             <Link href="/trades" className="btn-outline">
+              <Link href="/trades" className="btn-outline">
                 Compare career paths
-                  <ArrowRight className="h-4 w-4" />
-            </Link>
-           
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>
