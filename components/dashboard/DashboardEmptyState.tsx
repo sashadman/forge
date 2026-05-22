@@ -31,7 +31,7 @@ export default function DashboardEmptyState({
 
             <p className="mt-4 text-sm leading-6 text-slate-500">
               This dashboard only shows real saved items here. As you explore the
-              platform, save the trades, programs, and opportunities you want to
+              platform, save the career paths, training programs, and jobs or apprenticeships you want to
               compare later.
             </p>
           </div>

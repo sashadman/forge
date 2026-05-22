@@ -54,9 +54,9 @@ export default async function DashboardPage() {
       return {
         title: 'Compare training pathways that match your goals.',
         description:
-          'Save programs or apprenticeships you want to compare. This helps you build a realistic career pathway before applying.',
+          'Save training programs you want to compare. This helps you build a realistic career pathway before applying.',
         primaryHref: '/programs',
-        primaryLabel: 'Explore programs',
+        primaryLabel: 'Compare training programs',
         secondaryHref: '/opportunities',
         secondaryLabel: 'View jobs & apprenticeships',
         icon: <GraduationCap className="h-6 w-6" />,
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
         primaryHref: '/opportunities',
         primaryLabel: 'View jobs & apprenticeships',
         secondaryHref: '/programs',
-        secondaryLabel: 'Review programs',
+        secondaryLabel: 'Review training programs',
         icon: <BriefcaseBusiness className="h-6 w-6" />,
       }
     }

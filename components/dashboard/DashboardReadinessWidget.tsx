@@ -47,7 +47,7 @@ export default function DashboardReadinessWidget({
 
             <p className="muted-text mt-3 max-w-2xl">
               Your readiness profile becomes part of your application package.
-              Complete the required items before applying to serious opportunities.
+              Complete the required items before applying to serious jobs or apprenticeships.
             </p>
           </div>
         </div>

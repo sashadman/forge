@@ -30,7 +30,7 @@ const roleLinks = [
   {
     href: '/for-programs',
     label: 'Training Provider',
-    description: 'Help seekers compare training programs.',
+    description: 'Review provider workflow, program data, and future tools.',
     icon: GraduationCap,
   },
 ]

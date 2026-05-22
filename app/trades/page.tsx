@@ -34,7 +34,7 @@ const heroCards = [
   },
   {
     title: 'Act',
-    description: 'Move toward programs, jobs, apprenticeships, and employers.',
+    description: 'Move toward training programs, jobs, apprenticeships.',
     icon: BriefcaseBusiness,
     href: '/opportunities',
   },
@@ -97,7 +97,7 @@ export default function TradesPage() {
               title="Start with direction, then move toward training or work."
               description="Career paths help you choose a direction. Once a path feels right, compare training programs or look for real jobs and apprenticeships."
               primaryHref="/programs"
-              primaryLabel="Explore training programs"
+              primaryLabel="Compare training programs"
               secondaryHref="/opportunities"
               secondaryLabel="View jobs & apprenticeships"
               icon={<Compass className="h-6 w-6" />}

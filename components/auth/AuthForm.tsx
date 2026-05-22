@@ -103,15 +103,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
               <p className="lead-text-dark mt-5">
                 {isSignUp
-                  ? 'Create an account to save trades, programs, and build your skilled-trades roadmap.'
-                  : 'Sign in to continue exploring trades, programs, and your saved career path.'}
+                  ? 'Create an account to save career paths, training programs, and build your skilled-trades roadmap.'
+                  : 'Sign in to continue exploring career paths, training programs, and your saved career path.'}
               </p>
             </div>
 
             <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur">
               <p className="font-bold text-white">Marketplace progress</p>
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                Discover trades, compare real pathways, save what matters, and prepare for future opportunities.
+                Discover career paths, compare training programs, save what matters, and prepare for real jobs or apprenticeships.
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
             <p className="muted-text mt-3">
               {isSignUp
-                ? 'Start exploring skilled trades and save your career matches.'
+                ? 'Start comparing career paths and save your matches.'
                 : `Continue your ${siteConfig.name} journey.`}
             </p>
           </div>

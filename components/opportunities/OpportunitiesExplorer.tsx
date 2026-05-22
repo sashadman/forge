@@ -370,7 +370,7 @@ export default function OpportunitiesExplorer({
             <p className="lead-text mt-4">
               We are keeping this section honest. Listings will appear here only
               when real jobs, apprenticeships, trainee roles, or workforce
-              opportunities are added.
+              jobs and apprenticeships are added.
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
@@ -379,10 +379,11 @@ export default function OpportunitiesExplorer({
                 <CheckCircle2 className="h-4 w-4" />
               </Link>
 
-              <Link href="/for-employers" className="btn-outline">
+             <Link href="/trades" className="btn-outline">
                 Compare career paths
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                  <ArrowRight className="h-4 w-4" />
+            </Link>
+           
             </div>
           </div>
         </div>

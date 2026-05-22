@@ -99,9 +99,9 @@ export default async function OpportunitiesPage() {
           <div className="-pt-8">
             <NextStepPanel
               title="Ready to take action? Start with real listings."
-              description="Use this page when you want apply-now or near-apply opportunities. If you are still exploring direction or training, start with career paths or training programs first."
+              description="Use this page when you want apply-now or near-apply jobs and apprenticeships. If you are still exploring direction or training, start with career paths or training programs first."
               primaryHref="/programs"
-              primaryLabel="Explore training programs"
+              primaryLabel="Compare training programs"
               secondaryHref="/trades"
               secondaryLabel="Compare career paths"
               icon={<BriefcaseBusiness className="h-6 w-6" />}
@@ -138,7 +138,7 @@ export default async function OpportunitiesPage() {
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                   <a href="/programs" className="btn-light">
-                    Explore training programs
+                    Compare training programs
                   </a>
 
                   <a

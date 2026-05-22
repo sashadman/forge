@@ -247,7 +247,7 @@ async function saveDeviceResultToDashboard() {
 </h2>
 
  <p className="muted-text mt-4">
-  Your previous answers matched with several trade paths. Sign in or create an
+  Your previous answers matched with several career paths. Sign in or create an
   account to save future results to your dashboard.
 </p>
         </div>
@@ -317,7 +317,7 @@ async function saveDeviceResultToDashboard() {
           <p className="eyebrow">Your results</p>
 
           <h2 className="section-title mt-3">
-            These trades may fit your interests.
+            These career paths may fit your interests.
           </h2>
 
           <p className="muted-text mt-4">
@@ -527,7 +527,7 @@ function ResultCard({
 
         {showCompare && (
           <Link href="/trades" className="btn-outline">
-            Compare trades
+            Compare career paths 
           </Link>
         )}
       </div>
