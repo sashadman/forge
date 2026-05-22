@@ -45,7 +45,7 @@ export async function generateMetadata({
 
   if (!program) {
     return {
-      title: `Program Not Found — ${siteConfig.name}`,
+      title: `Training Program Not Found — ${siteConfig.name}`,
     }
   }
 
@@ -77,7 +77,11 @@ export default async function ProgramDetailPage({ params }: PageProps) {
         <div className="hero-fade" />
 
         <div className="section-shell relative py-20">
-          <BackLink href="/programs" label="Back to programs" variant="light" />
+          <BackLink
+            href="/programs"
+            label="Back to training programs"
+            variant="light"
+          />
 
           <div className="mt-10 max-w-4xl">
             <p className="eyebrow-dark">
@@ -95,9 +99,9 @@ export default async function ProgramDetailPage({ params }: PageProps) {
             </p>
 
             <p className="mt-6 max-w-3xl text-sm leading-6 text-slate-400">
-              Program information can change. Always confirm requirements,
-              cost, dates, and availability directly with the provider before
-              making enrollment decisions.
+              Training program information can change. Always confirm
+              requirements, cost, dates, and availability directly with the
+              provider before making enrollment decisions.
             </p>
           </div>
         </div>
@@ -105,12 +109,12 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
       <section className="section-light pb-20">
         <div className="section-shell">
-          <div className="-mt-12">
+          <div className="pt-8">
             <NextStepPanel
               title="Save this program if it belongs in your training plan."
-              description="Use saved programs to compare cost, duration, requirements, outcomes, and how each pathway connects to real jobs or apprenticeships."
+              description="Use saved training programs to compare cost, duration, requirements, outcomes, and how each pathway connects to real jobs or apprenticeships."
               primaryHref="/programs"
-              primaryLabel="Compare more programs"
+              primaryLabel="Compare training programs"
               secondaryHref="/opportunities"
               secondaryLabel="View jobs & apprenticeships"
               icon={<GraduationCap className="h-6 w-6" />}
@@ -120,7 +124,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="space-y-8">
               <section className="content-panel">
-                <p className="eyebrow">Program overview</p>
+                <p className="eyebrow">Training program overview</p>
 
                 <h2 className="section-title mt-3">
                   What this pathway offers
@@ -190,7 +194,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
                   <DetailItem
                     icon={<GraduationCap className="h-5 w-5" />}
-                    label="Trade focus"
+                    label="Career focus"
                     value={program.trade_slug}
                   />
                 </div>
@@ -228,13 +232,13 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </h3>
 
                   <p className="mt-3 leading-7 text-slate-300">
-                    Compare this program with real jobs, apprenticeships and career paths
-                    before deciding where to spend time or money.
+                    Compare this program with real jobs, apprenticeships, and
+                    career paths before deciding where to spend time or money.
                   </p>
 
                   <div className="mt-6 flex flex-col gap-3">
                     <Link href="/opportunities" className="btn-light">
-                      Explore jobs & apprenticeships
+                      View jobs & apprenticeships
                       <ArrowRight className="h-4 w-4" />
                     </Link>
 
@@ -242,7 +246,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                       href="/trades"
                       className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
                     >
-                      Compare career paths 
+                      Compare career paths
                     </Link>
                   </div>
                 </div>

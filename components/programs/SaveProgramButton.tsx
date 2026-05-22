@@ -62,7 +62,7 @@ export default function SaveProgramButton({
       if (!isMounted) return
 
       if (error) {
-        console.error('Failed to load saved program state:', error)
+        console.error('Failed to load saved training program state:', error)
         setError('Could not check saved status.')
         setLoading(false)
         return
@@ -149,8 +149,8 @@ export default function SaveProgramButton({
         setIsSaved(true)
       }
     } catch (error) {
-      console.error('Failed to update saved program:', error)
-      setError('Could not update saved program.')
+      console.error('Failed to update saved training program:', error)
+      setError('Could not update saved training program.')
     } finally {
       setSaving(false)
     }
@@ -196,7 +196,11 @@ export default function SaveProgramButton({
           <Bookmark className="h-4 w-4" />
         )}
 
-        {saving ? 'Saving...' : isSaved ? 'Saved program' : 'Save program'}
+        {saving
+          ? 'Saving...'
+          : isSaved
+            ? 'Saved training program'
+            : 'Save training program'}
       </button>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

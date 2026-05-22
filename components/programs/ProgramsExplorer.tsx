@@ -51,11 +51,15 @@ export default function ProgramsExplorer({
   }, [savedProgramIds])
 
   const programTypes = useMemo(() => {
-    return Array.from(new Set(programs.map((program) => program.program_type))).sort()
+    return Array.from(
+      new Set(programs.map((program) => program.program_type))
+    ).sort()
   }, [programs])
 
   const tradeFocusOptions = useMemo(() => {
-    return Array.from(new Set(programs.map((program) => program.trade_slug))).sort()
+    return Array.from(
+      new Set(programs.map((program) => program.trade_slug))
+    ).sort()
   }, [programs])
 
   const locationOptions = useMemo(() => {
@@ -118,7 +122,7 @@ export default function ProgramsExplorer({
 
             <p className="muted-text mt-3 max-w-2xl">
               Use search here because training decisions depend on provider,
-              location, trade focus, program type, duration, and cost.
+              location, career focus, program type, duration, and cost.
             </p>
           </div>
 
@@ -190,9 +194,31 @@ export default function ProgramsExplorer({
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {filteredPrograms.length > 0 ? (
-          filteredPrograms.map((program) => (
+      {programs.length === 0 ? (
+        <div className="card border-dashed p-10 text-center">
+          <h3 className="text-2xl font-bold">
+            No active training programs yet
+          </h3>
+
+          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+            Training programs will appear here after real public directory
+            records are added and activated. We avoid fake or filler listings.
+          </p>
+
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/trades" className="btn-dark">
+              Compare career paths
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+
+            <Link href="/opportunities" className="btn-outline">
+              View jobs & apprenticeships
+            </Link>
+          </div>
+        </div>
+      ) : filteredPrograms.length > 0 ? (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {filteredPrograms.map((program) => (
             <article key={program.id} className="card">
               <Link href={`/programs/${program.slug}`} className="group block">
                 <div className="flex items-start justify-between gap-4">
@@ -265,24 +291,25 @@ export default function ProgramsExplorer({
                 </div>
               </div>
             </article>
-          ))
-        ) : (
-          <div className="card border-dashed p-10 text-center lg:col-span-2">
-            <h3 className="text-2xl font-bold">
-              No matching training programs found
-            </h3>
+          ))}
+        </div>
+      ) : (
+        <div className="card border-dashed p-10 text-center">
+          <h3 className="text-2xl font-bold">
+            No matching training programs found
+          </h3>
 
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-              No active program records match your current filters. Try changing
-              the career path, program type, location, or clearing the filters.
-            </p>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+            No active training program records match your current filters. Try
+            changing the career path, program type, location, or clearing the
+            filters.
+          </p>
 
-            <button type="button" onClick={clearFilters} className="btn-dark mt-6">
-              Clear filters
-            </button>
-          </div>
-        )}
-      </div>
+          <button type="button" onClick={clearFilters} className="btn-dark mt-6">
+            Clear filters
+          </button>
+        </div>
+      )}
     </div>
   )
 }
