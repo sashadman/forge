@@ -66,7 +66,9 @@ export default function SubmittedApplicationsSection({
         title="Submitted applications"
         description="Track official applications you submitted through the platform and watch how each one moves through the review process."
         href="/opportunities"
-        action={applications.length > 0 ? 'Find more opportunities' : 'Apply to opportunities'}
+        action={applications.length > 0 
+          ? 'Find more jobs & apprenticeships' 
+          : 'Apply to jobs & apprenticeships'}
       />
 
       {applications.length > 0 ? (
@@ -135,7 +137,7 @@ export default function SubmittedApplicationsSection({
           title="No submitted applications yet"
           description="When you apply to an opportunity through the platform, your application will appear here with its status and readiness score at the time you applied."
           href="/opportunities"
-          action="Browse opportunities"
+          action="View jobs & apprenticeships"
         
         />
       )}

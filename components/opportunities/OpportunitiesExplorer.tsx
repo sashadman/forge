@@ -162,7 +162,7 @@ export default function OpportunitiesExplorer({
 
             <p className="muted-text mt-3 max-w-2xl">
               Use search here because this page is for action-ready listings.
-              Filter by employer, trade, listing type, location, schedule, or pay.
+              Filter by employer, career path, listing type, location, schedule, or pay.
             </p>
           </div>
 
@@ -179,7 +179,7 @@ export default function OpportunitiesExplorer({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search employer, trade, city, role..."
+              placeholder="Search employer, career path, city, role..."
               className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-400"
             />
           </div>
@@ -380,7 +380,7 @@ export default function OpportunitiesExplorer({
               </Link>
 
               <Link href="/for-employers" className="btn-outline">
-                For employers
+                Compare career paths
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

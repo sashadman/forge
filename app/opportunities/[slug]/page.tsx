@@ -62,7 +62,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
         primaryHref: '/dashboard',
         primaryLabel: 'Track application',
         secondaryHref: '/opportunities',
-        secondaryLabel: 'Find more opportunities',
+        secondaryLabel: 'Find more jobs & apprenticeships',
         icon: <Send className="h-6 w-6" />,
       }
     }
@@ -71,11 +71,11 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
       return {
         title: 'Sign in before applying so your progress is saved.',
         description:
-          'A signed-in account lets you save opportunities, submit an application, and track your application status from your dashboard.',
+          'A signed-in account lets you save jobs or apprenticeships, submit an application, and track your application status from your dashboard.',
         primaryHref: '/auth/sign-in',
         primaryLabel: 'Sign in to apply',
         secondaryHref: '/opportunities',
-        secondaryLabel: 'Back to opportunities',
+        secondaryLabel: 'Back to jobs & apprenticeships',
         icon: <ShieldCheck className="h-6 w-6" />,
       }
     }

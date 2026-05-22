@@ -108,11 +108,11 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           <div className="-mt-12">
             <NextStepPanel
               title="Save this program if it belongs in your training plan."
-              description="Use saved programs to compare cost, duration, requirements, outcomes, and how each pathway connects to real opportunities."
+              description="Use saved programs to compare cost, duration, requirements, outcomes, and how each pathway connects to real jobs or apprenticeships."
               primaryHref="/programs"
               primaryLabel="Compare more programs"
               secondaryHref="/opportunities"
-              secondaryLabel="Explore opportunities"
+              secondaryLabel="View jobs & apprenticeships"
               icon={<GraduationCap className="h-6 w-6" />}
             />
           </div>
@@ -228,13 +228,13 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </h3>
 
                   <p className="mt-3 leading-7 text-slate-300">
-                    Compare this program with real opportunities and trade paths
+                    Compare this program with real jobs, apprenticeships and career paths
                     before deciding where to spend time or money.
                   </p>
 
                   <div className="mt-6 flex flex-col gap-3">
                     <Link href="/opportunities" className="btn-light">
-                      Explore opportunities
+                      Explore jobs & apprenticeships
                       <ArrowRight className="h-4 w-4" />
                     </Link>
 
@@ -242,7 +242,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                       href="/trades"
                       className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
                     >
-                      Explore trades
+                      Compare career paths 
                     </Link>
                   </div>
                 </div>

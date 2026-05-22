@@ -131,7 +131,7 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
           <Bookmark className="h-4 w-4" />
         )}
 
-        {saving ? 'Saving...' : isSaved ? 'Saved' : 'Save this trade'}
+        {saving ? 'Saving...' : isSaved ? 'Saved' : 'Save career path'}
       </button>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

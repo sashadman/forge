@@ -45,7 +45,7 @@ export default async function DashboardPage() {
         primaryHref: '/dashboard/readiness',
         primaryLabel: 'Improve readiness',
         secondaryHref: '/opportunities',
-        secondaryLabel: 'Browse opportunities',
+        secondaryLabel: 'View jobs & apprenticeships',
         icon: <ShieldCheck className="h-6 w-6" />,
       }
     }
@@ -58,18 +58,18 @@ export default async function DashboardPage() {
         primaryHref: '/programs',
         primaryLabel: 'Explore programs',
         secondaryHref: '/opportunities',
-        secondaryLabel: 'Browse opportunities',
+        secondaryLabel: 'View jobs & apprenticeships',
         icon: <GraduationCap className="h-6 w-6" />,
       }
     }
 
     if (!hasSavedOpportunities) {
       return {
-        title: 'Start shortlisting real opportunities.',
+        title: 'Start shortlisting real jobs and apprenticeships.',
         description:
           'Save jobs, apprenticeships, trainee roles, or pre-apprenticeships so you can track them and apply when ready.',
         primaryHref: '/opportunities',
-        primaryLabel: 'Explore opportunities',
+        primaryLabel: 'View jobs & apprenticeships',
         secondaryHref: '/programs',
         secondaryLabel: 'Review programs',
         icon: <BriefcaseBusiness className="h-6 w-6" />,
@@ -80,9 +80,9 @@ export default async function DashboardPage() {
       return {
         title: 'You are ready to move from tracking to applying.',
         description:
-          'Review your saved opportunities and apply when the listing is a real fit. Your readiness snapshot will support your application.',
+          'Review your saved jobs and apprenticeships and apply when the listing is a real fit. Your readiness snapshot will support your application.',
         primaryHref: '/opportunities',
-        primaryLabel: 'Apply to opportunities',
+        primaryLabel: 'Apply to Jobs & Apprenticeships',
         secondaryHref: '/dashboard/readiness',
         secondaryLabel: 'Review readiness',
         icon: <Send className="h-6 w-6" />,
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
       description:
         'You have submitted applications. Watch their status, keep your readiness profile updated, and continue exploring strong fits.',
       primaryHref: '/opportunities',
-      primaryLabel: 'Find more opportunities',
+      primaryLabel: 'Find more jobs & apprenticeships',
       secondaryHref: '/dashboard/readiness',
       secondaryLabel: 'Update readiness',
       icon: <Send className="h-6 w-6" />,

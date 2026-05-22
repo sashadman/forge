@@ -21,7 +21,7 @@ export default function OpportunityHero({
       <div className="section-shell relative py-20">
         <BackLink
           href="/opportunities"
-          label="Back to opportunities"
+          label="Back to jobs & apprenticeships"
           variant="light"
         />
 

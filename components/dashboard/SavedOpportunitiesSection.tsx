@@ -16,12 +16,14 @@ export default function SavedOpportunitiesSection({
   return (
     <section className="content-panel">
       <DashboardSectionHeader
-        eyebrow="Opportunity pipeline"
+        eyebrow="Jobs & apprenticeships pipeline"
         title="Saved jobs and apprenticeships"
-        description="Track real opportunities from saved to researching, applying, interviewing, and closed."
+        description="Track real jobs, apprenticeships, trainee roles, and pre-apprenticeships from saved to researching, applying, interviewing, and closed."
         href="/opportunities"
         action={
-          items.length > 0 ? 'Find more opportunities' : 'Explore opportunities'
+          items.length > 0
+            ? 'Find more jobs & apprenticeships'
+            : 'View jobs & apprenticeships'
         }
       />
 
@@ -31,10 +33,10 @@ export default function SavedOpportunitiesSection({
         </div>
       ) : (
         <DashboardEmptyState
-          title="No saved opportunities yet"
-          description="Save real opportunities while browsing listings. Your saved opportunities become your action list for applications and follow-up."
+          title="No saved jobs or apprenticeships yet"
+          description="Save real listings while browsing. Your saved jobs and apprenticeships become your action list for applications and follow-up."
           href="/opportunities"
-          action="Explore opportunities"
+          action="View jobs & apprenticeships"
         />
       )}
     </section>

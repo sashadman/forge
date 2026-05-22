@@ -20,7 +20,7 @@ export default function SavedTradesSection({
   return (
     <section className="content-panel">
       <DashboardSectionHeader
-        eyebrow="Saved trades"
+        eyebrow="Saved career paths"
         title="Your bookmarked careers"
         href="/trades"
         action="Explore more"
@@ -79,10 +79,10 @@ export default function SavedTradesSection({
         </div>
       ) : (
         <DashboardEmptyState
-          title="No saved trades yet"
-          description="Save trades while exploring career paths to build your personal shortlist."
+          title="No saved career paths yet"
+          description="Save career paths while exploring to build your personal shortlist."
           href="/trades"
-          action="Explore trades"
+          action="Explore career paths"
         />
       )}
     </section>

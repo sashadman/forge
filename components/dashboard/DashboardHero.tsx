@@ -15,13 +15,13 @@ export default function DashboardHero() {
             <h1 className="page-title-dark">Welcome to {siteConfig.name}</h1>
 
             <p className="lead-text-dark mt-4 max-w-2xl">
-              Continue exploring skilled trades, review your quiz results, and
+              Continue comparing career paths, review your quiz results, and
               build your career path.
             </p>
           </div>
 
           <Link href="/trades" className="btn-light">
-            Explore trades
+            Compare career paths
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
