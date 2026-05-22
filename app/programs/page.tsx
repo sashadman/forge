@@ -7,6 +7,7 @@ import NextStepPanel from '@/components/ui/NextStepPanel'
 import ProgramsExplorer from '@/components/programs/ProgramsExplorer'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
+import BackLink from '@/components/ui/BackLink'
 
 export const metadata: Metadata = {
   title: `Training Programs — ${siteConfig.name}`,
@@ -56,9 +57,11 @@ export default async function ProgramsPage() {
       <section className="hero-dark">
         <div className="hero-fade" />
 
-        <div className="section-shell relative py-24">
-          <div className="max-w-4xl">
-            <p className="eyebrow-dark">Training programs</p>
+       <div className="section-shell relative py-24">
+  <BackLink href="/trades" label="Back to career paths" variant="light" />
+
+  <div className="mt-10 max-w-4xl">
+    <p className="eyebrow-dark">Training programs</p>
 
             <h1 className="page-title-dark mt-6">
               Compare training options before you apply.

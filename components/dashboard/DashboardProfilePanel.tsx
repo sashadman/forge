@@ -31,7 +31,7 @@ export default function DashboardProfilePanel({
   readinessScore,
 }: DashboardProfilePanelProps) {
   return (
-    <aside className="content-panel -mt-12 self-start">
+    <aside className="content-panel self-start">
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
         <User className="h-7 w-7" />
       </div>

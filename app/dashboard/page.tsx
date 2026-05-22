@@ -118,7 +118,7 @@ export default async function DashboardPage() {
             readinessScore={readinessScore}
           />
 
-          <div className="-mt-12 space-y-8">
+          <div className="-pt-8 space-y-8">
             <NextStepPanel
               title={nextStep.title}
               description={nextStep.description}
