@@ -13,7 +13,7 @@ import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Applicant Review — ${siteConfig.name}`,
-  description: 'Review applications submitted to your employer opportunities.',
+  description: 'Review applications submitted to your employer jobs and apprenticeships.',
 }
 
 export default async function EmployerApplicationsPage() {
@@ -27,7 +27,7 @@ export default async function EmployerApplicationsPage() {
       <PageHero
         eyebrow="Employer applicant review"
         title={`Review applications for ${employer.name}.`}
-        description="Review submitted application packages, readiness snapshots, intro messages, and timeline history for your opportunities."
+        description="Review submitted application packages, readiness snapshots, intro messages, and timeline history for your jobs and apprenticeships."
         actions={
           <BackLink
             href="/employers/dashboard"
@@ -61,7 +61,7 @@ export default async function EmployerApplicationsPage() {
               primaryLabel={
                 applications.length > 0
                   ? 'Review below'
-                  : 'Manage opportunities'
+                  : 'Manage listings'
               }
               secondaryHref="/employers/profile"
               secondaryLabel="Improve profile"
@@ -84,9 +84,9 @@ export default async function EmployerApplicationsPage() {
               <EmptyState
                 icon={<Inbox className="h-6 w-6" />}
                 title="No applications yet"
-                description="Applications will appear here when seekers apply to your active opportunities. The best next step is to review your listings and make sure they clearly explain the role, requirements, pay, schedule, and how to apply."
+                description="Applications will appear here when seekers apply to your active jobs and apprenticeships. The best next step is to review your listings and make sure they clearly explain the role, requirements, pay, schedule, and how to apply."
                 primaryHref="/employers/dashboard"
-                primaryLabel="Manage opportunities"
+                primaryLabel="Manage listings"
                 secondaryHref="/employers/profile"
                 secondaryLabel="Improve profile"
               />
