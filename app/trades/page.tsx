@@ -24,16 +24,19 @@ const heroCards = [
     title: 'Discover',
     description: 'Understand what each career path actually does.',
     icon: Search,
+    href: '#career-paths',
   },
   {
     title: 'Prepare',
     description: 'Connect the path to training and apprenticeship options.',
     icon: GraduationCap,
+    href: '/programs',
   },
   {
     title: 'Act',
     description: 'Move toward programs, jobs, apprenticeships, and employers.',
     icon: BriefcaseBusiness,
+    href: '/opportunities',
   },
 ]
 
@@ -58,22 +61,31 @@ export default function TradesPage() {
               pathways, compare earning potential, and build a practical route
               toward jobs, apprenticeships, and long-term growth.
             </p>
+<div className="mt-10 grid gap-4 sm:grid-cols-3">
+  {heroCards.map((card) => {
+    const Icon = card.icon
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {heroCards.map((card) => {
-                const Icon = card.icon
+    return (
+      <Link
+        key={card.title}
+        href={card.href}
+        className="card-dark group transition hover:-translate-y-1 hover:border-orange-400/30"
+      >
+        <Icon className="h-6 w-6 text-orange-300" />
 
-                return (
-                  <div key={card.title} className="card-dark">
-                    <Icon className="h-6 w-6 text-orange-300" />
-                    <p className="mt-4 font-bold text-white">{card.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      {card.description}
-                    </p>
-                  </div>
-                )
-              })}
-            </div>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <p className="font-bold text-white">{card.title}</p>
+          <ArrowRight className="h-4 w-4 text-orange-300 transition group-hover:translate-x-1" />
+        </div>
+
+        <p className="mt-2 text-sm leading-6 text-slate-300">
+          {card.description}
+        </p>
+      </Link>
+    )
+  })}
+</div>
+           
           </div>
         </div>
       </section>
@@ -92,7 +104,7 @@ export default function TradesPage() {
             />
           </div>
 
-          <div className="mt-8">
+          <div id="career-paths" className="mt-8 scroll-mt-28">
             <TradesExplorer />
           </div>
         </div>

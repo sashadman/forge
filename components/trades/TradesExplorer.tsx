@@ -34,19 +34,19 @@ export default function TradesExplorer() {
   }, [searchTerm])
 
   return (
-    <div className="space-y-10">
-      <div className="content-panel -mt-16">
+    <div className="space-y-8">
+      <section className="content-panel">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
-            <label htmlFor="trade-search" className="eyebrow mb-3">
-              Search the marketplace
+            <label htmlFor="career-path-search" className="eyebrow mb-3">
+              Career path search
             </label>
 
             <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
               <Search className="h-5 w-5 text-slate-400" />
 
               <input
-                id="trade-search"
+                id="career-path-search"
                 type="search"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
@@ -54,18 +54,25 @@ export default function TradesExplorer() {
                 className="w-full bg-transparent text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
               />
             </div>
+
+            <p className="muted-text mt-3 max-w-2xl">
+              Search is useful here because career seekers may already know a
+              trade name, skill, certification, or work environment they want to
+              compare.
+            </p>
           </div>
 
           <div className="rounded-2xl bg-slate-950 px-5 py-4 text-white">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
               Showing
             </p>
+
             <p className="mt-1 text-2xl font-bold">
               {filteredTrades.length} of {TRADES.length}
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {filteredTrades.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -148,11 +155,12 @@ export default function TradesExplorer() {
       ) : (
         <div className="card border-dashed p-10 text-center">
           <h2 className="text-2xl font-bold text-slate-950">
-            No trades found
+            No career paths found
           </h2>
 
           <p className="mt-3 text-slate-600">
-            Try searching for a different trade, skill, certification, or training path.
+            Try searching for a different career path, skill, certification, or
+            training direction.
           </p>
 
           <button
