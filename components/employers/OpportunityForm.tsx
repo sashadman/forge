@@ -94,7 +94,7 @@ export default function OpportunityForm({
     const baseSlug = createSlug(title)
 
     if (!baseSlug) {
-      setError('Please enter a valid opportunity title.')
+      setError('Please enter a valid job or apprenticeship title.')
       setSaving(false)
       return
     }
@@ -123,10 +123,10 @@ export default function OpportunityForm({
 
       if (error.message.toLowerCase().includes('duplicate')) {
         setError(
-          'An opportunity with this title already exists for this employer. Try a more specific title.'
+          'A jobs, an apprenticeship, or a trainee role with this title already exists for this employer. Try a more specific title.'
         )
       } else {
-        setError('Could not create opportunity. Please try again.')
+        setError('Could not create job or apprenticeship. Please try again.')
       }
 
       setSaving(false)
@@ -148,12 +148,12 @@ export default function OpportunityForm({
           <p className="eyebrow">Opportunity listing</p>
 
           <h2 className="section-title mt-3">
-            Add a real role or training opportunity.
+            Add a real role or training job or apprenticeship.
           </h2>
 
           <p className="muted-text mt-3 max-w-3xl">
             This listing will be connected to your employer profile. Only post
-            real opportunities that someone can actually review or apply for.
+            real jobs and apprenticeships that someone can actually review or apply for.
           </p>
         </div>
       </div>
@@ -252,7 +252,7 @@ export default function OpportunityForm({
             required
             rows={6}
             className="input-field"
-            placeholder="Describe the opportunity, work environment, responsibilities, and who should apply."
+            placeholder="Describe the job or apprenticeship, work environment, responsibilities, and who should apply."
           />
         </div>
 
@@ -301,11 +301,11 @@ export default function OpportunityForm({
 
       <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-6 text-slate-500">
-          This will publish the opportunity as an active listing.
+          This will publish the job or apprenticeship as an active listing.
         </p>
 
         <button type="submit" disabled={saving} className="btn-primary">
-          {saving ? 'Creating listing...' : 'Create opportunity'}
+          {saving ? 'Creating listing...' : 'Create job or apprenticeship'}
         </button>
       </div>
     </form>

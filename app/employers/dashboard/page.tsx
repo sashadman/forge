@@ -22,7 +22,7 @@ import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Employer Dashboard — ${siteConfig.name}`,
-  description: 'Manage your employer profile, applicant reviews, and opportunity listings.',
+  description: 'Manage your employer profile, applicant reviews, and job listings.',
 }
 
 function formatOpportunityType(type: string) {
@@ -142,9 +142,9 @@ export default async function EmployerDashboardPage() {
       helpText: 'Admin verification improves trust.',
     },
     {
-      label: 'Active opportunity',
+      label: 'Active jobs & apprenticeships',
       complete: activeOpportunities.length > 0,
-      helpText: 'Add a real opportunity when available.',
+      helpText: 'Add a real job or apprenticeship when available.',
     },
   ]
 
@@ -160,7 +160,7 @@ export default async function EmployerDashboardPage() {
       <PageHero
         eyebrow="Employer dashboard"
         title="Manage your employer presence with a clear hiring workflow."
-        description={`Review ${employer.name}, manage real opportunity listings, and follow up with applicants through one employer workspace.`}
+        description={`Review ${employer.name}, manage real jobs and apprenticeships, and follow up with applicants through one employer workspace.`}
       />
 
       <section className="section-light pb-20">
@@ -201,7 +201,7 @@ export default async function EmployerDashboardPage() {
               description={
                 applicationCount && applicationCount > 0
                   ? 'Applications are waiting for review. Start there before adding more listings.'
-                  : 'A strong employer profile and one real opportunity listing are the best next steps for attracting serious applicants.'
+                  : 'A strong employer profile and one real job or apprenticeship listing are the best next steps for attracting serious applicants.'
               }
               primaryHref={
                 applicationCount && applicationCount > 0
@@ -211,7 +211,7 @@ export default async function EmployerDashboardPage() {
               primaryLabel={
                 applicationCount && applicationCount > 0
                   ? 'Review applications'
-                  : 'Create opportunity'
+                  : 'Create listing'
               }
               secondaryHref="/employers/profile"
               secondaryLabel="Improve profile"
@@ -321,11 +321,11 @@ export default async function EmployerDashboardPage() {
                     <p className="eyebrow">Listings</p>
 
                     <h2 className="section-title mt-3">
-                      Active opportunity listings
+                      Active jobs & apprenticeships
                     </h2>
 
                     <p className="muted-text mt-3 max-w-2xl">
-                      These listings appear in the public opportunities directory.
+                      These listings appear in the public Jobs & Apprenticeships directory.
                       Keep them real, current, and easy for applicants to understand.
                     </p>
                   </div>
@@ -399,9 +399,9 @@ export default async function EmployerDashboardPage() {
                     <EmptyState
                       icon={<BriefcaseBusiness className="h-6 w-6" />}
                       title="No active listings yet"
-                      description="Create your first real opportunity listing when you have a job, apprenticeship, trainee role, or pre-apprenticeship that someone can actually review or apply for."
+                      description="Create your first real job or apprenticeship listing when you have a job, apprenticeship, trainee role, or pre-apprenticeship that someone can actually review or apply for."
                       primaryHref="/employers/opportunities/new"
-                      primaryLabel="Create opportunity"
+                      primaryLabel="Create listing"
                       secondaryHref="/employers/profile"
                       secondaryLabel="Improve profile first"
                     />
@@ -414,7 +414,7 @@ export default async function EmployerDashboardPage() {
                   <p className="eyebrow">Inactive listings</p>
 
                   <h2 className="section-title mt-3">
-                    Hidden opportunity listings
+                    Hidden job listings
                   </h2>
 
                   <p className="muted-text mt-3 max-w-2xl">

@@ -166,7 +166,7 @@ export default async function EmployerDetailPage({ params }: PageProps) {
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to opportunities
+            Back to jobs & apprenticeships
           </Link>
 
           <div className="mt-10 max-w-4xl">
@@ -326,12 +326,12 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   </h3>
 
                   <p className="muted-text mt-2">
-                    This employer does not have active opportunities listed right
+                    This employer does not have active jobs or apprenticeships listed right
                     now. We do not show fake openings.
                   </p>
 
                   <Link href="/opportunities" className="btn-dark mt-5">
-                    Browse opportunities
+                    Browse job and apprenticeships
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -436,7 +436,7 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                 </p>
 
                 <Link href="/trades" className="btn-light mt-6">
-                  Explore trades
+                  Explore career paths
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

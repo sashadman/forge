@@ -41,16 +41,16 @@ const benefits = [
 ]
 
 const employerUseCases = [
-  'List entry-level skilled-trades opportunities',
+  'List entry-level jobs, apprenticeships, and trainee roles',
   'Share apprenticeship or trainee openings',
-  'Connect with people who saved related trades or programs',
+  'Connect with people who saved related jobs or programs',
   'Build visibility with career seekers before they apply',
   'Support local workforce-development efforts',
 ]
 
 const futureTools = [
   'Employer profiles',
-  'Entry-level opportunity listings',
+  'Entry-level jobs and apprenticeship listings',
   'Apprenticeship and trainee postings',
   'Candidate interest signals',
   'Connections with program providers',
@@ -80,7 +80,7 @@ export default function ForEmployersPage() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link href="/opportunities" className="btn-primary px-7 py-4">
-                View opportunities
+                View jobs & apprenticeships
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
