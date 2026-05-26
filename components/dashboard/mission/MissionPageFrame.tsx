@@ -1,5 +1,4 @@
 'use client'
-
 import Link from 'next/link'
 import { useEffect, useState, type ReactNode } from 'react'
 import {
@@ -11,6 +10,7 @@ import {
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
+import MissionNav from '@/components/dashboard/mission/MissionNav'
 
 type MissionPageFrameProps = {
   eyebrow: string
@@ -198,7 +198,9 @@ export default function MissionPageFrame({
             )}
           </div>
         </div>
-      </section>
+           </section>
+
+      <MissionNav isDay={isDay} />
 
       <section
         className={
