@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import AuthNav from '@/components/layout/AuthNav'
+import ThemeToggle from '@/components/theme/ThemeToggle'
 
 const roleLinks = [
   {
@@ -78,7 +79,9 @@ export default function SiteNavbar() {
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <div className="relative">
+          <ThemeToggle />
+
+              <div className="relative">
               <button
                 type="button"
                 onClick={() => setIsRoleMenuOpen((current) => !current)}
@@ -134,15 +137,19 @@ export default function SiteNavbar() {
             <AuthNav />
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsOpen((current) => !current)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm lg:hidden"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isOpen}
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+        <div className="flex items-center gap-2 lg:hidden">
+  <ThemeToggle />
+
+  <button
+    type="button"
+    onClick={() => setIsOpen((current) => !current)}
+    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm"
+    aria-label={isOpen ? 'Close menu' : 'Open menu'}
+    aria-expanded={isOpen}
+  >
+    {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+  </button>
+</div>
         </div>
 
         {isOpen && (
