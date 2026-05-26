@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ReadinessPanel from '@/components/dashboard/readiness/ReadinessPanel'
 import MissionPageFrame from '@/components/dashboard/mission/MissionPageFrame'
+import MissionNextStep from '@/components/dashboard/mission/MissionNextStep'
 import {
   getCurrentUserReadinessItems,
   getCurrentUserReadinessScore,
@@ -28,8 +29,8 @@ export default async function ReadinessPage() {
       secondaryHref="/opportunities"
       secondaryLabel="View jobs & apprenticeships"
     >
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-8 rounded-[2rem] border border-slate-200 bg-white/95 p-6 shadow-sm">
+      <div className="mx-auto max-w-5xl space-y-8">
+        <div className="rounded-[2rem] border border-slate-200 bg-white/95 p-6 shadow-sm">
           <p className="font-bold text-slate-950">Readiness mission active</p>
 
           <p className="mt-2 text-slate-600">
@@ -39,6 +40,13 @@ export default async function ReadinessPage() {
         </div>
 
         <ReadinessPanel initialItems={items} initialScore={score} />
+
+        <MissionNextStep
+          title="Ready enough to choose direction?"
+          description="After improving readiness, review your saved career paths so your next training and job decisions stay focused."
+          primaryHref="/dashboard/career-paths"
+          primaryLabel="Go to career paths"
+        />
       </div>
     </MissionPageFrame>
   )
