@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import ThemeProvider from '@/components/theme/ThemeProvider'
 import { Barlow, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import ToastProvider from '@/components/providers/ToastProvider'
 import './globals.css'
@@ -65,10 +66,12 @@ export default function RootLayout({
       className={`${barlow.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-white font-body text-forge-navy antialiased">
-        {children}
-        <ToastProvider />
-      </body>
+     <body className="bg-white font-body text-forge-navy antialiased">
+  <ThemeProvider>
+    {children}
+    <ToastProvider />
+  </ThemeProvider>
+</body>
     </html>
   )
 }

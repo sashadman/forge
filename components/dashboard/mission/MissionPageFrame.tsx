@@ -1,16 +1,13 @@
 'use client'
+
 import Link from 'next/link'
-import { useEffect, useState, type ReactNode } from 'react'
-import {
-  ArrowLeft,
-  ArrowRight,
-  Moon,
-  SunMedium,
-  TerminalSquare,
-} from 'lucide-react'
+import { type ReactNode } from 'react'
+import { ArrowLeft, ArrowRight, TerminalSquare } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import MissionNav from '@/components/dashboard/mission/MissionNav'
+import ThemeToggle from '@/components/theme/ThemeToggle'
+import { useTheme } from '@/components/theme/ThemeProvider'
 
 type MissionPageFrameProps = {
   eyebrow: string
@@ -23,8 +20,6 @@ type MissionPageFrameProps = {
   children: ReactNode
 }
 
-type MissionTheme = 'night' | 'day'
-
 export default function MissionPageFrame({
   eyebrow,
   title,
@@ -35,25 +30,8 @@ export default function MissionPageFrame({
   secondaryLabel,
   children,
 }: MissionPageFrameProps) {
-  const [theme, setTheme] = useState<MissionTheme>('night')
-
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem('mission-theme')
-
-    if (savedTheme === 'day' || savedTheme === 'night') {
-      setTheme(savedTheme)
-    }
-  }, [])
-
-  function toggleTheme() {
-    setTheme((currentTheme) => {
-      const nextTheme = currentTheme === 'night' ? 'day' : 'night'
-      window.localStorage.setItem('mission-theme', nextTheme)
-      return nextTheme
-    })
-  }
-
-  const isDay = theme === 'day'
+  const { isLight } = useTheme()
+  const isDay = isLight
 
   return (
     <main
@@ -110,28 +88,7 @@ export default function MissionPageFrame({
               Back to mission hub
             </Link>
 
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className={
-                isDay
-                  ? 'inline-flex w-fit items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:border-teal-300 hover:text-teal-700'
-                  : 'inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-slate-200 shadow-sm transition hover:border-cyan-300/40 hover:text-cyan-200'
-              }
-              aria-label="Toggle dashboard mission theme"
-            >
-              {isDay ? (
-                <>
-                  <Moon className="h-4 w-4" />
-                  Night mode
-                </>
-              ) : (
-                <>
-                  <SunMedium className="h-4 w-4" />
-                  Day mode
-                </>
-              )}
-            </button>
+            <ThemeToggle variant="mission" />
           </div>
 
           <div className="mt-12 max-w-4xl">
@@ -198,7 +155,7 @@ export default function MissionPageFrame({
             )}
           </div>
         </div>
-           </section>
+      </section>
 
       <MissionNav isDay={isDay} />
 
