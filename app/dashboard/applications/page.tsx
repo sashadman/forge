@@ -1,4 +1,4 @@
-import { ClipboardCheck } from 'lucide-react'
+import ApplicationsMissionGuide from '@/components/dashboard/applications/ApplicationsMissionGuide'
 import DashboardActionCenter from '@/components/dashboard/DashboardActionCenter'
 import SubmittedApplicationsSection from '@/components/dashboard/SubmittedApplicationsSection'
 import MissionPageFrame from '@/components/dashboard/mission/MissionPageFrame'
@@ -23,20 +23,11 @@ export default async function DashboardApplicationsPage() {
       secondaryLabel="Return to mission hub"
     >
       <div className="space-y-8">
-        <div className="rounded-[2rem] border border-slate-200 bg-white/95 p-6 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
-              <ClipboardCheck className="h-6 w-6" />
-            </div>
-
-            <div>
-              <p className="font-bold text-slate-950">Mission purpose</p>
-              <p className="text-slate-600">
-                Keep applications and follow-ups from getting lost.
-              </p>
-            </div>
-          </div>
-        </div>
+        <ApplicationsMissionGuide
+          applications={submittedApplications}
+          programItems={savedProgramPipelineItems}
+          opportunityItems={savedOpportunityPipelineItems}
+        />
 
         <DashboardActionCenter
           programItems={savedProgramPipelineItems}
