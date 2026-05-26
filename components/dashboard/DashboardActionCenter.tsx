@@ -230,8 +230,8 @@ export default function DashboardActionCenter({
               </h3>
 
               <p className="muted-text mt-2">
-                Add next actions or follow-up dates to saved programs and
-                opportunities to turn this dashboard into a daily command center.
+                Add next actions or follow-up dates to saved training programs, jobs, and
+                apprenticeships to turn this dashboard into a daily command center.
               </p>
             </div>
           </div>

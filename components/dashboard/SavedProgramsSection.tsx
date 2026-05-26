@@ -16,11 +16,15 @@ export default function SavedProgramsSection({
   return (
     <section className="content-panel">
       <DashboardSectionHeader
-        eyebrow="Training pathways"
-        title="Saved programs and apprenticeships"
-        description="Use this section to compare programs, track follow-up actions, and decide which pathways are worth applying to."
+        eyebrow="Training programs pipeline"
+        title="Saved training programs"
+        description="Use this section to compare programs, track follow-up actions, and decide which training pathways are worth pursuing."
         href="/programs"
-        action={items.length > 0 ? 'Find more programs' : 'Explore programs'}
+        action={
+          items.length > 0
+            ? 'Compare more training programs'
+            : 'Compare training programs'
+        }
       />
 
       {items.length > 0 ? (
@@ -29,10 +33,10 @@ export default function SavedProgramsSection({
         </div>
       ) : (
         <DashboardEmptyState
-          title="No saved programs yet"
-          description="Save programs while browsing training pathways. Your saved programs become your comparison list for training, apprenticeships, cost, duration, and next steps."
+          title="No saved training programs yet"
+          description="Save training programs while browsing preparation pathways. Your saved programs become your comparison list for cost, duration, requirements, and next steps."
           href="/programs"
-          action="Explore programs"
+          action="Compare training programs"
         />
       )}
     </section>

@@ -67,7 +67,7 @@ export default function OpportunityPipelineSummary({
           <p className="eyebrow">Opportunity pipeline</p>
 
           <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
-            {total} tracked {total === 1 ? 'opportunity' : 'opportunities'}
+            {total} tracked {total === 1 ? 'listing' : 'listings'}
           </h3>
 
           <p className="muted-text mt-2 max-w-2xl">

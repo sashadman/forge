@@ -169,7 +169,7 @@ export default function OpportunityPipelineBoard({
 
             <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
               {items.length} tracked{' '}
-              {items.length === 1 ? 'opportunity' : 'opportunities'}
+              {items.length === 1 ? 'opportunity' : 'listings'}
             </h3>
 
             <p className="muted-text mt-3 max-w-2xl">
@@ -221,7 +221,7 @@ export default function OpportunityPipelineBoard({
 
       <PipelineGroup
         title="Active pipeline"
-        description="Sorted by follow-up urgency first, then title. These are opportunities you are actively exploring, preparing for, applying to, interviewing for, or considering."
+        description="Sorted by follow-up urgency first, then title. These are jobs and apprenticeships you are actively exploring, preparing for, applying to, interviewing for, or considering."
         emptyTitle="No active pipeline items yet"
         emptyDescription="Move a saved opportunity to Interested, Preparing, Applied, Interviewing, or Offer when you are ready to work on it."
         items={activePipeline}
@@ -230,8 +230,8 @@ export default function OpportunityPipelineBoard({
 
       <PipelineGroup
         title="Saved for later"
-        description="These are opportunities you saved but have not moved into active progress yet."
-        emptyTitle="No saved-for-later opportunities"
+        description="These are jobs and apprenticeships you saved but have not moved into active progress yet."
+        emptyTitle="No saved-for-later jobs or apprenticeships"
         emptyDescription="Newly saved jobs and apprenticeships will appear here first."
         items={savedForLater}
         userId={userId}
@@ -239,9 +239,9 @@ export default function OpportunityPipelineBoard({
 
       <PipelineGroup
         title="Closed"
-        description="These are opportunities you are no longer pursuing, but may want to keep for your record."
-        emptyTitle="No closed opportunities"
-        emptyDescription="Move opportunities here when they are no longer active for you."
+        description="These are jobs and apprenticeships you are no longer pursuing, but may want to keep for your record."
+        emptyTitle="No closed jobs or apprenticeships"
+        emptyDescription="Move jobs and apprenticeships here when they are no longer active for you."
         items={closedPipeline}
         userId={userId}
       />
