@@ -825,6 +825,75 @@ export type Database = {
         }
         Relationships: []
       }
+      provider_claims: {
+        Row: {
+          admin_notes: string | null
+          city: string
+          claim_type: string
+          contact_email: string
+          contact_name: string
+          created_at: string
+          evidence_summary: string
+          id: string
+          organization_name: string
+          phone: string | null
+          program_names: string | null
+          requested_access: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          role_title: string | null
+          state: string
+          status: string
+          submitted_by: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          city: string
+          claim_type?: string
+          contact_email: string
+          contact_name: string
+          created_at?: string
+          evidence_summary: string
+          id?: string
+          organization_name: string
+          phone?: string | null
+          program_names?: string | null
+          requested_access?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_title?: string | null
+          state: string
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          city?: string
+          claim_type?: string
+          contact_email?: string
+          contact_name?: string
+          created_at?: string
+          evidence_summary?: string
+          id?: string
+          organization_name?: string
+          phone?: string | null
+          program_names?: string | null
+          requested_access?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_title?: string | null
+          state?: string
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           answers: Json

@@ -15,37 +15,39 @@ import {
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `For Training Providers — ${siteConfig.name}`,
   description:
-    'A provider-facing overview for training organizations, apprenticeship programs, workforce partners, and schools that want to prepare accurate program listings and future provider-managed data.',
+    'A provider-facing overview for training organizations, apprenticeship programs, workforce partners, and schools that want to request provider access and manage accurate training program information.',
 }
 
 const providerWorkflow = [
   {
-    title: 'Create or claim provider profile',
+    title: 'Request provider access',
     description:
-      'A provider profile should identify the organization, location, contact information, website, and verification status before program editing is allowed.',
+      'A real provider starts by submitting an access request with organization details, contact information, program names, and evidence of connection.',
     icon: ShieldCheck,
   },
   {
-    title: 'Add training program information',
+    title: 'Admin reviews the request',
     description:
-      'Each program should have a clear name, program type, career focus, location, duration, cost, requirements, outcomes, and application instructions.',
-    icon: FilePenLine,
-  },
-  {
-    title: 'Maintain accuracy over time',
-    description:
-      'Dates, costs, application links, cohort availability, and admission requirements should be reviewed regularly so seekers do not rely on stale information.',
+      'Provider access should not be automatic. An admin reviews the organization, website, evidence, and requested access before future editing tools are enabled.',
     icon: ClipboardCheck,
   },
   {
-    title: 'Understand seeker interest later',
+    title: 'Create or claim provider profile',
     description:
-      'Future provider tools should show useful signals such as views, saves, career-path interest, and applicant readiness trends without exposing private seeker data.',
+      'After review, a provider profile can identify the organization, location, contact information, website, and verification status.',
+    icon: FilePenLine,
+  },
+  {
+    title: 'Maintain accurate program data',
+    description:
+      'Dates, costs, application links, cohort availability, and admission requirements should be reviewed regularly so seekers do not rely on stale information.',
     icon: BarChart3,
   },
 ]
@@ -92,7 +94,7 @@ const providerPrinciples = [
 
 export default function ForProgramsPage() {
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <section className="hero-dark">
@@ -103,30 +105,34 @@ export default function ForProgramsPage() {
             <p className="eyebrow-dark">For training providers</p>
 
             <h1 className="page-title-dark mt-6">
-              Manage accurate training pathway information for future skilled workers.
+              Help future skilled workers find accurate training pathways.
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
               {siteConfig.name} is being designed so training providers,
               apprenticeship programs, workforce organizations, and schools can
-              eventually manage clear program information, verification status,
-              and useful seeker-interest data from one provider workflow.
+              manage accurate program information through a verified provider
+              workflow.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Link href="#provider-workflow" className="btn-primary px-7 py-4">
-                Review provider workflow
+              <Link
+                href="/training-providers/claim"
+                className="btn-primary px-7 py-4"
+              >
+                Request provider access
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
-              <Link href="#program-data" className="btn-outline-dark px-7 py-4">
-                See program data fields
+              <Link href="#provider-workflow" className="btn-outline-dark px-7 py-4">
+                Review provider workflow
               </Link>
             </div>
 
             <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-400">
-              Provider account tools are not being claimed as live until the
-              claim, verification, editing, and security workflow is built.
+              Provider tools are opened only after the claim, verification,
+              editing, and security workflow is reviewed. This keeps program
+              data trustworthy.
             </p>
           </div>
 
@@ -138,9 +144,9 @@ export default function ForProgramsPage() {
                 </div>
 
                 <div>
-                  <p className="font-bold">Provider workspace model</p>
+                  <p className="font-bold">Provider access model</p>
                   <p className="text-sm text-slate-500">
-                    Profile · programs · verification · insights
+                    Claim · review · verify · manage programs
                   </p>
                 </div>
               </div>
@@ -156,12 +162,11 @@ export default function ForProgramsPage() {
 
               <div className="mt-6 rounded-2xl border border-orange-200 bg-orange-50 p-4">
                 <p className="text-sm font-semibold text-orange-900">
-                  Build note
+                  First live provider step
                 </p>
                 <p className="mt-1 text-sm leading-6 text-orange-800">
-                  This page defines the provider experience. The actual provider
-                  portal should be built only after the database, RLS policies,
-                  ownership checks, and verification workflow are designed.
+                  Training providers can now request access. Admin review comes
+                  before any provider profile or program-editing privileges.
                 </p>
               </div>
             </div>
@@ -169,16 +174,16 @@ export default function ForProgramsPage() {
         </div>
       </section>
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
           <div className="pt-8">
             <NextStepPanel
-              title="Training providers need a provider workflow, not a seeker directory redirect."
-              description="The provider path should help organizations understand what they will manage, what data matters, and how future claim or verification tools will work."
-              primaryHref="#provider-workflow"
-              primaryLabel="Review workflow"
-              secondaryHref="#provider-insights"
-              secondaryLabel="Review future insights"
+              title="Start with a verified provider request."
+              description="The provider path should begin with ownership review. Organizations can request access, then admins can review the claim before provider tools are enabled."
+              primaryHref="/training-providers/claim"
+              primaryLabel="Request provider access"
+              secondaryHref="#program-data"
+              secondaryLabel="Review program data fields"
               icon={<ShieldCheck className="h-6 w-6" />}
             />
           </div>
@@ -188,13 +193,13 @@ export default function ForProgramsPage() {
               <p className="eyebrow">Provider workflow</p>
 
               <h2 className="section-title mt-6">
-                The provider journey should start with ownership and accuracy.
+                The provider journey starts with ownership and accuracy.
               </h2>
 
               <p className="lead-text mt-5">
-                A training provider should be able to manage its profile, add or
-                maintain program listings, verify public details, and later
-                review useful visibility and seeker-interest data.
+                A training provider should be able to request access, verify its
+                connection to a real organization, and later manage program
+                information through a secure provider workflow.
               </p>
             </div>
 
@@ -232,8 +237,8 @@ export default function ForProgramsPage() {
                 </h2>
 
                 <p className="lead-text mt-5">
-                  Before building the provider portal, the platform should define
-                  the program fields clearly. This prevents fake listings,
+                  Before provider editing is enabled, the platform should define
+                  program fields clearly. This prevents fake listings,
                   incomplete records, and confusing provider claims.
                 </p>
               </div>
@@ -296,7 +301,8 @@ export default function ForProgramsPage() {
                 </p>
 
                 <h2 className="mt-4 text-3xl font-bold tracking-tight">
-                  Providers should eventually see useful data, not just public listing text.
+                  Providers should eventually see useful data, not just public
+                  listing text.
                 </h2>
 
                 <p className="mt-5 max-w-3xl leading-7 text-slate-300">
@@ -308,8 +314,8 @@ export default function ForProgramsPage() {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link href="#program-data" className="btn-light">
-                    Review program data fields
+                  <Link href="/training-providers/claim" className="btn-light">
+                    Request provider access
                     <ArrowRight className="h-4 w-4" />
                   </Link>
 
@@ -353,9 +359,9 @@ export default function ForProgramsPage() {
             </div>
           </section>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }
