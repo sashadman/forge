@@ -1141,6 +1141,106 @@ export type Database = {
           },
         ]
       }
+      training_provider_memberships: {
+        Row: {
+          created_at: string
+          id: string
+          provider_profile_id: string
+          role: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          provider_profile_id: string
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          provider_profile_id?: string
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_provider_memberships_provider_profile_id_fkey"
+            columns: ["provider_profile_id"]
+            isOneToOne: false
+            referencedRelation: "training_provider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_provider_profiles: {
+        Row: {
+          city: string
+          contact_email: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          phone: string | null
+          slug: string
+          source_claim_id: string | null
+          state: string
+          updated_at: string
+          verification_status: string
+          website_url: string | null
+        }
+        Insert: {
+          city: string
+          contact_email?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          phone?: string | null
+          slug: string
+          source_claim_id?: string | null
+          state: string
+          updated_at?: string
+          verification_status?: string
+          website_url?: string | null
+        }
+        Update: {
+          city?: string
+          contact_email?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone?: string | null
+          slug?: string
+          source_claim_id?: string | null
+          state?: string
+          updated_at?: string
+          verification_status?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_provider_profiles_source_claim_id_fkey"
+            columns: ["source_claim_id"]
+            isOneToOne: false
+            referencedRelation: "provider_claims"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       seeker_readiness_scores: {

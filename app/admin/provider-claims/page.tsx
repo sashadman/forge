@@ -5,11 +5,19 @@ import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import ProviderClaimReviewForm from '@/components/training-providers/ProviderClaimReviewForm'
+import CreateProviderProfileFromClaimButton from '@/components/training-providers/CreateProviderProfileFromClaimButton'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Provider Claims — ${siteConfig.name}`,
   description: 'Review training provider access and program claim requests.',
+}
+
+function formatClaimType(value: string) {
+  return value
+    .split('_')
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(' ')
 }
 
 export default async function AdminProviderClaimsPage() {
@@ -38,6 +46,7 @@ export default async function AdminProviderClaimsPage() {
     .select(
       `
       id,
+      submitted_by,
       contact_name,
       contact_email,
       organization_name,
@@ -62,8 +71,10 @@ export default async function AdminProviderClaimsPage() {
     console.error('Failed to load provider claims:', error)
   }
 
-  const pendingCount =
-    claims?.filter((claim) => claim.status === 'pending').length ?? 0
+  const providerClaims = claims ?? []
+  const pendingCount = providerClaims.filter(
+    (claim) => claim.status === 'pending'
+  ).length
 
   return (
     <main className="page-shell">
@@ -91,14 +102,14 @@ export default async function AdminProviderClaimsPage() {
       <section className="section-light pb-20">
         <div className="section-shell">
           <div className="-mt-12 grid gap-5 md:grid-cols-3">
-            <StatusPanel label="Total requests" value={`${claims?.length ?? 0}`} />
+            <StatusPanel label="Total requests" value={`${providerClaims.length}`} />
             <StatusPanel label="Pending review" value={`${pendingCount}`} />
             <StatusPanel label="Review model" value="Manual" />
           </div>
 
           <div className="mt-8 grid gap-6">
-            {claims && claims.length > 0 ? (
-              claims.map((claim) => (
+            {providerClaims.length > 0 ? (
+              providerClaims.map((claim) => (
                 <article key={claim.id} className="content-panel">
                   <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
                     <div className="max-w-3xl">
@@ -106,7 +117,7 @@ export default async function AdminProviderClaimsPage() {
                         <p className="eyebrow">{claim.status}</p>
 
                         <span className="badge-slate">
-                          {claim.claim_type.replaceAll('_', ' ')}
+                          {formatClaimType(claim.claim_type)}
                         </span>
                       </div>
 
@@ -187,6 +198,12 @@ export default async function AdminProviderClaimsPage() {
                         claimId={claim.id}
                         currentStatus={claim.status}
                         currentAdminNotes={claim.admin_notes ?? ''}
+                      />
+
+                      <CreateProviderProfileFromClaimButton
+                        claimId={claim.id}
+                        claimStatus={claim.status}
+                        submittedBy={claim.submitted_by}
                       />
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import {
   AlertCircle,
   ArrowRight,
+  Building2,
   CheckCircle2,
   Clock,
   FileCheck2,
@@ -20,7 +21,7 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: `Training Provider Dashboard — ${siteConfig.name}`,
   description:
-    'Review training provider request status and next steps for provider access.',
+    'Review training provider request status and manage approved provider workspace access.',
 }
 
 type ProviderClaimStatus =
@@ -46,6 +47,34 @@ type ProviderClaim = {
   reviewed_at: string | null
 }
 
+type ProviderMembership = {
+  id: string
+  role: string
+  status: string
+  training_provider_profiles:
+    | {
+        id: string
+        name: string
+        slug: string
+        city: string
+        state: string
+        verification_status: string
+        contact_email: string | null
+        website_url: string | null
+      }
+    | {
+        id: string
+        name: string
+        slug: string
+        city: string
+        state: string
+        verification_status: string
+        contact_email: string | null
+        website_url: string | null
+      }[]
+    | null
+}
+
 function formatClaimType(value: string) {
   return value
     .split('_')
@@ -58,11 +87,10 @@ function getStatusConfig(status: ProviderClaimStatus) {
     return {
       label: 'Approved',
       icon: CheckCircle2,
-      panelClass:
-        'border-emerald-200 bg-emerald-50 text-emerald-800',
+      panelClass: 'border-emerald-200 bg-emerald-50 text-emerald-800',
       iconClass: 'bg-emerald-100 text-emerald-700',
       message:
-        'Your request was approved. Program-management tools should be enabled in the next provider build.',
+        'Your request was approved. If an admin created your provider workspace, it will appear on this dashboard.',
     }
   }
 
@@ -70,8 +98,7 @@ function getStatusConfig(status: ProviderClaimStatus) {
     return {
       label: 'Needs more information',
       icon: AlertCircle,
-      panelClass:
-        'border-orange-200 bg-orange-50 text-orange-800',
+      panelClass: 'border-orange-200 bg-orange-50 text-orange-800',
       iconClass: 'bg-orange-100 text-orange-700',
       message:
         'An admin needs more information before approving this provider request. Review the admin notes and submit a clearer request if needed.',
@@ -82,8 +109,7 @@ function getStatusConfig(status: ProviderClaimStatus) {
     return {
       label: 'Rejected',
       icon: AlertCircle,
-      panelClass:
-        'border-red-200 bg-red-50 text-red-800',
+      panelClass: 'border-red-200 bg-red-50 text-red-800',
       iconClass: 'bg-red-100 text-red-700',
       message:
         'This request was not approved. You can review the notes and submit a new request with stronger evidence if appropriate.',
@@ -93,8 +119,7 @@ function getStatusConfig(status: ProviderClaimStatus) {
   return {
     label: 'Pending review',
     icon: Clock,
-    panelClass:
-      'border-slate-200 bg-slate-50 text-slate-700',
+    panelClass: 'border-slate-200 bg-slate-50 text-slate-700',
     iconClass: 'bg-slate-100 text-slate-700',
     message:
       'Your request is waiting for admin review. Provider tools are not enabled until review is complete.',
@@ -112,7 +137,33 @@ export default async function TrainingProviderDashboardPage() {
     redirect('/auth/sign-in')
   }
 
-  const { data: claims, error } = await supabase
+  const { data: memberships, error: membershipsError } = await supabase
+    .from('training_provider_memberships')
+    .select(
+      `
+      id,
+      role,
+      status,
+      training_provider_profiles (
+        id,
+        name,
+        slug,
+        city,
+        state,
+        verification_status,
+        contact_email,
+        website_url
+      )
+      `
+    )
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+
+  if (membershipsError) {
+    console.error('Failed to load provider memberships:', membershipsError)
+  }
+
+  const { data: claims, error: claimsError } = await supabase
     .from('provider_claims')
     .select(
       `
@@ -135,12 +186,20 @@ export default async function TrainingProviderDashboardPage() {
     .eq('submitted_by', user.id)
     .order('created_at', { ascending: false })
 
-  if (error) {
-    console.error('Failed to load provider claims:', error)
+  if (claimsError) {
+    console.error('Failed to load provider claims:', claimsError)
   }
 
+  const providerMemberships = (memberships ?? []) as ProviderMembership[]
   const providerClaims = (claims ?? []) as ProviderClaim[]
   const latestClaim = providerClaims[0]
+
+  const activeProviderProfiles = providerMemberships
+    .map((membership) => {
+      const profile = membership.training_provider_profiles
+      return Array.isArray(profile) ? profile[0] : profile
+    })
+    .filter(Boolean)
 
   return (
     <ThemedPublicPage>
@@ -154,12 +213,12 @@ export default async function TrainingProviderDashboardPage() {
             <p className="eyebrow-dark">Training provider workspace</p>
 
             <h1 className="page-title-dark mt-6">
-              Track your provider access request.
+              Manage your provider access.
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              This workspace keeps the provider journey honest: claim first,
-              admin review second, provider tools after approval.
+              Track provider requests, view approved provider workspaces, and
+              prepare for program-management tools.
             </p>
           </div>
         </div>
@@ -167,37 +226,105 @@ export default async function TrainingProviderDashboardPage() {
 
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          {latestClaim ? (
-            <div className="-mt-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <LatestClaimPanel claim={latestClaim} />
+          {activeProviderProfiles.length > 0 && (
+            <section className="-mt-12 content-panel">
+              <p className="eyebrow">Approved provider workspace</p>
 
-              <ProviderNextSteps claim={latestClaim} />
-            </div>
-          ) : (
-            <section className="-mt-12 content-panel text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
-                <GraduationCap className="h-8 w-8" />
-              </div>
-
-              <p className="eyebrow mt-8">No provider request yet</p>
-
-              <h2 className="section-title mt-4">
-                Start by requesting provider access.
+              <h2 className="section-title mt-3">
+                Your verified provider profile is active.
               </h2>
 
-              <p className="muted-text mx-auto mt-5 max-w-2xl">
-                Training providers need a verified request before program tools
-                are enabled. Submit organization details and evidence of
-                connection to begin.
+              <p className="muted-text mt-3 max-w-3xl">
+                Provider profile management is now available. Program submission
+                and editing will come next.
               </p>
 
-              <div className="mt-8 flex justify-center">
-                <Link href="/training-providers/claim" className="btn-primary">
-                  Request provider access
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+              <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                {activeProviderProfiles.map((providerProfile) => (
+                  <div key={providerProfile.id} className="mini-card">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                        <Building2 className="h-6 w-6" />
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-950">
+                          {providerProfile.name}
+                        </h3>
+
+                        <p className="mt-1 text-sm text-slate-600">
+                          {providerProfile.city}, {providerProfile.state} ·{' '}
+                          {providerProfile.verification_status}
+                        </p>
+
+                        {providerProfile.contact_email && (
+                          <p className="mt-2 text-sm text-slate-600">
+                            {providerProfile.contact_email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                      <Link
+                        href="/training-providers/profile"
+                        className="btn-primary"
+                      >
+                        Manage provider profile
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+
+                      <Link href="/for-programs#program-data" className="btn-outline">
+                        Review program data
+                      </Link>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
+          )}
+
+          {latestClaim ? (
+            <div
+              className={
+                activeProviderProfiles.length > 0
+                  ? 'mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]'
+                  : '-mt-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]'
+              }
+            >
+              <LatestClaimPanel claim={latestClaim} />
+              <ProviderNextSteps
+                claim={latestClaim}
+                hasProviderWorkspace={activeProviderProfiles.length > 0}
+              />
+            </div>
+          ) : (
+            activeProviderProfiles.length === 0 && (
+              <section className="-mt-12 content-panel text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                  <GraduationCap className="h-8 w-8" />
+                </div>
+
+                <p className="eyebrow mt-8">No provider request yet</p>
+
+                <h2 className="section-title mt-4">
+                  Start by requesting provider access.
+                </h2>
+
+                <p className="muted-text mx-auto mt-5 max-w-2xl">
+                  Training providers need a verified request before program tools
+                  are enabled. Submit organization details and evidence of
+                  connection to begin.
+                </p>
+
+                <div className="mt-8 flex justify-center">
+                  <Link href="/training-providers/claim" className="btn-primary">
+                    Request provider access
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </section>
+            )
           )}
 
           {providerClaims.length > 1 && (
@@ -230,7 +357,9 @@ function LatestClaimPanel({ claim }: { claim: ProviderClaim }) {
   return (
     <section className="content-panel">
       <div className="flex items-start gap-4">
-        <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${statusConfig.iconClass}`}>
+        <div
+          className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${statusConfig.iconClass}`}
+        >
           <StatusIcon className="h-7 w-7" />
         </div>
 
@@ -304,7 +433,13 @@ function LatestClaimPanel({ claim }: { claim: ProviderClaim }) {
   )
 }
 
-function ProviderNextSteps({ claim }: { claim: ProviderClaim }) {
+function ProviderNextSteps({
+  claim,
+  hasProviderWorkspace,
+}: {
+  claim: ProviderClaim
+  hasProviderWorkspace: boolean
+}) {
   const isApproved = claim.status === 'approved'
   const needsMoreInfo = claim.status === 'needs_more_info'
   const isRejected = claim.status === 'rejected'
@@ -332,14 +467,19 @@ function ProviderNextSteps({ claim }: { claim: ProviderClaim }) {
           />
 
           <StepItem
-            complete={false}
-            title="Provider tools"
-            description="Program editing and provider dashboards come only after approval and membership setup."
+            complete={hasProviderWorkspace}
+            title="Provider workspace"
+            description="Approved providers get a secured profile and membership before program editing begins."
           />
         </div>
 
         <div className="mt-8 flex flex-col gap-3">
-          {isApproved ? (
+          {hasProviderWorkspace ? (
+            <Link href="/training-providers/profile" className="btn-primary">
+              Manage provider profile
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          ) : isApproved ? (
             <Link href="/for-programs#provider-insights" className="btn-primary">
               Review future provider tools
               <ArrowRight className="h-4 w-4" />
@@ -362,12 +502,12 @@ function ProviderNextSteps({ claim }: { claim: ProviderClaim }) {
           <FileCheck2 className="h-8 w-8 text-orange-300" />
 
           <h3 className="mt-5 text-2xl font-bold">
-            No fake provider access
+            Program editing comes next
           </h3>
 
           <p className="mt-3 leading-7 text-slate-300">
-            This workspace intentionally does not allow program editing until
-            the provider ownership and security model is complete.
+            This sprint creates verified provider ownership. Program submission
+            and editing should be built on top of this membership foundation.
           </p>
         </div>
       </section>
@@ -435,7 +575,9 @@ function ClaimHistoryCard({ claim }: { claim: ProviderClaim }) {
           </p>
         </div>
 
-        <span className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${statusConfig.panelClass}`}>
+        <span
+          className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide ${statusConfig.panelClass}`}
+        >
           {statusConfig.label}
         </span>
       </div>
