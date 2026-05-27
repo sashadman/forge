@@ -318,7 +318,9 @@ export default function ForProgramsPage() {
                     Request provider access
                     <ArrowRight className="h-4 w-4" />
                   </Link>
-
+<Link href="/training-providers/dashboard" className="btn-outline-dark px-7 py-4">
+  Track provider request
+</Link>
                   <Link
                     href="#provider-workflow"
                     className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"

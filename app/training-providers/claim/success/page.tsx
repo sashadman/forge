@@ -36,13 +36,13 @@ export default function TrainingProviderClaimSuccessPage() {
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/for-programs" className="btn-dark">
-                Return to provider overview
+              <Link href="/training-providers/dashboard" className="btn-primary">
+                Track request status
+                <ArrowRight className="h-4 w-4" />
               </Link>
 
-              <Link href="/programs" className="btn-outline">
-                View public training programs
-                <ArrowRight className="h-4 w-4" />
+              <Link href="/for-programs" className="btn-outline">
+                Return to provider overview
               </Link>
             </div>
           </section>
