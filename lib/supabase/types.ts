@@ -211,6 +211,54 @@ export type Database = {
           },
         ]
       }
+      california_community_colleges: {
+        Row: {
+          city: string
+          county: string | null
+          created_at: string
+          district_name: string | null
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          region: string
+          slug: string
+          state: string
+          updated_at: string
+          website_url: string
+        }
+        Insert: {
+          city: string
+          county?: string | null
+          created_at?: string
+          district_name?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          region: string
+          slug: string
+          state?: string
+          updated_at?: string
+          website_url: string
+        }
+        Update: {
+          city?: string
+          county?: string | null
+          created_at?: string
+          district_name?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          region?: string
+          slug?: string
+          state?: string
+          updated_at?: string
+          website_url?: string
+        }
+        Relationships: []
+      }
       employers: {
         Row: {
           contact_email: string | null

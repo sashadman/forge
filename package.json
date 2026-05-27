@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
