@@ -1,16 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useTheme } from '@/components/theme/ThemeProvider'
 
 type SaveTradeButtonProps = {
   tradeSlug: string
 }
 
 export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+  const { isLight } = useTheme()
 
   const [userId, setUserId] = useState<string | null>(null)
   const [isSaved, setIsSaved] = useState(false)
@@ -19,6 +21,8 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    let isMounted = true
+
     async function loadSavedState() {
       setLoading(true)
       setError('')
@@ -26,6 +30,8 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
       const {
         data: { user },
       } = await supabase.auth.getUser()
+
+      if (!isMounted) return
 
       if (!user) {
         setUserId(null)
@@ -43,8 +49,10 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
         .eq('trade_slug', tradeSlug)
         .maybeSingle()
 
+      if (!isMounted) return
+
       if (error) {
-        console.error('Failed to load saved trade state:', error)
+        console.error('Failed to load saved career path state:', error)
         setError('Could not check saved status.')
       }
 
@@ -53,52 +61,58 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
     }
 
     loadSavedState()
+
+    return () => {
+      isMounted = false
+    }
   }, [supabase, tradeSlug])
 
   async function toggleSavedTrade() {
-    if (!userId) return
+    if (!userId || saving) return
 
     setSaving(true)
     setError('')
 
-    if (isSaved) {
-      const { error } = await supabase
-        .from('saved_trades')
-        .delete()
-        .eq('user_id', userId)
-        .eq('trade_slug', tradeSlug)
+    try {
+      if (isSaved) {
+        const { error } = await supabase
+          .from('saved_trades')
+          .delete()
+          .eq('user_id', userId)
+          .eq('trade_slug', tradeSlug)
 
-      if (error) {
-        console.error('Failed to remove saved trade:', error)
-        setError('Could not remove saved trade.')
-        setSaving(false)
-        return
+        if (error) throw error
+
+        setIsSaved(false)
+      } else {
+        const { error } = await supabase.from('saved_trades').insert({
+          user_id: userId,
+          trade_slug: tradeSlug,
+        })
+
+        if (error && error.code !== '23505') throw error
+
+        setIsSaved(true)
       }
-
-      setIsSaved(false)
+    } catch (error) {
+      console.error('Failed to update saved career path:', error)
+      setError('Could not update saved career path.')
+    } finally {
       setSaving(false)
-      return
     }
-
-    const { error } = await supabase.from('saved_trades').insert({
-      user_id: userId,
-      trade_slug: tradeSlug,
-    })
-
-    if (error) {
-      console.error('Failed to save trade:', error)
-      setError('Could not save trade.')
-      setSaving(false)
-      return
-    }
-
-    setIsSaved(true)
-    setSaving(false)
   }
+
+  const neutralButtonClass = isLight
+    ? 'inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-7 py-4 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60'
+    : 'inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-7 py-4 font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60'
+
+  const savedButtonClass = isLight
+    ? 'inline-flex items-center justify-center gap-2 rounded-full bg-orange-100 px-7 py-4 font-semibold text-orange-700 transition hover:bg-orange-200 disabled:cursor-not-allowed disabled:opacity-60'
+    : 'inline-flex items-center justify-center gap-2 rounded-full border border-orange-300/30 bg-orange-500/15 px-7 py-4 font-semibold text-orange-200 transition hover:bg-orange-500/20 disabled:cursor-not-allowed disabled:opacity-60'
 
   if (loading) {
     return (
-      <button type="button" disabled className="btn-outline px-7 py-4 text-slate-400">
+      <button type="button" disabled className={neutralButtonClass}>
         Checking...
       </button>
     )
@@ -106,7 +120,7 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
 
   if (!userId) {
     return (
-      <Link href="/auth/sign-in" className="btn-outline px-7 py-4">
+      <Link href="/auth/sign-in" className={neutralButtonClass}>
         <Bookmark className="h-4 w-4" />
         Sign in to save
       </Link>
@@ -119,11 +133,8 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
         type="button"
         onClick={toggleSavedTrade}
         disabled={saving}
-        className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
-          isSaved
-            ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-            : 'border border-white/20 text-white hover:bg-white/10'
-        }`}
+        aria-pressed={isSaved}
+        className={isSaved ? savedButtonClass : neutralButtonClass}
       >
         {isSaved ? (
           <BookmarkCheck className="h-4 w-4" />
@@ -131,10 +142,10 @@ export default function SaveTradeButton({ tradeSlug }: SaveTradeButtonProps) {
           <Bookmark className="h-4 w-4" />
         )}
 
-        {saving ? 'Saving...' : isSaved ? 'Saved' : 'Save career path'}
+        {saving ? 'Saving...' : isSaved ? 'Saved career path' : 'Save career path'}
       </button>
 
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
     </div>
   )
 }

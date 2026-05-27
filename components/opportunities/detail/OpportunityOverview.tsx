@@ -10,9 +10,9 @@ export default function OpportunityOverview({
 }: OpportunityOverviewProps) {
   return (
     <section className="content-panel">
-      <p className="eyebrow">Opportunity overview</p>
+      <p className="eyebrow">Listing overview</p>
 
-      <h2 className="section-title mt-3">What this opportunity offers</h2>
+      <h2 className="section-title mt-3">What this listing offers</h2>
 
       <p className="lead-text mt-5">{opportunity.description}</p>
 
@@ -24,6 +24,7 @@ export default function OpportunityOverview({
             {opportunity.benefits.map((benefit) => (
               <div key={benefit} className="mini-card flex gap-3">
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+
                 <p className="leading-7 text-slate-700">{benefit}</p>
               </div>
             ))}

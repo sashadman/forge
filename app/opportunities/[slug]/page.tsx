@@ -10,6 +10,8 @@ import EmployerSummaryCard from '@/components/opportunities/detail/EmployerSumma
 import OpportunityDetailsCard from '@/components/opportunities/detail/OpportunityDetailsCard'
 import OpportunityApplicationPanel from '@/components/opportunities/detail/OpportunityApplicationPanel'
 import OpportunityPreparationCard from '@/components/opportunities/detail/OpportunityPreparationCard'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import {
   getOpportunityDetailPageData,
   getOpportunityMetadataData,
@@ -29,7 +31,7 @@ export async function generateMetadata({
 
   if (!metadata) {
     return {
-      title: `Opportunity Not Found — ${siteConfig.name}`,
+      title: `Job or Apprenticeship Not Found — ${siteConfig.name}`,
     }
   }
 
@@ -56,7 +58,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
   const nextStep = (() => {
     if (hasActiveApplication) {
       return {
-        title: 'You already submitted an application for this opportunity.',
+        title: 'You already submitted an application for this listing.',
         description:
           'Track your application from the dashboard and keep your readiness profile current while the employer reviews your submission.',
         primaryHref: '/dashboard',
@@ -88,7 +90,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
         primaryHref: '/dashboard/readiness',
         primaryLabel: 'Improve readiness',
         secondaryHref: '/programs',
-        secondaryLabel: 'Explore training',
+        secondaryLabel: 'Compare training programs',
         icon: <GraduationCap className="h-6 w-6" />,
       }
     }
@@ -100,18 +102,18 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
       primaryHref: '#apply',
       primaryLabel: 'Go to application panel',
       secondaryHref: '/opportunities',
-      secondaryLabel: 'Compare more listings',
+      secondaryLabel: 'Compare more jobs & apprenticeships',
       icon: <BriefcaseBusiness className="h-6 w-6" />,
     }
   })()
 
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <OpportunityHero opportunity={opportunity} employer={employer} />
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
           <div className="-mt-12">
             <NextStepPanel
@@ -155,9 +157,9 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
             </aside>
           </div>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }

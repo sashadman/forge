@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { siteConfig } from '@/config/site'
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react'
 import {
@@ -27,7 +26,8 @@ type SavedQuizResult = {
 }
 
 export default function CareerQuiz() {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [isComplete, setIsComplete] = useState(false)
@@ -37,11 +37,11 @@ export default function CareerQuiz() {
   const [savingSavedResult, setSavingSavedResult] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
   const [saveError, setSaveError] = useState('')
+
   const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex]
   const currentAnswer = answers.find(
     (answer) => answer.question_id === currentQuestion.id
   )
-
   const selectedOptions = currentAnswer?.selected_options ?? []
   const progressPercentage =
     ((currentQuestionIndex + 1) / QUIZ_QUESTIONS.length) * 100
@@ -55,36 +55,36 @@ export default function CareerQuiz() {
     }))
   }, [answers, isComplete])
 
- useEffect(() => {
-  async function loadQuizState() {
-    if (typeof window === 'undefined') return
+  useEffect(() => {
+    async function loadQuizState() {
+      if (typeof window === 'undefined') return
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
 
-    setUserId(user?.id ?? null)
+      setUserId(user?.id ?? null)
 
-    const storedResult = window.localStorage.getItem('forge_latest_quiz_result')
+      const storedResult = window.localStorage.getItem('forge_latest_quiz_result')
 
-    if (!storedResult) {
-      setHasLoadedSavedResult(true)
-      return
+      if (!storedResult) {
+        setHasLoadedSavedResult(true)
+        return
+      }
+
+      try {
+        const parsedResult = JSON.parse(storedResult) as SavedQuizResult
+        setSavedResult(parsedResult)
+      } catch (error) {
+        console.error('Failed to parse saved quiz result:', error)
+        window.localStorage.removeItem('forge_latest_quiz_result')
+      } finally {
+        setHasLoadedSavedResult(true)
+      }
     }
 
-    try {
-      const parsedResult = JSON.parse(storedResult) as SavedQuizResult
-      setSavedResult(parsedResult)
-    } catch (error) {
-      console.error('Failed to parse saved quiz result:', error)
-      window.localStorage.removeItem('forge_latest_quiz_result')
-    } finally {
-      setHasLoadedSavedResult(true)
-    }
-  }
-
-  loadQuizState()
-}, [supabase])
+    loadQuizState()
+  }, [supabase])
 
   function updateAnswer(optionId: string) {
     const isMulti = currentQuestion.type === 'multi'
@@ -96,17 +96,11 @@ export default function CareerQuiz() {
 
       const currentSelectedOptions = existingAnswer?.selected_options ?? []
 
-      let nextSelectedOptions: string[]
-
-      if (isMulti) {
-        const alreadySelected = currentSelectedOptions.includes(optionId)
-
-        nextSelectedOptions = alreadySelected
+      const nextSelectedOptions = isMulti
+        ? currentSelectedOptions.includes(optionId)
           ? currentSelectedOptions.filter((id) => id !== optionId)
           : [...currentSelectedOptions, optionId]
-      } else {
-        nextSelectedOptions = [optionId]
-      }
+        : [optionId]
 
       if (existingAnswer) {
         return previousAnswers.map((answer) =>
@@ -138,88 +132,92 @@ export default function CareerQuiz() {
 
     const isLastQuestion = currentQuestionIndex === QUIZ_QUESTIONS.length - 1
 
-    if (isLastQuestion) {
-      const calculatedResults = calculateQuizResults(answers)
-
-      const resultToSave = {
-        completedAt: new Date().toISOString(),
-        answers,
-        results: calculatedResults,
-      }
-
-      window.localStorage.setItem(
-        'forge_latest_quiz_result',
-        JSON.stringify(resultToSave)
-      )
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (user) {
-        const { error } = await supabase.from('quiz_results').insert({
-          user_id: user.id,
-          answers: answers as unknown as Json,
-          results: calculatedResults as unknown as Json,
-          completed_at: resultToSave.completedAt,
-        })
-
-        if (error) {
-          console.error('Failed to save quiz result to Supabase:', error)
-        } else {
-          await supabase
-            .from('profiles')
-            .update({ quiz_completed: true })
-            .eq('id', user.id)
-        }
-      }
-
-      setIsComplete(true)
+    if (!isLastQuestion) {
+      setCurrentQuestionIndex((index) => index + 1)
       return
     }
 
-    setCurrentQuestionIndex((index) => index + 1)
+    const calculatedResults = calculateQuizResults(answers)
+
+    const resultToSave = {
+      completedAt: new Date().toISOString(),
+      answers,
+      results: calculatedResults,
+    }
+
+    window.localStorage.setItem(
+      'forge_latest_quiz_result',
+      JSON.stringify(resultToSave)
+    )
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      const { error } = await supabase.from('quiz_results').insert({
+        user_id: user.id,
+        answers: answers as unknown as Json,
+        results: calculatedResults as unknown as Json,
+        completed_at: resultToSave.completedAt,
+      })
+
+      if (error) {
+        console.error('Failed to save quiz result to Supabase:', error)
+      } else {
+        await supabase
+          .from('profiles')
+          .update({ quiz_completed: true })
+          .eq('id', user.id)
+      }
+    }
+
+    setIsComplete(true)
   }
 
   function goBack() {
     if (currentQuestionIndex === 0) return
     setCurrentQuestionIndex((index) => index - 1)
   }
-async function saveDeviceResultToDashboard() {
-  if (!userId || !savedResult) return
 
-  setSavingSavedResult(true)
-  setSaveMessage('')
-  setSaveError('')
+  async function saveDeviceResultToDashboard() {
+    if (!userId || !savedResult) return
 
-  const { error } = await supabase.from('quiz_results').insert({
-    user_id: userId,
-    answers: savedResult.answers as unknown as Json,
-    results: savedResult.results as unknown as Json,
-    completed_at: savedResult.completedAt,
-  })
+    setSavingSavedResult(true)
+    setSaveMessage('')
+    setSaveError('')
 
-  if (error) {
-    console.error('Failed to save device quiz result:', error)
-    setSaveError('Could not save this result. Please try again.')
+    const { error } = await supabase.from('quiz_results').insert({
+      user_id: userId,
+      answers: savedResult.answers as unknown as Json,
+      results: savedResult.results as unknown as Json,
+      completed_at: savedResult.completedAt,
+    })
+
+    if (error) {
+      console.error('Failed to save device quiz result:', error)
+      setSaveError('Could not save this result. Please try again.')
+      setSavingSavedResult(false)
+      return
+    }
+
+    await supabase
+      .from('profiles')
+      .update({ quiz_completed: true })
+      .eq('id', userId)
+
+    setSaveMessage('Quiz result saved to your dashboard.')
     setSavingSavedResult(false)
-    return
   }
 
-  await supabase
-    .from('profiles')
-    .update({ quiz_completed: true })
-    .eq('id', userId)
-
-  setSaveMessage('Quiz result saved to your dashboard.')
-  setSavingSavedResult(false)
-}
   function restartQuiz() {
     window.localStorage.removeItem('forge_latest_quiz_result')
     setSavedResult(null)
     setCurrentQuestionIndex(0)
     setAnswers([])
     setIsComplete(false)
+    setSaveMessage('')
+    setSaveError('')
   }
 
   if (!hasLoadedSavedResult) {
@@ -241,15 +239,15 @@ async function saveDeviceResultToDashboard() {
       <div className="content-panel">
         <div className="max-w-3xl">
           <p className="eyebrow">Latest quiz result</p>
-         
-         <h2 className="section-title mt-3">
-  You have a recent quiz result on this device.
-</h2>
 
- <p className="muted-text mt-4">
-  Your previous answers matched with several career paths. Sign in or create an
-  account to save future results to your dashboard.
-</p>
+          <h2 className="section-title mt-3">
+            You have a recent quiz result on this device.
+          </h2>
+
+          <p className="muted-text mt-4">
+            Your previous answers matched with several career paths. Sign in or
+            create an account to save future results to your dashboard.
+          </p>
         </div>
 
         <div className="mt-10 grid gap-6">
@@ -271,41 +269,41 @@ async function saveDeviceResultToDashboard() {
           })}
         </div>
 
-       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-  <button type="button" onClick={restartQuiz} className="btn-outline">
-    <RotateCcw className="h-4 w-4" />
-    Retake quiz
-  </button>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <button type="button" onClick={restartQuiz} className="btn-outline">
+            <RotateCcw className="h-4 w-4" />
+            Retake quiz
+          </button>
 
-  {userId ? (
-    <button
-      type="button"
-      onClick={saveDeviceResultToDashboard}
-      disabled={savingSavedResult}
-      className="btn-primary"
-    >
-      {savingSavedResult ? 'Saving result...' : 'Save result to dashboard'}
-      <ArrowRight className="h-4 w-4" />
-    </button>
-  ) : (
-    <Link href="/auth/sign-up" className="btn-primary">
-      Create account to save results
-      <ArrowRight className="h-4 w-4" />
-    </Link>
-  )}
-</div>
+          {userId ? (
+            <button
+              type="button"
+              onClick={saveDeviceResultToDashboard}
+              disabled={savingSavedResult}
+              className="btn-primary"
+            >
+              {savingSavedResult ? 'Saving result...' : 'Save result to dashboard'}
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <Link href="/auth/sign-up" className="btn-primary">
+              Create account to save results
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
 
-{saveMessage && (
-  <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-    {saveMessage}
-  </div>
-)}
+        {saveMessage && (
+          <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+            {saveMessage}
+          </div>
+        )}
 
-{saveError && (
-  <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-    {saveError}
-  </div>
-)}
+        {saveError && (
+          <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            {saveError}
+          </div>
+        )}
       </div>
     )
   }
@@ -321,8 +319,8 @@ async function saveDeviceResultToDashboard() {
           </h2>
 
           <p className="muted-text mt-4">
-            These results are not a final decision. They are a starting point
-            to help you explore career paths with more clarity.
+            These results are not a final decision. They are a starting point to
+            help you explore career paths with more clarity.
           </p>
         </div>
 
@@ -342,18 +340,18 @@ async function saveDeviceResultToDashboard() {
             />
           ))}
         </div>
-<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-  <button type="button" onClick={restartQuiz} className="btn-outline">
-    <RotateCcw className="h-4 w-4" />
-    Retake quiz
-  </button>
 
-  <Link href="/auth/sign-up" className="btn-primary">
-    Create account to save results
-    <ArrowRight className="h-4 w-4" />
-  </Link>
-</div>
-       
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <button type="button" onClick={restartQuiz} className="btn-outline">
+            <RotateCcw className="h-4 w-4" />
+            Retake quiz
+          </button>
+
+          <Link href="/auth/sign-up" className="btn-primary">
+            Create account to save results
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     )
   }
@@ -419,7 +417,7 @@ async function saveDeviceResultToDashboard() {
               </div>
 
               {isSelected && (
-                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-orange-600" />
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-orange-600" />
               )}
             </button>
           )
@@ -507,9 +505,7 @@ function ResultCard({
             Match score
           </p>
 
-          <p className="mt-1 text-3xl font-bold text-orange-600">
-            {score}%
-          </p>
+          <p className="mt-1 text-3xl font-bold text-orange-600">{score}%</p>
 
           <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Median salary
@@ -527,7 +523,7 @@ function ResultCard({
 
         {showCompare && (
           <Link href="/trades" className="btn-outline">
-            Compare career paths 
+            Compare career paths
           </Link>
         )}
       </div>

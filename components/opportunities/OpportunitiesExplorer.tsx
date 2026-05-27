@@ -58,7 +58,7 @@ export default function OpportunitiesExplorer({
 }: OpportunitiesExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [opportunityType, setOpportunityType] = useState('all')
-  const [tradeFocus, setTradeFocus] = useState('all')
+  const [careerFocus, setCareerFocus] = useState('all')
   const [location, setLocation] = useState('all')
   const [verifiedOnly, setVerifiedOnly] = useState(false)
 
@@ -72,7 +72,7 @@ export default function OpportunitiesExplorer({
     ).sort()
   }, [opportunities])
 
-  const tradeFocusOptions = useMemo(() => {
+  const careerFocusOptions = useMemo(() => {
     return Array.from(
       new Set(opportunities.map((opportunity) => opportunity.trade_slug))
     ).sort()
@@ -115,8 +115,8 @@ export default function OpportunitiesExplorer({
         opportunityType === 'all' ||
         opportunity.opportunity_type === opportunityType
 
-      const matchesTrade =
-        tradeFocus === 'all' || opportunity.trade_slug === tradeFocus
+      const matchesCareerFocus =
+        careerFocus === 'all' || opportunity.trade_slug === careerFocus
 
       const opportunityLocation = `${opportunity.location}, ${opportunity.state}`
       const matchesLocation =
@@ -127,7 +127,7 @@ export default function OpportunitiesExplorer({
       return (
         matchesSearch &&
         matchesType &&
-        matchesTrade &&
+        matchesCareerFocus &&
         matchesLocation &&
         matchesVerified
       )
@@ -136,7 +136,7 @@ export default function OpportunitiesExplorer({
     opportunities,
     searchTerm,
     opportunityType,
-    tradeFocus,
+    careerFocus,
     location,
     verifiedOnly,
   ])
@@ -144,7 +144,7 @@ export default function OpportunitiesExplorer({
   function clearFilters() {
     setSearchTerm('')
     setOpportunityType('all')
-    setTradeFocus('all')
+    setCareerFocus('all')
     setLocation('all')
     setVerifiedOnly(false)
   }
@@ -199,14 +199,14 @@ export default function OpportunitiesExplorer({
           </select>
 
           <select
-            value={tradeFocus}
-            onChange={(event) => setTradeFocus(event.target.value)}
+            value={careerFocus}
+            onChange={(event) => setCareerFocus(event.target.value)}
             className="select-field"
           >
             <option value="all">All career paths</option>
-            {tradeFocusOptions.map((trade) => (
-              <option key={trade} value={trade}>
-                {trade}
+            {careerFocusOptions.map((careerPath) => (
+              <option key={careerPath} value={careerPath}>
+                {careerPath}
               </option>
             ))}
           </select>
@@ -294,6 +294,7 @@ export default function OpportunitiesExplorer({
                   <div className="mini-card">
                     <div className="flex items-center gap-2 text-slate-500">
                       <MapPin className="h-4 w-4" />
+
                       <p className="text-xs font-semibold uppercase tracking-wide">
                         Location
                       </p>
@@ -307,6 +308,7 @@ export default function OpportunitiesExplorer({
                   <div className="mini-card">
                     <div className="flex items-center gap-2 text-slate-500">
                       <BriefcaseBusiness className="h-4 w-4" />
+
                       <p className="text-xs font-semibold uppercase tracking-wide">
                         Schedule
                       </p>

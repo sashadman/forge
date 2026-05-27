@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useTheme } from '@/components/theme/ThemeProvider'
 
 type SaveProgramButtonProps = {
   programId: string
@@ -15,6 +16,7 @@ export default function SaveProgramButton({
   initiallySaved,
 }: SaveProgramButtonProps) {
   const supabase = useMemo(() => createClient(), [])
+  const { isLight } = useTheme()
 
   const hasInitialSavedState = typeof initiallySaved === 'boolean'
 
@@ -156,13 +158,17 @@ export default function SaveProgramButton({
     }
   }
 
+  const neutralButtonClass = isLight
+    ? 'inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-4 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60'
+    : 'inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-6 py-4 font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60'
+
+  const savedButtonClass = isLight
+    ? 'inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-100 px-6 py-4 font-semibold text-orange-700 transition hover:bg-orange-200 disabled:cursor-not-allowed disabled:opacity-60'
+    : 'inline-flex w-full items-center justify-center gap-2 rounded-full border border-orange-300/30 bg-orange-500/15 px-6 py-4 font-semibold text-orange-200 transition hover:bg-orange-500/20 disabled:cursor-not-allowed disabled:opacity-60'
+
   if (loading) {
     return (
-      <button
-        type="button"
-        disabled
-        className="btn-outline w-full px-6 py-4 text-slate-400"
-      >
+      <button type="button" disabled className={neutralButtonClass}>
         Checking...
       </button>
     )
@@ -170,7 +176,7 @@ export default function SaveProgramButton({
 
   if (!userId) {
     return (
-      <Link href="/auth/sign-in" className="btn-outline w-full px-6 py-4">
+      <Link href="/auth/sign-in" className={neutralButtonClass}>
         <Bookmark className="h-4 w-4" />
         Sign in to save
       </Link>
@@ -184,11 +190,7 @@ export default function SaveProgramButton({
         onClick={toggleSavedProgram}
         disabled={saving}
         aria-pressed={isSaved}
-        className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
-          isSaved
-            ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-            : 'border border-slate-300 text-slate-800 hover:bg-slate-100'
-        }`}
+        className={isSaved ? savedButtonClass : neutralButtonClass}
       >
         {isSaved ? (
           <BookmarkCheck className="h-4 w-4" />
@@ -203,7 +205,7 @@ export default function SaveProgramButton({
             : 'Save training program'}
       </button>
 
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
     </div>
   )
 }

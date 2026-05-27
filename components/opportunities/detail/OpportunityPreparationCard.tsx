@@ -12,7 +12,7 @@ export default function OpportunityPreparationCard() {
         <h3 className="mt-5 text-2xl font-bold">Still preparing?</h3>
 
         <p className="mt-3 leading-7 text-slate-300">
-          Compare training programs before applying if this listingrequires
+          Compare training programs before applying if this listing requires
           more preparation, certification, or trade experience.
         </p>
 

@@ -43,7 +43,7 @@ export default function ProgramsExplorer({
 }: ProgramsExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [programType, setProgramType] = useState('all')
-  const [tradeFocus, setTradeFocus] = useState('all')
+  const [careerFocus, setCareerFocus] = useState('all')
   const [location, setLocation] = useState('all')
 
   const savedProgramIdSet = useMemo(() => {
@@ -56,7 +56,7 @@ export default function ProgramsExplorer({
     ).sort()
   }, [programs])
 
-  const tradeFocusOptions = useMemo(() => {
+  const careerFocusOptions = useMemo(() => {
     return Array.from(
       new Set(programs.map((program) => program.trade_slug))
     ).sort()
@@ -92,20 +92,20 @@ export default function ProgramsExplorer({
       const matchesType =
         programType === 'all' || program.program_type === programType
 
-      const matchesTrade =
-        tradeFocus === 'all' || program.trade_slug === tradeFocus
+      const matchesCareerFocus =
+        careerFocus === 'all' || program.trade_slug === careerFocus
 
       const programLocation = `${program.location}, ${program.state}`
       const matchesLocation = location === 'all' || programLocation === location
 
-      return matchesSearch && matchesType && matchesTrade && matchesLocation
+      return matchesSearch && matchesType && matchesCareerFocus && matchesLocation
     })
-  }, [programs, searchTerm, programType, tradeFocus, location])
+  }, [programs, searchTerm, programType, careerFocus, location])
 
   function clearFilters() {
     setSearchTerm('')
     setProgramType('all')
-    setTradeFocus('all')
+    setCareerFocus('all')
     setLocation('all')
   }
 
@@ -158,14 +158,14 @@ export default function ProgramsExplorer({
           </select>
 
           <select
-            value={tradeFocus}
-            onChange={(event) => setTradeFocus(event.target.value)}
+            value={careerFocus}
+            onChange={(event) => setCareerFocus(event.target.value)}
             className="select-field"
           >
             <option value="all">All career paths</option>
-            {tradeFocusOptions.map((trade) => (
-              <option key={trade} value={trade}>
-                {trade}
+            {careerFocusOptions.map((careerPath) => (
+              <option key={careerPath} value={careerPath}>
+                {careerPath}
               </option>
             ))}
           </select>
@@ -250,6 +250,7 @@ export default function ProgramsExplorer({
                 <div className="mini-card">
                   <div className="flex items-center gap-2 text-slate-500">
                     <MapPin className="h-4 w-4" />
+
                     <p className="text-xs font-semibold uppercase tracking-wide">
                       Location
                     </p>
@@ -263,6 +264,7 @@ export default function ProgramsExplorer({
                 <div className="mini-card">
                   <div className="flex items-center gap-2 text-slate-500">
                     <GraduationCap className="h-4 w-4" />
+
                     <p className="text-xs font-semibold uppercase tracking-wide">
                       Duration
                     </p>
