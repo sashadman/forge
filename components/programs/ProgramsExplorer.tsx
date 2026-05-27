@@ -30,58 +30,6 @@ type ProgramsExplorerProps = {
   savedProgramIds: string[]
 }
 
-const CALIFORNIA_REGIONS = [
-  {
-    value: 'san-diego-imperial',
-    label: 'San Diego / Imperial',
-    cities: [
-      'San Diego',
-      'Chula Vista',
-      'El Cajon',
-      'San Marcos',
-      'Oceanside',
-      'Imperial',
-      'El Centro',
-      'Rancho San Diego',
-    ],
-  },
-  {
-    value: 'los-angeles',
-    label: 'Los Angeles area',
-    cities: ['Los Angeles', 'Whittier', 'Pasadena', 'Compton', 'Long Beach'],
-  },
-  {
-    value: 'orange-county',
-    label: 'Orange County',
-    cities: ['Santa Ana', 'Mission Viejo', 'Huntington Beach', 'Fullerton', 'Anaheim'],
-  },
-  {
-    value: 'inland-empire',
-    label: 'Inland Empire',
-    cities: ['Riverside', 'San Bernardino', 'Rancho Cucamonga', 'Walnut'],
-  },
-  {
-    value: 'central-valley',
-    label: 'Central Valley',
-    cities: ['Bakersfield', 'Fresno', 'Modesto'],
-  },
-  {
-    value: 'sacramento-northern',
-    label: 'Sacramento / Northern California',
-    cities: ['Sacramento'],
-  },
-  {
-    value: 'bay-area',
-    label: 'Bay Area',
-    cities: ['San Mateo', 'Cupertino', 'Oakland', 'San Francisco'],
-  },
-  {
-    value: 'central-coast',
-    label: 'Central Coast',
-    cities: ['San Luis Obispo', 'Santa Maria'],
-  },
-]
-
 function formatProgramType(type: string) {
   return type
     .split('_')
@@ -89,28 +37,29 @@ function formatProgramType(type: string) {
     .join(' ')
 }
 
-function getProgramRegion(program: Program) {
-  return CALIFORNIA_REGIONS.find((region) =>
-    region.cities.includes(program.location)
-  )
+function formatTradeSlug(value: string) {
+  return value
+    .split('-')
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(' ')
 }
 
 function hasActiveFilters({
   searchTerm,
   programType,
   careerFocus,
-  region,
+  state,
 }: {
   searchTerm: string
   programType: string
   careerFocus: string
-  region: string
+  state: string
 }) {
   return (
     searchTerm.trim().length > 0 ||
     programType !== 'all' ||
     careerFocus !== 'all' ||
-    region !== 'all'
+    state !== 'all'
   )
 }
 
@@ -121,7 +70,7 @@ export default function ProgramsExplorer({
   const [searchTerm, setSearchTerm] = useState('')
   const [programType, setProgramType] = useState('all')
   const [careerFocus, setCareerFocus] = useState('all')
-  const [region, setRegion] = useState('all')
+  const [state, setState] = useState('all')
 
   const savedProgramIdSet = useMemo(() => {
     return new Set(savedProgramIds)
@@ -139,19 +88,21 @@ export default function ProgramsExplorer({
     ).sort()
   }, [programs])
 
+  const stateOptions = useMemo(() => {
+    return Array.from(new Set(programs.map((program) => program.state))).sort()
+  }, [programs])
+
   const activeFilters = hasActiveFilters({
     searchTerm,
     programType,
     careerFocus,
-    region,
+    state,
   })
 
   const filteredPrograms = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
 
     return programs.filter((program) => {
-      const programRegion = getProgramRegion(program)
-
       const matchesSearch =
         !query ||
         [
@@ -161,7 +112,6 @@ export default function ProgramsExplorer({
           program.trade_slug,
           program.location,
           program.state,
-          programRegion?.label || '',
           program.duration || '',
           program.cost || '',
           program.description,
@@ -176,18 +126,17 @@ export default function ProgramsExplorer({
       const matchesCareerFocus =
         careerFocus === 'all' || program.trade_slug === careerFocus
 
-      const matchesRegion =
-        region === 'all' || programRegion?.value === region
+      const matchesState = state === 'all' || program.state === state
 
-      return matchesSearch && matchesType && matchesCareerFocus && matchesRegion
+      return matchesSearch && matchesType && matchesCareerFocus && matchesState
     })
-  }, [programs, searchTerm, programType, careerFocus, region])
+  }, [programs, searchTerm, programType, careerFocus, state])
 
   function clearFilters() {
     setSearchTerm('')
     setProgramType('all')
     setCareerFocus('all')
-    setRegion('all')
+    setState('all')
   }
 
   return (
@@ -198,11 +147,11 @@ export default function ProgramsExplorer({
             <p className="eyebrow">Training program directory</p>
 
             <h2 className="section-title mt-3">
-              Search active training programs
+              Search verified training programs
             </h2>
 
             <p className="muted-text mt-3 max-w-2xl">
-              Search by provider, career path, city, region, program type,
+              Search by provider, career path, state, city, program type,
               duration, or cost.
             </p>
           </div>
@@ -210,11 +159,11 @@ export default function ProgramsExplorer({
           <p className="badge-slate">
             {activeFilters
               ? `${filteredPrograms.length} matching programs`
-              : `${programs.length} California programs`}
+              : `${programs.length} verified programs`}
           </p>
         </div>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_auto]">
+        <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.6fr_auto]">
           <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
             <Search className="h-5 w-5 text-slate-400" />
 
@@ -222,7 +171,7 @@ export default function ProgramsExplorer({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search provider, career path, city, region..."
+              placeholder="Search provider, career path, city, state..."
               className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-400"
             />
           </div>
@@ -248,20 +197,20 @@ export default function ProgramsExplorer({
             <option value="all">All career paths</option>
             {careerFocusOptions.map((careerPath) => (
               <option key={careerPath} value={careerPath}>
-                {careerPath}
+                {formatTradeSlug(careerPath)}
               </option>
             ))}
           </select>
 
           <select
-            value={region}
-            onChange={(event) => setRegion(event.target.value)}
+            value={state}
+            onChange={(event) => setState(event.target.value)}
             className="select-field"
           >
-            <option value="all">All California regions</option>
-            {CALIFORNIA_REGIONS.map((regionOption) => (
-              <option key={regionOption.value} value={regionOption.value}>
-                {regionOption.label}
+            <option value="all">All states</option>
+            {stateOptions.map((stateOption) => (
+              <option key={stateOption} value={stateOption}>
+                {stateOption}
               </option>
             ))}
           </select>
@@ -281,12 +230,12 @@ export default function ProgramsExplorer({
       {programs.length === 0 ? (
         <div className="card border-dashed p-10 text-center">
           <h3 className="text-2xl font-bold">
-            No active training programs yet
+            No verified training programs yet
           </h3>
 
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            Training programs will appear here after real public directory
-            records are added and activated. We avoid fake or filler listings.
+            Training programs will appear here after official source candidates
+            are reviewed and published.
           </p>
 
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
@@ -295,101 +244,93 @@ export default function ProgramsExplorer({
               <ArrowRight className="h-4 w-4" />
             </Link>
 
-            <Link href="/opportunities" className="btn-outline">
-              View jobs & apprenticeships
+            <Link href="/community-colleges" className="btn-outline">
+              Explore community colleges
             </Link>
           </div>
         </div>
       ) : filteredPrograms.length > 0 ? (
         <div className="grid gap-6 lg:grid-cols-2">
-          {filteredPrograms.map((program) => {
-            const programRegion = getProgramRegion(program)
+          {filteredPrograms.map((program) => (
+            <article key={program.id} className="card">
+              <Link href={`/programs/${program.slug}`} className="group block">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="badge-orange">
+                        {formatProgramType(program.program_type)}
+                      </span>
 
-            return (
-              <article key={program.id} className="card">
-                <Link href={`/programs/${program.slug}`} className="group block">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="badge-orange">
-                          {formatProgramType(program.program_type)}
-                        </span>
-
-                        {programRegion && (
-                          <span className="badge-slate">
-                            {programRegion.label}
-                          </span>
-                        )}
-                      </div>
-
-                      <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
-                        {program.name}
-                      </h3>
-
-                      <p className="mt-2 font-semibold text-slate-600">
-                        {program.provider_name}
-                      </p>
+                      <span className="badge-slate">{program.state}</span>
                     </div>
 
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
-                      <ArrowRight className="h-5 w-5" />
-                    </div>
+                    <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
+                      {program.name}
+                    </h3>
+
+                    <p className="mt-2 font-semibold text-slate-600">
+                      {program.provider_name}
+                    </p>
                   </div>
+
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
+                    <ArrowRight className="h-5 w-5" />
+                  </div>
+                </div>
+              </Link>
+
+              <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
+                {program.description}
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="mini-card">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <MapPin className="h-4 w-4" />
+
+                    <p className="text-xs font-semibold uppercase tracking-wide">
+                      Location
+                    </p>
+                  </div>
+
+                  <p className="mt-2 font-semibold text-slate-950">
+                    {program.location}, {program.state}
+                  </p>
+                </div>
+
+                <div className="mini-card">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <GraduationCap className="h-4 w-4" />
+
+                    <p className="text-xs font-semibold uppercase tracking-wide">
+                      Duration
+                    </p>
+                  </div>
+
+                  <p className="mt-2 font-semibold text-slate-950">
+                    {program.duration || 'See provider'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <Link
+                  href={`/programs/${program.slug}`}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
+                >
+                  View training program
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
 
-                <p className="mt-5 line-clamp-3 leading-7 text-slate-600">
-                  {program.description}
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <div className="mini-card">
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <MapPin className="h-4 w-4" />
-
-                      <p className="text-xs font-semibold uppercase tracking-wide">
-                        Location
-                      </p>
-                    </div>
-
-                    <p className="mt-2 font-semibold text-slate-950">
-                      {program.location}, {program.state}
-                    </p>
-                  </div>
-
-                  <div className="mini-card">
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <GraduationCap className="h-4 w-4" />
-
-                      <p className="text-xs font-semibold uppercase tracking-wide">
-                        Duration
-                      </p>
-                    </div>
-
-                    <p className="mt-2 font-semibold text-slate-950">
-                      {program.duration || 'See provider'}
-                    </p>
-                  </div>
+                <div className="sm:min-w-48">
+                  <SaveProgramButton
+                    programId={program.id}
+                    initiallySaved={savedProgramIdSet.has(program.id)}
+                  />
                 </div>
-
-                <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <Link
-                    href={`/programs/${program.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
-                  >
-                    View training program
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <div className="sm:min-w-48">
-                    <SaveProgramButton
-                      programId={program.id}
-                      initiallySaved={savedProgramIdSet.has(program.id)}
-                    />
-                  </div>
-                </div>
-              </article>
-            )
-          })}
+              </div>
+            </article>
+          ))}
         </div>
       ) : (
         <div className="card border-dashed p-10 text-center">
@@ -398,9 +339,8 @@ export default function ProgramsExplorer({
           </h3>
 
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            No active training program records match your current filters. Try
-            changing the career path, program type, region, or clearing the
-            filters.
+            No verified program records match your current filters. Try changing
+            the career path, program type, state, or clearing the filters.
           </p>
 
           <button type="button" onClick={clearFilters} className="btn-dark mt-6">

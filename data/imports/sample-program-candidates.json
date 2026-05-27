@@ -1,0 +1,23 @@
+{
+  "source_slug": "apprenticeship-gov",
+  "records": [
+    {
+      "source_url": "https://www.apprenticeship.gov/",
+      "title": "Registered Apprenticeship Source Example",
+      "provider_name": "U.S. Department of Labor",
+      "program_type": "apprenticeship",
+      "trade_slug": "other",
+      "location": "National",
+      "state": null,
+      "country": "US",
+      "duration": "See official source",
+      "cost": "See official source",
+      "description": "Official federal apprenticeship source record used to validate the national candidate ingestion pipeline.",
+      "requirements": ["Review the official source for current requirements"],
+      "outcomes": ["Connect users to registered apprenticeship discovery"],
+      "raw_payload": {
+        "purpose": "pipeline validation"
+      }
+    }
+  ]
+}
