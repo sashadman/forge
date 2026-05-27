@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts"
+    "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts",
+    "seed:training-sources": "tsx scripts/seed-training-sources.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",

@@ -752,6 +752,65 @@ export type Database = {
         }
         Relationships: []
       }
+      program_import_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          metadata: Json
+          records_created: number
+          records_found: number
+          records_rejected: number
+          records_updated: number
+          run_type: string
+          source_id: string | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json
+          records_created?: number
+          records_found?: number
+          records_rejected?: number
+          records_updated?: number
+          run_type?: string
+          source_id?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json
+          records_created?: number
+          records_found?: number
+          records_rejected?: number
+          records_updated?: number
+          run_type?: string
+          source_id?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_import_runs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "training_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_pipeline: {
         Row: {
           created_at: string
@@ -1218,6 +1277,149 @@ export type Database = {
           },
         ]
       }
+      training_program_candidates: {
+        Row: {
+          apprenticeship_occupation: string | null
+          cip_code: string | null
+          confidence_score: number
+          cost: string | null
+          country: string
+          created_at: string
+          description: string | null
+          duplicate_of_candidate_id: string | null
+          duration: string | null
+          external_id: string | null
+          id: string
+          import_run_id: string | null
+          institution_name: string | null
+          location: string | null
+          normalized_slug: string | null
+          occupation_code: string | null
+          outcomes: string[] | null
+          program_type: string
+          provider_name: string
+          published_program_id: string | null
+          raw_payload: Json
+          requirements: string[] | null
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_authority: string
+          source_domain: string
+          source_id: string | null
+          source_url: string
+          state: string | null
+          title: string
+          trade_slug: string
+          trust_level: string
+          updated_at: string
+          verification_status: string
+        }
+        Insert: {
+          apprenticeship_occupation?: string | null
+          cip_code?: string | null
+          confidence_score?: number
+          cost?: string | null
+          country?: string
+          created_at?: string
+          description?: string | null
+          duplicate_of_candidate_id?: string | null
+          duration?: string | null
+          external_id?: string | null
+          id?: string
+          import_run_id?: string | null
+          institution_name?: string | null
+          location?: string | null
+          normalized_slug?: string | null
+          occupation_code?: string | null
+          outcomes?: string[] | null
+          program_type?: string
+          provider_name: string
+          published_program_id?: string | null
+          raw_payload?: Json
+          requirements?: string[] | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_authority?: string
+          source_domain: string
+          source_id?: string | null
+          source_url: string
+          state?: string | null
+          title: string
+          trade_slug?: string
+          trust_level?: string
+          updated_at?: string
+          verification_status?: string
+        }
+        Update: {
+          apprenticeship_occupation?: string | null
+          cip_code?: string | null
+          confidence_score?: number
+          cost?: string | null
+          country?: string
+          created_at?: string
+          description?: string | null
+          duplicate_of_candidate_id?: string | null
+          duration?: string | null
+          external_id?: string | null
+          id?: string
+          import_run_id?: string | null
+          institution_name?: string | null
+          location?: string | null
+          normalized_slug?: string | null
+          occupation_code?: string | null
+          outcomes?: string[] | null
+          program_type?: string
+          provider_name?: string
+          published_program_id?: string | null
+          raw_payload?: Json
+          requirements?: string[] | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_authority?: string
+          source_domain?: string
+          source_id?: string | null
+          source_url?: string
+          state?: string | null
+          title?: string
+          trade_slug?: string
+          trust_level?: string
+          updated_at?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_program_candidates_duplicate_of_candidate_id_fkey"
+            columns: ["duplicate_of_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "training_program_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_program_candidates_import_run_id_fkey"
+            columns: ["import_run_id"]
+            isOneToOne: false
+            referencedRelation: "program_import_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_program_candidates_published_program_id_fkey"
+            columns: ["published_program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_program_candidates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "training_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       training_provider_memberships: {
         Row: {
           created_at: string
@@ -1317,6 +1519,93 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      training_sources: {
+        Row: {
+          admin_notes: string | null
+          allowed_domains: string[]
+          api_endpoint: string | null
+          base_url: string
+          crawl_status: string
+          crawler_strategy: string
+          created_at: string
+          created_by: string | null
+          id: string
+          institution_name: string | null
+          institution_unit_id: string | null
+          is_active: boolean
+          last_crawled_at: string | null
+          last_error: string | null
+          last_successful_crawl_at: string | null
+          ope_id: string | null
+          program_index_url: string | null
+          provider_name: string | null
+          source_authority: string
+          source_country: string
+          source_name: string
+          source_slug: string
+          source_state: string | null
+          source_type: string
+          trust_level: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          allowed_domains?: string[]
+          api_endpoint?: string | null
+          base_url: string
+          crawl_status?: string
+          crawler_strategy?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          institution_name?: string | null
+          institution_unit_id?: string | null
+          is_active?: boolean
+          last_crawled_at?: string | null
+          last_error?: string | null
+          last_successful_crawl_at?: string | null
+          ope_id?: string | null
+          program_index_url?: string | null
+          provider_name?: string | null
+          source_authority: string
+          source_country?: string
+          source_name: string
+          source_slug: string
+          source_state?: string | null
+          source_type: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          allowed_domains?: string[]
+          api_endpoint?: string | null
+          base_url?: string
+          crawl_status?: string
+          crawler_strategy?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          institution_name?: string | null
+          institution_unit_id?: string | null
+          is_active?: boolean
+          last_crawled_at?: string | null
+          last_error?: string | null
+          last_successful_crawl_at?: string | null
+          ope_id?: string | null
+          program_index_url?: string | null
+          provider_name?: string | null
+          source_authority?: string
+          source_country?: string
+          source_name?: string
+          source_slug?: string
+          source_state?: string | null
+          source_type?: string
+          trust_level?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
