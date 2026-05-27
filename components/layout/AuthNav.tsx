@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useTheme } from '@/components/theme/ThemeProvider'
@@ -10,21 +10,88 @@ type AuthUser = {
   id: string
   email?: string
   role?: string | null
+  hasEmployerProfile: boolean
+  hasProviderWorkspace: boolean
+}
+
+function getDashboardHref(user: AuthUser) {
+  if (user.hasEmployerProfile) return '/employers/dashboard'
+  if (user.hasProviderWorkspace) return '/training-providers/dashboard'
+  if (user.role === 'admin') return '/admin'
+
+  return '/dashboard'
 }
 
 export default function AuthNav() {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const { isLight } = useTheme()
 
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let isMounted = true
+
+    async function buildAuthUser(authUser: {
+      id: string
+      email?: string | null
+    }): Promise<AuthUser> {
+      const [profileResult, employerResult, providerMembershipResult] =
+        await Promise.all([
+          supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', authUser.id)
+            .maybeSingle(),
+
+          supabase
+            .from('employers')
+            .select('id')
+            .eq('owner_id', authUser.id)
+            .maybeSingle(),
+
+          supabase
+            .from('training_provider_memberships')
+            .select('id')
+            .eq('user_id', authUser.id)
+            .eq('status', 'active')
+            .limit(1)
+            .maybeSingle(),
+        ])
+
+      if (profileResult.error) {
+        console.error('Failed to load auth profile:', profileResult.error)
+      }
+
+      if (employerResult.error) {
+        console.error('Failed to load auth employer profile:', employerResult.error)
+      }
+
+      if (providerMembershipResult.error) {
+        console.error(
+          'Failed to load auth provider membership:',
+          providerMembershipResult.error
+        )
+      }
+
+      return {
+        id: authUser.id,
+        email: authUser.email ?? undefined,
+        role: profileResult.data?.role ?? null,
+        hasEmployerProfile: Boolean(employerResult.data),
+        hasProviderWorkspace: Boolean(providerMembershipResult.data),
+      }
+    }
+
     async function loadUser() {
+      setLoading(true)
+
       const {
         data: { user },
       } = await supabase.auth.getUser()
+
+      if (!isMounted) return
 
       if (!user) {
         setUser(null)
@@ -32,18 +99,11 @@ export default function AuthNav() {
         return
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .maybeSingle()
+      const authUser = await buildAuthUser(user)
 
-      setUser({
-        id: user.id,
-        email: user.email ?? undefined,
-        role: profile?.role ?? null,
-      })
+      if (!isMounted) return
 
+      setUser(authUser)
       setLoading(false)
     }
 
@@ -60,26 +120,19 @@ export default function AuthNav() {
         return
       }
 
-      async function loadProfileRole() {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', sessionUser.id)
-          .maybeSingle()
+      async function refreshAuthUser() {
+        const authUser = await buildAuthUser(sessionUser)
+        if (!isMounted) return
 
-        setUser({
-          id: sessionUser.id,
-          email: sessionUser.email ?? undefined,
-          role: profile?.role ?? null,
-        })
-
+        setUser(authUser)
         setLoading(false)
       }
 
-      loadProfileRole()
+      refreshAuthUser()
     })
 
     return () => {
+      isMounted = false
       subscription.unsubscribe()
     }
   }, [supabase])
@@ -123,15 +176,16 @@ export default function AuthNav() {
     )
   }
 
+  const dashboardHref = getDashboardHref(user)
   const isAdmin = user.role === 'admin'
 
   return (
     <div className="hidden items-center gap-3 sm:flex">
-      <Link href="/dashboard" className={secondaryButtonClass}>
+      <Link href={dashboardHref} className={secondaryButtonClass}>
         Dashboard
       </Link>
 
-      {isAdmin && (
+      {isAdmin && dashboardHref !== '/admin' && (
         <Link href="/admin" className={adminButtonClass}>
           Admin
         </Link>
