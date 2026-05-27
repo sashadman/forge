@@ -3,12 +3,42 @@
 import Link from 'next/link'
 import { Hammer } from 'lucide-react'
 import { siteConfig } from '@/config/site'
+import { useTheme } from '@/components/theme/ThemeProvider'
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear()
+  const { isLight } = useTheme()
+
+  const footerClass = isLight
+    ? 'border-t border-slate-200 bg-white'
+    : 'border-t border-white/10 bg-slate-950'
+
+  const brandTextClass = isLight
+    ? 'text-xl font-bold tracking-tight text-slate-950'
+    : 'text-xl font-bold tracking-tight text-white'
+
+  const descriptionClass = isLight
+    ? 'mt-4 max-w-xl text-sm leading-6 text-slate-500'
+    : 'mt-4 max-w-xl text-sm leading-6 text-slate-400'
+
+  const headingClass = isLight
+    ? 'text-sm font-bold uppercase tracking-wide text-slate-950'
+    : 'text-sm font-bold uppercase tracking-wide text-white'
+
+  const linkGroupClass = isLight
+    ? 'mt-4 grid gap-3 text-sm font-semibold text-slate-600'
+    : 'mt-4 grid gap-3 text-sm font-semibold text-slate-400'
+
+  const linkClass = isLight
+    ? 'hover:text-slate-950'
+    : 'hover:text-white'
+
+  const bottomClass = isLight
+    ? 'mt-8 border-t border-slate-200 pt-6 text-sm text-slate-500'
+    : 'mt-8 border-t border-white/10 pt-6 text-sm text-slate-500'
 
   return (
-    <footer className="border-t border-slate-200 bg-white">
+    <footer className={footerClass}>
       <div className="section-shell py-10">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
           <div>
@@ -17,96 +47,79 @@ export default function SiteFooter() {
                 <Hammer className="h-5 w-5" />
               </div>
 
-              <span className="text-xl font-bold tracking-tight text-slate-950">
-                {siteConfig.name}
-              </span>
+              <span className={brandTextClass}>{siteConfig.name}</span>
             </Link>
 
-            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-500">
+            <p className={descriptionClass}>
               Skilled-trades pathway platform for career seekers, employers, and
               training providers.
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Career Seeker
-            </p>
+            <p className={headingClass}>Career Seeker</p>
 
-            <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/trades" className="hover:text-slate-950">
+            <div className={linkGroupClass}>
+              <Link href="/trades" className={linkClass}>
                 Career Paths
               </Link>
 
-              <Link href="/programs" className="hover:text-slate-950">
+              <Link href="/programs" className={linkClass}>
                 Training Programs
               </Link>
 
-              <Link href="/opportunities" className="hover:text-slate-950">
+              <Link href="/opportunities" className={linkClass}>
                 Jobs & Apprenticeships
               </Link>
 
-              <Link href="/quiz" className="hover:text-slate-950">
+              <Link href="/quiz" className={linkClass}>
                 Career Quiz
               </Link>
             </div>
           </div>
 
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Employer
-            </p>
+            <p className={headingClass}>Employer</p>
 
-            <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/for-employers" className="hover:text-slate-950">
+            <div className={linkGroupClass}>
+              <Link href="/for-employers" className={linkClass}>
                 Employer Overview
               </Link>
 
-            <Link href="/employers/sign-up" className="hover:text-slate-950">
+              <Link href="/employers/sign-up" className={linkClass}>
                 Create Employer Account
-            </Link>
+              </Link>
 
-              <Link href="/employers/sign-in" className="hover:text-slate-950">
+              <Link href="/employers/sign-in" className={linkClass}>
                 Employer Sign In
               </Link>
             </div>
           </div>
 
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-slate-950">
-              Training Provider
-            </p>
+            <p className={headingClass}>Training Provider</p>
 
-            <div className="mt-4 grid gap-3 text-sm font-semibold text-slate-600">
-              <Link href="/for-programs" className="hover:text-slate-950">
+            <div className={linkGroupClass}>
+              <Link href="/for-programs" className={linkClass}>
                 Provider Overview
               </Link>
 
-              <Link
-                href="/for-programs#provider-workflow"
-                className="hover:text-slate-950"
-              >
+              <Link href="/for-programs#provider-workflow" className={linkClass}>
                 Provider Workflow
               </Link>
 
-              <Link
-                href="/for-programs#program-data"
-                className="hover:text-slate-950"
-              >
+              <Link href="/for-programs#program-data" className={linkClass}>
                 Program Data Model
               </Link>
 
-              <Link
-                href="/for-programs#provider-insights"
-                className="hover:text-slate-950"
-              >
+              <Link href="/for-programs#provider-insights" className={linkClass}>
                 Future Provider Insights
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-slate-200 pt-6 text-sm text-slate-500">
+        <div className={bottomClass}>
           © {currentYear} Shadman Consulting. All rights reserved.
         </div>
       </div>

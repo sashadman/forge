@@ -5,6 +5,7 @@ import {
   GraduationCap,
   UserRound,
 } from 'lucide-react'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 
 const paths = [
   {
@@ -35,7 +36,7 @@ const paths = [
 
 export default function HomeEmployerCTA() {
   return (
-    <section className="section-light pb-24">
+    <ThemedPublicSection className="pb-24">
       <div className="section-shell">
         <div className="dark-panel px-8 py-16 md:px-16">
           <div className="dark-panel-content">
@@ -87,6 +88,6 @@ export default function HomeEmployerCTA() {
           </div>
         </div>
       </div>
-    </section>
+    </ThemedPublicSection>
   )
 }

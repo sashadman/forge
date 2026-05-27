@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
@@ -6,6 +7,8 @@ import NextStepPanel from '@/components/ui/NextStepPanel'
 import OpportunitiesExplorer from '@/components/opportunities/OpportunitiesExplorer'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 
 export const metadata: Metadata = {
   title: `Jobs & Apprenticeships — ${siteConfig.name}`,
@@ -71,7 +74,7 @@ export default async function OpportunitiesPage() {
   }
 
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <section className="hero-dark">
@@ -94,9 +97,9 @@ export default async function OpportunitiesPage() {
         </div>
       </section>
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <div className="-pt-8">
+          <div className="pt-8">
             <NextStepPanel
               title="Ready to take action? Start with real listings."
               description="Use this page when you want apply-now or near-apply jobs and apprenticeships. If you are still exploring direction or training, start with career paths or training programs first."
@@ -115,7 +118,7 @@ export default async function OpportunitiesPage() {
             />
           </div>
 
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
+          <section className="mt-8 rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
                 <GraduationCap className="h-8 w-8" />
@@ -137,24 +140,24 @@ export default async function OpportunitiesPage() {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <a href="/programs" className="btn-light">
+                  <Link href="/programs" className="btn-light">
                     Compare training programs
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href="/trades"
                     className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
                   >
                     Compare career paths
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
           </section>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }

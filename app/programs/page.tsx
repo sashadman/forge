@@ -8,6 +8,8 @@ import ProgramsExplorer from '@/components/programs/ProgramsExplorer'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import BackLink from '@/components/ui/BackLink'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 
 export const metadata: Metadata = {
   title: `Training Programs — ${siteConfig.name}`,
@@ -51,17 +53,17 @@ export default async function ProgramsPage() {
   }
 
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <section className="hero-dark">
         <div className="hero-fade" />
 
-       <div className="section-shell relative py-24">
-  <BackLink href="/trades" label="Back to career paths" variant="light" />
+        <div className="section-shell relative py-24">
+          <BackLink href="/trades" label="Back to career paths" variant="light" />
 
-  <div className="mt-10 max-w-4xl">
-    <p className="eyebrow-dark">Training programs</p>
+          <div className="mt-10 max-w-4xl">
+            <p className="eyebrow-dark">Training programs</p>
 
             <h1 className="page-title-dark mt-6">
               Compare training options before you apply.
@@ -76,7 +78,7 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
           <div className="pt-8">
             <NextStepPanel
@@ -97,7 +99,7 @@ export default async function ProgramsPage() {
             />
           </div>
 
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
+          <section className="mt-8 rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
                 <BriefcaseBusiness className="h-8 w-8" />
@@ -133,9 +135,9 @@ export default async function ProgramsPage() {
             </div>
           </section>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }

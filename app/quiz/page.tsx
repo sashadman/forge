@@ -5,6 +5,8 @@ import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import CareerQuiz from '@/components/quiz/CareerQuiz'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function QuizPage() {
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <section className="hero-dark">
@@ -40,7 +42,7 @@ export default function QuizPage() {
         </div>
       </section>
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
           <div className="pt-8">
             <NextStepPanel
@@ -49,7 +51,7 @@ export default function QuizPage() {
               primaryHref="/trades"
               primaryLabel="Compare career paths"
               secondaryHref="/programs"
-              secondaryLabel="Explore training programs"
+              secondaryLabel="Compare training programs"
               icon={<Compass className="h-6 w-6" />}
             />
           </div>
@@ -58,7 +60,7 @@ export default function QuizPage() {
             <CareerQuiz />
           </div>
 
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
+          <section className="mt-8 rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
                 <GraduationCap className="h-8 w-8" />
@@ -82,9 +84,9 @@ export default function QuizPage() {
             </div>
           </section>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }

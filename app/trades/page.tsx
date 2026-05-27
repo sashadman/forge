@@ -11,6 +11,8 @@ import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import TradesExplorer from '@/components/trades/TradesExplorer'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
+import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -42,7 +44,7 @@ const heroCards = [
 
 export default function TradesPage() {
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
 
       <section className="hero-dark">
@@ -61,38 +63,38 @@ export default function TradesPage() {
               pathways, compare earning potential, and build a practical route
               toward jobs, apprenticeships, and long-term growth.
             </p>
-<div className="mt-10 grid gap-4 sm:grid-cols-3">
-  {heroCards.map((card) => {
-    const Icon = card.icon
 
-    return (
-      <Link
-        key={card.title}
-        href={card.href}
-        className="card-dark group transition hover:-translate-y-1 hover:border-orange-400/30"
-      >
-        <Icon className="h-6 w-6 text-orange-300" />
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              {heroCards.map((card) => {
+                const Icon = card.icon
 
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <p className="font-bold text-white">{card.title}</p>
-          <ArrowRight className="h-4 w-4 text-orange-300 transition group-hover:translate-x-1" />
-        </div>
+                return (
+                  <Link
+                    key={card.title}
+                    href={card.href}
+                    className="card-dark group transition hover:-translate-y-1 hover:border-orange-400/30"
+                  >
+                    <Icon className="h-6 w-6 text-orange-300" />
 
-        <p className="mt-2 text-sm leading-6 text-slate-300">
-          {card.description}
-        </p>
-      </Link>
-    )
-  })}
-</div>
-           
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <p className="font-bold text-white">{card.title}</p>
+                      <ArrowRight className="h-4 w-4 text-orange-300 transition group-hover:translate-x-1" />
+                    </div>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      {card.description}
+                    </p>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="section-light pb-20">
+      <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <div className="-pt-8">
+          <div className="pt-8">
             <NextStepPanel
               title="Start with direction, then move toward training or work."
               description="Career paths help you choose a direction. Once a path feels right, compare training programs or look for real jobs and apprenticeships."
@@ -108,9 +110,9 @@ export default function TradesPage() {
             <TradesExplorer />
           </div>
         </div>
-      </section>
+      </ThemedPublicSection>
 
-      <section className="section-light pb-24">
+      <ThemedPublicSection className="pb-24">
         <div className="section-shell">
           <div className="dark-panel px-8 py-14 md:px-14">
             <div className="dark-panel-content grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
@@ -136,9 +138,9 @@ export default function TradesPage() {
             </div>
           </div>
         </div>
-      </section>
+      </ThemedPublicSection>
 
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }

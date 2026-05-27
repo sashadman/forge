@@ -4,6 +4,7 @@ import SiteFooter from '@/components/layout/SiteFooter'
 import HomeHero from '@/components/home/HomeHero'
 import HomeHowItWorks from '@/components/home/HomeHowItWorks'
 import HomeEmployerCTA from '@/components/home/HomeEmployerCTA'
+import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -14,12 +15,12 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="page-shell">
+    <ThemedPublicPage>
       <SiteNavbar />
       <HomeHero />
       <HomeHowItWorks />
       <HomeEmployerCTA />
       <SiteFooter />
-    </main>
+    </ThemedPublicPage>
   )
 }
