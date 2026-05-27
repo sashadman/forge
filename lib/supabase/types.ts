@@ -778,9 +778,16 @@ export type Database = {
           outcomes: string[] | null
           program_type: Database["public"]["Enums"]["program_type"]
           provider_name: string
+          provider_profile_id: string | null
+          published_at: string | null
           requirements: string[] | null
+          review_notes: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           slug: string
           state: string
+          submitted_by: string | null
           trade_slug: string
           updated_at: string
           website_url: string | null
@@ -797,9 +804,16 @@ export type Database = {
           outcomes?: string[] | null
           program_type: Database["public"]["Enums"]["program_type"]
           provider_name: string
+          provider_profile_id?: string | null
+          published_at?: string | null
           requirements?: string[] | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug: string
           state: string
+          submitted_by?: string | null
           trade_slug: string
           updated_at?: string
           website_url?: string | null
@@ -816,14 +830,29 @@ export type Database = {
           outcomes?: string[] | null
           program_type?: Database["public"]["Enums"]["program_type"]
           provider_name?: string
+          provider_profile_id?: string | null
+          published_at?: string | null
           requirements?: string[] | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           slug?: string
           state?: string
+          submitted_by?: string | null
           trade_slug?: string
           updated_at?: string
           website_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "programs_provider_profile_id_fkey"
+            columns: ["provider_profile_id"]
+            isOneToOne: false
+            referencedRelation: "training_provider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       provider_claims: {
         Row: {
