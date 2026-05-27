@@ -18,15 +18,6 @@ import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
 
-type MissionCard = {
-  title: string
-  description: string
-  href: string
-  action: string
-  stat: string
-  icon: React.ComponentType<{ className?: string }>
-}
-
 export default async function DashboardPage() {
   const {
     user,
@@ -39,24 +30,12 @@ export default async function DashboardPage() {
     readinessScore,
   } = await getDashboardPageData()
 
-  const firstName =
-    profile?.full_name?.trim().split(' ')[0] ||
-    user.email?.split('@')[0] ||
-    'Explorer'
-
+  const displayName = profile?.full_name || user.email || 'Career seeker'
   const savedCareerPathCount = savedTrades.length
   const savedTrainingProgramCount = savedProgramPipelineItems.length
   const savedJobCount = savedOpportunityPipelineItems.length
   const applicationCount = submittedApplications.length
   const quizResultCount = quizResults.length
-
-  const profileStarted = Boolean(
-    profile?.full_name || profile?.location || profile?.experience_level
-  )
-
-  const profileComplete = Boolean(
-    profile?.full_name && profile?.location && profile?.experience_level
-  )
 
   const level =
     readinessScore >= 90
@@ -70,11 +49,11 @@ export default async function DashboardPage() {
             : 'Level 1'
 
   const nextMission = (() => {
-    if (!profileComplete) {
+    if (!profile?.full_name || !profile?.location || !profile?.experience_level) {
       return {
         title: 'Complete your seeker profile',
         description:
-          'Set up your basic profile first so your career journey, readiness work, and applications have a stronger foundation.',
+          'Set up your basic profile first so the rest of your career journey has a foundation.',
         href: '/dashboard/profile',
         action: 'Start profile mission',
         icon: UserRound,
@@ -135,14 +114,14 @@ export default async function DashboardPage() {
     }
   })()
 
-  const missionCards: MissionCard[] = [
+  const missionCards = [
     {
       title: 'Profile Setup',
       description: 'Complete your seeker profile and basic career information.',
       href: '/dashboard/profile',
       action: 'Open profile',
       icon: UserRound,
-      stat: profileComplete ? 'Complete' : profileStarted ? 'Started' : 'New',
+      stat: profile?.full_name ? 'Started' : 'Not started',
     },
     {
       title: 'Readiness Score',
@@ -187,8 +166,6 @@ export default async function DashboardPage() {
   ]
 
   const NextMissionIcon = nextMission.icon
-  const totalSavedItems =
-    savedCareerPathCount + savedTrainingProgramCount + savedJobCount
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -210,7 +187,7 @@ export default async function DashboardPage() {
               <h1 className="mt-6 text-5xl font-black tracking-tight md:text-7xl">
                 Welcome back,{' '}
                 <span className="bg-gradient-to-r from-orange-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">
-                  {firstName}
+                  {displayName.split(' ')[0]}
                 </span>
               </h1>
 
@@ -228,14 +205,12 @@ export default async function DashboardPage() {
 
               <div className="mt-4 flex items-end gap-4">
                 <p className="text-5xl font-black">{level}</p>
-
                 <div className="pb-1">
                   <p className="font-bold text-orange-200">
                     {readinessScore}% readiness
                   </p>
                   <p className="text-sm text-slate-400">
-                    {quizResultCount} quiz result
-                    {quizResultCount === 1 ? '' : 's'}
+                    {quizResultCount} quiz result{quizResultCount === 1 ? '' : 's'}
                   </p>
                 </div>
               </div>
@@ -250,7 +225,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-10 rounded-[2rem] border border-orange-300/20 bg-slate-900/80 p-6 shadow-2xl shadow-orange-950/20 backdrop-blur md:p-8">
-            <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr_auto] lg:items-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-300 ring-1 ring-orange-300/30">
                 <NextMissionIcon className="h-8 w-8" />
               </div>
@@ -331,7 +306,9 @@ export default async function DashboardPage() {
 
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
               <Target className="h-7 w-7 text-fuchsia-300" />
-              <p className="mt-4 text-3xl font-black">{totalSavedItems}</p>
+              <p className="mt-4 text-3xl font-black">
+                {savedCareerPathCount + savedTrainingProgramCount + savedJobCount}
+              </p>
               <p className="mt-1 text-sm font-semibold text-slate-400">
                 Saved mission items
               </p>
@@ -361,7 +338,7 @@ export default async function DashboardPage() {
                 </p>
               </div>
 
-              <Link href={nextMission.href} className="btn-light">
+              <Link href="/dashboard/readiness" className="btn-light">
                 Continue mission
                 <ArrowRight className="h-4 w-4" />
               </Link>
