@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BriefcaseBusiness,
   Building2,
+  ClipboardCheck,
   Database,
   GraduationCap,
   ShieldCheck,
@@ -47,15 +48,21 @@ export default async function AdminPage() {
     employerCountResult,
     opportunityCountResult,
     programCountResult,
+    candidateCountResult,
     sourceCountResult,
     activeSourceCountResult,
     reviewDueSourceCountResult,
+    trustedCandidateCountResult,
   ] = await Promise.all([
     supabase.from('employers').select('id', { count: 'exact', head: true }),
 
     supabase.from('opportunities').select('id', { count: 'exact', head: true }),
 
     supabase.from('programs').select('id', { count: 'exact', head: true }),
+
+    supabase
+      .from('training_program_candidates')
+      .select('id', { count: 'exact', head: true }),
 
     supabase
       .from('opportunity_sources')
@@ -70,14 +77,21 @@ export default async function AdminPage() {
       .from('opportunity_sources')
       .select('id', { count: 'exact', head: true })
       .lte('next_review_at', new Date().toISOString()),
+
+    supabase
+      .from('training_program_candidates')
+      .select('id', { count: 'exact', head: true })
+      .eq('verification_status', 'trusted_candidate'),
   ])
 
   const employerCount = employerCountResult.count ?? 0
   const opportunityCount = opportunityCountResult.count ?? 0
   const programCount = programCountResult.count ?? 0
+  const candidateCount = candidateCountResult.count ?? 0
   const sourceCount = sourceCountResult.count ?? 0
   const activeSourceCount = activeSourceCountResult.count ?? 0
   const reviewDueSourceCount = reviewDueSourceCountResult.count ?? 0
+  const trustedCandidateCount = trustedCandidateCountResult.count ?? 0
 
   return (
     <main className="page-shell">
@@ -107,30 +121,30 @@ export default async function AdminPage() {
             />
 
             <AdminMetricCard
-              icon={<Database className="h-8 w-8" />}
-              eyebrow="Sources"
-              value={sourceCount}
-              description={`${activeSourceCount} active trusted listing sources.`}
+              icon={<GraduationCap className="h-8 w-8" />}
+              eyebrow="Published programs"
+              value={programCount}
+              description="Public training programs currently visible or staged."
             />
 
             <AdminMetricCard
-              icon={<ShieldCheck className="h-8 w-8" />}
-              eyebrow="Review due"
-              value={reviewDueSourceCount}
-              description="Sources that need review or verification."
+              icon={<ClipboardCheck className="h-8 w-8" />}
+              eyebrow="Candidate queue"
+              value={candidateCount}
+              description={`${trustedCandidateCount} trusted candidates ready for review.`}
             />
           </div>
 
           <div className="mt-8">
             <NextStepPanel
               eyebrow="Recommended next step"
-              title="Keep source quality and listing freshness under control."
-              description="Start with trusted sources, then create or review opportunity listings. This keeps the platform useful without allowing stale or fake records."
-              primaryHref="/admin/data-expansion"
-              primaryLabel="Open data expansion"
-              secondaryHref="/admin/opportunity-sources"
-              secondaryLabel="Manage sources"
-              icon={<Database className="h-6 w-6" />}
+              title="Review imported training candidates before publishing."
+              description="Imported program candidates should be reviewed before they become public records. Start with trusted candidates, promote one at a time, and reject records outside the platform scope."
+              primaryHref="/admin/program-candidates"
+              primaryLabel="Review candidates"
+              secondaryHref="/admin/training-sources"
+              secondaryLabel="Manage training sources"
+              icon={<ClipboardCheck className="h-6 w-6" />}
             />
           </div>
 
@@ -143,27 +157,44 @@ export default async function AdminPage() {
               </h2>
 
               <p className="muted-text mt-3 max-w-3xl">
-                Each area has a focused purpose. Avoid jumping between pages
-                randomly; use the workflow that matches the business task.
+                Each area has a focused purpose. Review candidate training data
+                before publishing it, and keep employer, opportunity, and
+                provider workflows separated.
               </p>
             </div>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <AdminActionCard
+                href="/admin/program-candidates"
+                icon={<ClipboardCheck className="h-7 w-7" />}
+                title="Review program candidates"
+                description="Review imported training candidates, promote trusted records, and reject records that do not fit the platform."
+                action="Open candidate queue"
+                featured
+              />
+
               <AdminActionCard
                 href="/admin/data-expansion"
                 icon={<Database className="h-7 w-7" />}
                 title="Expand real data"
                 description="Use trusted sources, source review, and freshness rules to grow real listings."
                 action="Open workflow"
-                featured
+              />
+
+              <AdminActionCard
+                href="/admin/training-sources"
+                icon={<ShieldCheck className="h-7 w-7" />}
+                title="Manage training sources"
+                description="Review national, state, and provider training data sources."
+                action="Open training sources"
               />
 
               <AdminActionCard
                 href="/admin/opportunity-sources"
                 icon={<ShieldCheck className="h-7 w-7" />}
-                title="Manage sources"
+                title="Manage opportunity sources"
                 description="Add, review, activate, and check trusted opportunity sources."
-                action="Open sources"
+                action="Open opportunity sources"
               />
 
               <AdminActionCard
@@ -172,6 +203,14 @@ export default async function AdminPage() {
                 title="Review opportunities"
                 description="Review real listings, source attribution, quality, and public visibility."
                 action="Open opportunities"
+              />
+
+              <AdminActionCard
+                href="/admin/programs"
+                icon={<GraduationCap className="h-7 w-7" />}
+                title="Review published programs"
+                description="Review public training programs, apprenticeships, and pathway records."
+                action="Open programs"
               />
 
               <AdminActionCard
@@ -188,14 +227,6 @@ export default async function AdminPage() {
                 title="Manage employers"
                 description="Review employer records, verification status, and public profiles."
                 action="Open employers"
-              />
-
-              <AdminActionCard
-                href="/admin/programs"
-                icon={<GraduationCap className="h-7 w-7" />}
-                title="Review programs"
-                description="Review training programs, apprenticeships, and pathway records."
-                action="Open programs"
               />
             </div>
           </section>
@@ -229,7 +260,7 @@ export default async function AdminPage() {
                 />
                 <QualityCard
                   title="Current"
-                  description="Monitor stale and expired records."
+                  description={`${sourceCount} sources tracked, including ${activeSourceCount} active sources and ${reviewDueSourceCount} due for review.`}
                 />
               </div>
             </div>
@@ -259,7 +290,9 @@ function AdminMetricCard({
 
       <p className="eyebrow mt-5">{eyebrow}</p>
 
-      <h2 className="mt-3 text-3xl font-bold text-slate-950">{value}</h2>
+      <h2 className="mt-3 text-3xl font-bold text-slate-950">
+        {value.toLocaleString()}
+      </h2>
 
       <p className="muted-text mt-3">{description}</p>
     </div>
