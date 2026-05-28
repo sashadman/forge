@@ -1,333 +1,159 @@
-import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { getProgramCandidatesForReview } from '@/app/actions/program-candidates'
 import {
-  DatabaseZap,
-  ExternalLink,
-  GraduationCap,
-  MapPin,
-  ShieldCheck,
-} from 'lucide-react'
-import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
-import ProgramCandidateReviewForm from '@/components/admin/program-candidates/ProgramCandidateReviewForm'
-import { createClient } from '@/lib/supabase/server'
-import { siteConfig } from '@/config/site'
+  ProgramCandidateReviewTable,
+  type ProgramCandidateReviewRow,
+} from '@/components/admin/program-candidate-review-table'
 
-export const metadata: Metadata = {
-  title: `Program Candidates — ${siteConfig.name}`,
-  description:
-    'Review imported training program candidates before publishing them.',
+type AdminProgramCandidatesPageProps = {
+  searchParams?: Promise<{
+    status?: string
+    trade?: string
+    search?: string
+  }>
 }
 
-function formatLabel(value: string | null) {
-  if (!value) return 'Not provided'
+const statusOptions = [
+  { label: 'Trusted candidates', value: 'trusted_candidate' },
+  { label: 'Candidates', value: 'candidate' },
+  { label: 'Needs review', value: 'needs_review' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Published', value: 'published' },
+  { label: 'Rejected', value: 'rejected' },
+  { label: 'Duplicates', value: 'duplicate' },
+]
 
-  return value
-    .split('_')
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(' ')
-}
+const tradeOptions = [
+  { label: 'All trades', value: '' },
+  { label: 'Electrical', value: 'electrical' },
+  { label: 'HVAC', value: 'hvac' },
+  { label: 'Plumbing', value: 'plumbing' },
+  { label: 'Construction', value: 'construction' },
+  { label: 'Automotive', value: 'automotive' },
+  { label: 'Welding', value: 'welding' },
+  { label: 'Manufacturing', value: 'manufacturing' },
+  { label: 'Healthcare', value: 'healthcare' },
+  { label: 'Other', value: 'other' },
+]
 
-export default async function AdminProgramCandidatesPage() {
-  const supabase = createClient()
+export default async function AdminProgramCandidatesPage({
+  searchParams,
+}: AdminProgramCandidatesPageProps) {
+  const params = await searchParams
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const status = params?.status ?? 'trusted_candidate'
+  const trade = params?.trade ?? ''
+  const search = params?.search ?? ''
 
-  if (!user) {
-    redirect('/auth/sign-in')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle()
-
-  if (profile?.role !== 'admin') {
-    redirect('/dashboard')
-  }
-
-  const { data: candidates, error } = await supabase
-    .from('training_program_candidates')
-    .select(
-      `
-      id,
-      source_id,
-      source_url,
-      source_domain,
-      title,
-      provider_name,
-      institution_name,
-      program_type,
-      trade_slug,
-      location,
-      state,
-      country,
-      duration,
-      cost,
-      description,
-      requirements,
-      outcomes,
-      cip_code,
-      occupation_code,
-      apprenticeship_occupation,
-      verification_status,
-      source_authority,
-      trust_level,
-      confidence_score,
-      published_program_id,
-      review_notes,
-      created_at,
-      training_sources (
-        source_name,
-        source_type,
-        source_authority,
-        trust_level
-      )
-      `
-    )
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('Failed to load program candidates:', error)
-  }
-
-  const programCandidates = candidates ?? []
-
-  const publishedCount = programCandidates.filter(
-    (candidate) => candidate.published_program_id
-  ).length
-
-  const needsReviewCount = programCandidates.filter((candidate) =>
-    ['candidate', 'trusted_candidate', 'needs_review'].includes(
-      candidate.verification_status
-    )
-  ).length
-
-  const rejectedCount = programCandidates.filter(
-    (candidate) => candidate.verification_status === 'rejected'
-  ).length
+  const candidates = (await getProgramCandidatesForReview({
+    status,
+    trade: trade || undefined,
+    search: search || undefined,
+    limit: 50,
+    offset: 0,
+  })) as ProgramCandidateReviewRow[]
 
   return (
-    <main className="page-shell">
-      <SiteNavbar />
+    <main className="min-h-screen bg-slate-50 px-6 py-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <Link
+              href="/admin"
+              className="text-sm font-medium text-slate-600 hover:text-slate-950"
+            >
+              ← Back to admin
+            </Link>
 
-      <section className="hero-dark">
-        <div className="hero-fade" />
-
-        <div className="section-shell relative py-20">
-          <div className="max-w-4xl">
-            <p className="eyebrow-dark">Candidate pipeline</p>
-
-            <h1 className="page-title-dark mt-6">
-              Review imported training programs.
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950">
+              Program Candidate Review
             </h1>
 
-            <p className="lead-text-dark mt-6 max-w-3xl">
-              Program candidates come from official sources. Admin review turns
-              clean candidates into public training program records.
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+              Review imported training program candidates before publishing them
+              into the public program directory. Promote one candidate at a time
+              until bulk review tools are ready.
             </p>
           </div>
+
+          <Link
+            href="/admin/programs"
+            className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-100"
+          >
+            View published programs
+          </Link>
         </div>
-      </section>
 
-      <section className="section-light pb-20">
-        <div className="section-shell">
-          <div className="-mt-12 grid gap-5 md:grid-cols-4">
-            <StatusPanel label="Candidates" value={`${programCandidates.length}`} />
-            <StatusPanel label="Needs review" value={`${needsReviewCount}`} />
-            <StatusPanel label="Published" value={`${publishedCount}`} />
-            <StatusPanel label="Rejected" value={`${rejectedCount}`} />
-          </div>
+        <section className="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <form className="grid gap-4 md:grid-cols-[1fr_1fr_2fr_auto] md:items-end">
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Status
+              </span>
+              <select
+                name="status"
+                defaultValue={status}
+                className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-900"
+              >
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          <div className="mt-8 grid gap-6">
-            {programCandidates.length > 0 ? (
-              programCandidates.map((candidate) => {
-                const source = Array.isArray(candidate.training_sources)
-                  ? candidate.training_sources[0]
-                  : candidate.training_sources
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Trade
+              </span>
+              <select
+                name="trade"
+                defaultValue={trade}
+                className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-900"
+              >
+                {tradeOptions.map((option) => (
+                  <option key={option.value || 'all'} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-                return (
-                  <article key={candidate.id} className="content-panel">
-                    <div className="grid gap-6 lg:grid-cols-[1fr_22rem]">
-                      <div>
-                        <div className="flex flex-wrap gap-2">
-                          <span className="badge-orange">
-                            {formatLabel(candidate.program_type)}
-                          </span>
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Search
+              </span>
+              <input
+                name="search"
+                defaultValue={search}
+                placeholder="Search provider, title, institution, or CIP..."
+                className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-900"
+              />
+            </label>
 
-                          <span className="badge-slate">
-                            {formatLabel(candidate.verification_status)}
-                          </span>
+            <button
+              type="submit"
+              className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            >
+              Filter
+            </button>
+          </form>
+        </section>
 
-                          <span className="badge-slate">
-                            {formatLabel(candidate.source_authority)}
-                          </span>
+        <section className="mb-4 flex items-center justify-between">
+          <p className="text-sm text-slate-600">
+            Showing <span className="font-semibold">{candidates.length}</span>{' '}
+            candidates.
+          </p>
 
-                          {candidate.published_program_id && (
-                            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
-                              Published
-                            </span>
-                          )}
-                        </div>
+          <p className="text-xs text-slate-500">
+            Actions are admin-only and backed by database functions.
+          </p>
+        </section>
 
-                        <h2 className="section-title mt-4">{candidate.title}</h2>
-
-                        <p className="mt-2 font-semibold text-slate-600">
-                          {candidate.provider_name}
-                        </p>
-
-                        <div className="mt-5 grid gap-3 md:grid-cols-3">
-                          <MiniInfo
-                            icon={<GraduationCap className="h-4 w-4" />}
-                            label="Career focus"
-                            value={candidate.trade_slug}
-                          />
-
-                          <MiniInfo
-                            icon={<MapPin className="h-4 w-4" />}
-                            label="Location"
-                            value={`${candidate.location || 'See provider'}, ${
-                              candidate.state || candidate.country
-                            }`}
-                          />
-
-                          <MiniInfo
-                            icon={<ShieldCheck className="h-4 w-4" />}
-                            label="Trust"
-                            value={formatLabel(candidate.trust_level)}
-                          />
-                        </div>
-
-                        {source && (
-                          <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-                              Source
-                            </p>
-
-                            <p className="mt-2 font-semibold text-slate-950">
-                              {source.source_name}
-                            </p>
-
-                            <p className="mt-1 text-sm text-slate-600">
-                              {formatLabel(source.source_type)} ·{' '}
-                              {formatLabel(source.source_authority)}
-                            </p>
-                          </div>
-                        )}
-
-                        {candidate.description && (
-                          <p className="mt-6 leading-7 text-slate-700">
-                            {candidate.description}
-                          </p>
-                        )}
-
-                        {candidate.requirements &&
-                          candidate.requirements.length > 0 && (
-                            <ReviewList
-                              title="Requirements"
-                              items={candidate.requirements}
-                            />
-                          )}
-
-                        {candidate.outcomes && candidate.outcomes.length > 0 && (
-                          <ReviewList title="Outcomes" items={candidate.outcomes} />
-                        )}
-
-                        <a
-                          href={candidate.source_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
-                        >
-                          View official source
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </div>
-
-                      <ProgramCandidateReviewForm
-                        candidateId={candidate.id}
-                        currentStatus={candidate.verification_status}
-                        currentProgramType={candidate.program_type}
-                        currentTradeSlug={candidate.trade_slug}
-                        currentReviewNotes={candidate.review_notes ?? ''}
-                        alreadyPublished={Boolean(candidate.published_program_id)}
-                      />
-                    </div>
-                  </article>
-                )
-              })
-            ) : (
-              <section className="content-panel text-center">
-                <DatabaseZap className="mx-auto h-12 w-12 text-orange-600" />
-
-                <h2 className="section-title mt-5">
-                  No program candidates yet
-                </h2>
-
-                <p className="muted-text mx-auto mt-4 max-w-2xl">
-                  Candidates will appear here after an importer captures program
-                  records from official sources.
-                </p>
-              </section>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <SiteFooter />
-    </main>
-  )
-}
-
-function StatusPanel({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="content-panel">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-        {label}
-      </p>
-
-      <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
-    </div>
-  )
-}
-
-function MiniInfo({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: string
-}) {
-  return (
-    <div className="mini-card">
-      <div className="flex items-center gap-2 text-slate-500">
-        <span className="text-orange-600">{icon}</span>
-
-        <p className="text-xs font-bold uppercase tracking-wide">{label}</p>
+        <ProgramCandidateReviewTable candidates={candidates} />
       </div>
-
-      <p className="mt-2 font-semibold text-slate-950">{value}</p>
-    </div>
-  )
-}
-
-function ReviewList({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="mt-6 mini-card">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-        {title}
-      </p>
-
-      <ul className="mt-3 space-y-2 text-slate-700">
-        {items.map((item) => (
-          <li key={item}>• {item}</li>
-        ))}
-      </ul>
-    </div>
+    </main>
   )
 }

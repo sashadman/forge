@@ -2,242 +2,230 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { Database } from '@/lib/supabase/types'
 
-type ProgramType = Database['public']['Enums']['program_type']
-
-type CandidateReviewStatus =
-  | 'candidate'
-  | 'trusted_candidate'
-  | 'needs_review'
-  | 'approved'
-  | 'rejected'
-  | 'published'
-  | 'duplicate'
-
-type PublishCandidateInput = {
-  candidateId: string
-  programType: ProgramType
-  tradeSlug: string
-  reviewNotes: string
+export type ProgramCandidateReviewFilters = {
+  status?: string
+  trade?: string
+  search?: string
+  limit?: number
+  offset?: number
 }
 
-type UpdateCandidateInput = {
-  candidateId: string
-  verificationStatus: CandidateReviewStatus
-  reviewNotes: string
+type SupabaseRpcClient = {
+  rpc: (
+    fn: string,
+    args?: Record<string, unknown>
+  ) => Promise<{
+    data: unknown
+    error: { message: string } | null
+  }>
+  from: (table: string) => {
+    update: (values: Record<string, unknown>) => {
+      eq: (
+        column: string,
+        value: string
+      ) => Promise<{
+        data: unknown
+        error: { message: string } | null
+      }>
+    }
+  }
 }
 
-function cleanString(value: string) {
-  return value.trim()
+type CandidateActionInput =
+  | FormData
+  | {
+      candidateId: string
+      status?: string
+      verificationStatus?: string
+      programType?: string
+      tradeSlug?: string
+      notes?: string
+      reviewNotes?: string
+    }
+
+function asRpcClient(client: unknown) {
+  return client as SupabaseRpcClient
 }
 
-function cleanOptionalString(value: string | null | undefined) {
-  const cleaned = value?.trim() ?? ''
-  return cleaned.length > 0 ? cleaned : null
-}
+function getCandidateId(input: CandidateActionInput) {
+  if (input instanceof FormData) {
+    const candidateId = input.get('candidateId')
 
-function createSlug(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+    if (typeof candidateId !== 'string' || candidateId.length === 0) {
+      throw new Error('Candidate ID is required.')
+    }
 
-function normalizeProgramType(value: string): ProgramType {
-  const allowedTypes: ProgramType[] = [
-    'apprenticeship',
-    'trade_school',
-    'community_college',
-    'workforce_program',
-    'employer_training',
-  ]
-
-  return allowedTypes.includes(value as ProgramType)
-    ? (value as ProgramType)
-    : 'workforce_program'
-}
-
-async function requireAdminUser() {
-  const supabase = createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    throw new Error('You must be signed in.')
+    return candidateId
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle()
-
-  if (profile?.role !== 'admin') {
-    throw new Error('Only admins can manage program candidates.')
+  if (!input.candidateId) {
+    throw new Error('Candidate ID is required.')
   }
 
-  return user
+  return input.candidateId
 }
 
-export async function updateProgramCandidateStatus(input: UpdateCandidateInput) {
-  const supabase = createClient()
-  const adminUser = await requireAdminUser()
+function getNotes(input: CandidateActionInput, fallback: string) {
+  if (input instanceof FormData) {
+    const notes = input.get('notes')
+
+    return typeof notes === 'string' && notes.trim().length > 0
+      ? notes.trim()
+      : fallback
+  }
+
+  return input.notes?.trim() || input.reviewNotes?.trim() || fallback
+}
+
+export async function getProgramCandidatesForReview({
+  status = 'trusted_candidate',
+  trade,
+  search,
+  limit = 50,
+  offset = 0,
+}: ProgramCandidateReviewFilters = {}) {
+  const supabase = asRpcClient(await createClient())
+
+  const { data, error } = await supabase.rpc(
+    'list_training_program_candidates_for_review',
+    {
+      requested_status: status || null,
+      requested_trade_slug: trade || null,
+      search_text: search || null,
+      result_limit: limit,
+      result_offset: offset,
+    }
+  )
+
+  if (error) {
+    throw new Error(`Failed to load program candidates: ${error.message}`)
+  }
+
+  return data ?? []
+}
+
+export async function promoteProgramCandidate(input: CandidateActionInput) {
+  const candidateId = getCandidateId(input)
+  const supabase = asRpcClient(await createClient())
+
+  const { error } = await supabase.rpc('promote_training_program_candidate', {
+    candidate_id: candidateId,
+  })
+
+  if (error) {
+    throw new Error(`Failed to promote candidate: ${error.message}`)
+  }
+
+  revalidatePath('/admin/program-candidates')
+  revalidatePath('/admin/programs')
+  revalidatePath('/programs')
+}
+
+export async function rejectProgramCandidate(input: CandidateActionInput) {
+  const candidateId = getCandidateId(input)
+  const notes = getNotes(input, 'Rejected from admin candidate review queue.')
+  const supabase = asRpcClient(await createClient())
+
+  const { error } = await supabase.rpc('reject_training_program_candidate', {
+    candidate_id: candidateId,
+    notes,
+  })
+
+  if (error) {
+    throw new Error(`Failed to reject candidate: ${error.message}`)
+  }
+
+  revalidatePath('/admin/program-candidates')
+}
+
+export async function markProgramCandidateDuplicate(formData: FormData) {
+  const candidateId = formData.get('candidateId')
+  const duplicateCandidateId = formData.get('duplicateCandidateId')
+  const notes = formData.get('notes')
+
+  if (typeof candidateId !== 'string' || candidateId.length === 0) {
+    throw new Error('Candidate ID is required.')
+  }
+
+  if (
+    typeof duplicateCandidateId !== 'string' ||
+    duplicateCandidateId.length === 0
+  ) {
+    throw new Error('Duplicate candidate ID is required.')
+  }
+
+  const supabase = asRpcClient(await createClient())
+
+  const { error } = await supabase.rpc(
+    'mark_training_program_candidate_duplicate',
+    {
+      candidate_id: candidateId,
+      duplicate_candidate_id: duplicateCandidateId,
+      notes:
+        typeof notes === 'string' && notes.trim().length > 0
+          ? notes.trim()
+          : 'Marked as duplicate from admin candidate review queue.',
+    }
+  )
+
+  if (error) {
+    throw new Error(`Failed to mark candidate duplicate: ${error.message}`)
+  }
+
+  revalidatePath('/admin/program-candidates')
+}
+
+/**
+ * Backward-compatible action used by older admin candidate components.
+ */
+export async function publishProgramCandidate(input: CandidateActionInput) {
+  return promoteProgramCandidate(input)
+}
+
+/**
+ * Backward-compatible action used by older admin candidate components.
+ */
+export async function updateProgramCandidateStatus(input: CandidateActionInput) {
+  const candidateId = getCandidateId(input)
+  const status = input instanceof FormData 
+  ? input.get('status')
+   : input.status ?? input.verificationStatus
+  const notes = getNotes(input, 'Updated from admin candidate review queue.')
+
+  if (status === 'rejected') {
+    return rejectProgramCandidate(input)
+  }
+
+  if (status === 'published') {
+    return promoteProgramCandidate(input)
+  }
+
+  if (
+    status !== 'candidate' &&
+    status !== 'trusted_candidate' &&
+    status !== 'needs_review' &&
+    status !== 'approved' &&
+    status !== 'duplicate'
+  ) {
+    throw new Error('Unsupported candidate status update.')
+  }
+
+  const supabase = asRpcClient(await createClient())
 
   const { error } = await supabase
     .from('training_program_candidates')
     .update({
-      verification_status: input.verificationStatus,
-      review_notes: cleanOptionalString(input.reviewNotes),
-      reviewed_by: adminUser.id,
+      verification_status: status,
+      review_notes: notes,
       reviewed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .eq('id', input.candidateId)
+    .eq('id', candidateId)
 
   if (error) {
-    console.error('Failed to update program candidate:', error)
-    throw new Error('Could not update program candidate.')
+    throw new Error(`Failed to update candidate status: ${error.message}`)
   }
 
   revalidatePath('/admin/program-candidates')
-}
-
-export async function publishProgramCandidate(input: PublishCandidateInput) {
-  const supabase = createClient()
-  const adminUser = await requireAdminUser()
-
-  const { data: candidate, error: candidateError } = await supabase
-    .from('training_program_candidates')
-    .select(
-      `
-      id,
-      source_id,
-      source_url,
-      title,
-      provider_name,
-      program_type,
-      trade_slug,
-      location,
-      state,
-      country,
-      duration,
-      cost,
-      description,
-      requirements,
-      outcomes,
-      published_program_id,
-      verification_status
-      `
-    )
-    .eq('id', input.candidateId)
-    .maybeSingle()
-
-  if (candidateError) {
-    console.error('Failed to load program candidate:', candidateError)
-    throw new Error('Could not load program candidate.')
-  }
-
-  if (!candidate) {
-    throw new Error('Program candidate was not found.')
-  }
-
-  if (candidate.published_program_id) {
-    throw new Error('This candidate has already been published.')
-  }
-
-  if (candidate.verification_status === 'rejected') {
-    throw new Error('Rejected candidates cannot be published.')
-  }
-
-  const title = cleanString(candidate.title)
-  const providerName = cleanString(candidate.provider_name)
-  const location = cleanOptionalString(candidate.location) ?? 'See provider'
-  const state = cleanOptionalString(candidate.state) ?? 'US'
-  const description =
-    cleanOptionalString(candidate.description) ??
-    `Training program listed by ${providerName}. Review the official source for the most current details.`
-
-  if (!title) throw new Error('Candidate title is required.')
-  if (!providerName) throw new Error('Candidate provider name is required.')
-
-  const slug = createSlug(`${providerName}-${title}-${state}`)
-
-  if (!slug) {
-    throw new Error('Candidate could not create a valid public program slug.')
-  }
-
-  const { data: existingProgram } = await supabase
-    .from('programs')
-    .select('id')
-    .eq('slug', slug)
-    .maybeSingle()
-
-  if (existingProgram) {
-    throw new Error(
-      'A public program with this slug already exists. Mark this candidate as duplicate or adjust the source record before publishing.'
-    )
-  }
-
-  const { data: program, error: publishError } = await supabase
-    .from('programs')
-    .insert({
-      slug,
-      name: title,
-      provider_name: providerName,
-      program_type: normalizeProgramType(input.programType),
-      trade_slug: cleanString(input.tradeSlug) || candidate.trade_slug || 'other',
-      location,
-      state,
-      duration: cleanOptionalString(candidate.duration),
-      cost: cleanOptionalString(candidate.cost),
-      description,
-      requirements: candidate.requirements,
-      outcomes: candidate.outcomes,
-      website_url: candidate.source_url,
-      is_active: true,
-      review_status: 'approved',
-      review_notes: cleanOptionalString(input.reviewNotes),
-      reviewed_by: adminUser.id,
-      reviewed_at: new Date().toISOString(),
-      published_at: new Date().toISOString(),
-      provider_profile_id: null,
-      submitted_by: null,
-    })
-    .select('id')
-    .single()
-
-  if (publishError) {
-    console.error('Failed to publish program candidate:', publishError)
-    throw new Error('Could not publish program candidate.')
-  }
-
-  const { error: candidateUpdateError } = await supabase
-    .from('training_program_candidates')
-    .update({
-      verification_status: 'published',
-      published_program_id: program.id,
-      review_notes: cleanOptionalString(input.reviewNotes),
-      reviewed_by: adminUser.id,
-      reviewed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', candidate.id)
-
-  if (candidateUpdateError) {
-    console.error(
-      'Program published but candidate update failed:',
-      candidateUpdateError
-    )
-    throw new Error(
-      'Program was published, but candidate status could not be updated.'
-    )
-  }
-
-  revalidatePath('/admin/program-candidates')
-  revalidatePath('/programs')
 }
