@@ -244,8 +244,8 @@ export default function ProgramsExplorer({
               <ArrowRight className="h-4 w-4" />
             </Link>
 
-            <Link href="/community-colleges" className="btn-outline">
-              Explore community colleges
+            <Link href="/training-sources" className="btn-outline">
+              Explore training sources
             </Link>
           </div>
         </div>
