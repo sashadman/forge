@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts",
     "seed:training-sources": "tsx scripts/seed-training-sources.ts",
-    "import:program-candidates": "tsx scripts/import-training-program-candidates.ts"
+    "import:program-candidates": "tsx scripts/import-training-program-candidates.ts",
+    "import:scorecard-fields": "tsx scripts/import-college-scorecard-fields.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
@@ -24,7 +25,9 @@
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
     "clsx": "^2.1.1",
+    "csv-parse": "^6.2.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^11.2.12",
     "lucide-react": "^0.395.0",
     "next": "14.2.5",
@@ -48,6 +51,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }
