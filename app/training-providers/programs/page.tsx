@@ -263,17 +263,18 @@ export default async function TrainingProviderProgramsPage() {
                       </div>
 
                       <div className="flex shrink-0 flex-col gap-3">
-                        {program.is_active ? (
+                        {program.is_active && (
                           <Link href={`/programs/${program.slug}`} className="btn-dark">
                             View public page
                             <ArrowRight className="h-4 w-4" />
                           </Link>
-                        ) : (
-                          <Link href="/for-programs#program-data" className="btn-outline">
-                            Review data model
+                        )}  
+                          <Link href={`/training-providers/programs/${program.id}/request-update`}
+                              className="btn-outline"
+                              >
+                          Request update
                           </Link>
-                        )}
-
+                          
                         {program.source_url && (
                           <a
                             href={program.source_url}

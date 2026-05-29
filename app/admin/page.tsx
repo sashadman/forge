@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {
@@ -7,6 +8,7 @@ import {
   Building2,
   ClipboardCheck,
   Database,
+  FileText,
   GraduationCap,
   ShieldCheck,
   UsersRound,
@@ -21,6 +23,41 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: `Admin — ${siteConfig.name}`,
   description: `Admin tools for managing real ${siteConfig.name} platform records.`,
+}
+
+type CountResult = {
+  count: number | null
+  error: { message: string } | null
+}
+
+type LooseCountTable = {
+  select: (
+    columns: string,
+    options?: {
+      count?: 'exact'
+      head?: boolean
+    }
+  ) => Promise<CountResult>
+}
+
+type LooseSupabaseClient = {
+  from: (table: string) => LooseCountTable
+}
+
+function asLooseSupabase(client: unknown) {
+  return client as LooseSupabaseClient
+}
+
+async function getLooseCount(client: unknown, table: string) {
+  const { count, error } = await asLooseSupabase(client)
+    .from(table)
+    .select('id', { count: 'exact', head: true })
+
+  if (error) {
+    console.error(`Failed to count ${table}:`, error)
+  }
+
+  return count ?? 0
 }
 
 export default async function AdminPage() {
@@ -47,21 +84,45 @@ export default async function AdminPage() {
   const [
     employerCountResult,
     opportunityCountResult,
+    applicationCountResult,
     programCountResult,
     candidateCountResult,
-    sourceCountResult,
-    activeSourceCountResult,
-    reviewDueSourceCountResult,
     trustedCandidateCountResult,
+    providerClaimCountResult,
+    pendingProviderClaimCountResult,
+    trainingSourceCountResult,
+    opportunitySourceCountResult,
+    activeOpportunitySourceCountResult,
+    programUpdateRequestCount,
   ] = await Promise.all([
     supabase.from('employers').select('id', { count: 'exact', head: true }),
 
     supabase.from('opportunities').select('id', { count: 'exact', head: true }),
 
+    supabase.from('applications').select('id', { count: 'exact', head: true }),
+
     supabase.from('programs').select('id', { count: 'exact', head: true }),
 
     supabase
       .from('training_program_candidates')
+      .select('id', { count: 'exact', head: true }),
+
+    supabase
+      .from('training_program_candidates')
+      .select('id', { count: 'exact', head: true })
+      .eq('verification_status', 'trusted_candidate'),
+
+    supabase
+      .from('provider_claims')
+      .select('id', { count: 'exact', head: true }),
+
+    supabase
+      .from('provider_claims')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
+
+    supabase
+      .from('training_sources')
       .select('id', { count: 'exact', head: true }),
 
     supabase
@@ -73,25 +134,20 @@ export default async function AdminPage() {
       .select('id', { count: 'exact', head: true })
       .eq('is_active', true),
 
-    supabase
-      .from('opportunity_sources')
-      .select('id', { count: 'exact', head: true })
-      .lte('next_review_at', new Date().toISOString()),
-
-    supabase
-      .from('training_program_candidates')
-      .select('id', { count: 'exact', head: true })
-      .eq('verification_status', 'trusted_candidate'),
+    getLooseCount(supabase, 'provider_program_update_requests'),
   ])
 
   const employerCount = employerCountResult.count ?? 0
   const opportunityCount = opportunityCountResult.count ?? 0
+  const applicationCount = applicationCountResult.count ?? 0
   const programCount = programCountResult.count ?? 0
   const candidateCount = candidateCountResult.count ?? 0
-  const sourceCount = sourceCountResult.count ?? 0
-  const activeSourceCount = activeSourceCountResult.count ?? 0
-  const reviewDueSourceCount = reviewDueSourceCountResult.count ?? 0
   const trustedCandidateCount = trustedCandidateCountResult.count ?? 0
+  const providerClaimCount = providerClaimCountResult.count ?? 0
+  const pendingProviderClaimCount = pendingProviderClaimCountResult.count ?? 0
+  const trainingSourceCount = trainingSourceCountResult.count ?? 0
+  const opportunitySourceCount = opportunitySourceCountResult.count ?? 0
+  const activeOpportunitySourceCount = activeOpportunitySourceCountResult.count ?? 0
 
   return (
     <main className="page-shell">
@@ -99,139 +155,176 @@ export default async function AdminPage() {
 
       <PageHero
         eyebrow="Admin command center"
-        title="Manage platform quality with clear operational workflows."
-        description="Use this area to manage trusted sources, real employers, opportunity listings, training pathways, applications, and data-quality operations."
+        title="Operate platform quality from one control room."
+        description="Review imported records, provider claims, update requests, public programs, employers, opportunities, and source quality without mixing user-role workflows."
       />
 
       <section className="section-light pb-20">
         <div className="section-shell">
           <div className="-mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             <AdminMetricCard
-              icon={<Building2 className="h-8 w-8" />}
-              eyebrow="Employers"
-              value={employerCount}
-              description="Real employer profiles currently stored."
+              icon={<ClipboardCheck className="h-8 w-8" />}
+              eyebrow="Candidate queue"
+              value={candidateCount}
+              description={`${trustedCandidateCount} trusted program candidates ready for review.`}
             />
 
             <AdminMetricCard
-              icon={<BriefcaseBusiness className="h-8 w-8" />}
-              eyebrow="Opportunities"
-              value={opportunityCount}
-              description="Opportunity records connected to employers."
+              icon={<Building2 className="h-8 w-8" />}
+              eyebrow="Provider claims"
+              value={providerClaimCount}
+              description={`${pendingProviderClaimCount} provider requests pending review.`}
+            />
+
+            <AdminMetricCard
+              icon={<FileText className="h-8 w-8" />}
+              eyebrow="Update requests"
+              value={programUpdateRequestCount}
+              description="Provider-submitted program correction requests."
             />
 
             <AdminMetricCard
               icon={<GraduationCap className="h-8 w-8" />}
               eyebrow="Published programs"
               value={programCount}
-              description="Public training programs currently visible or staged."
-            />
-
-            <AdminMetricCard
-              icon={<ClipboardCheck className="h-8 w-8" />}
-              eyebrow="Candidate queue"
-              value={candidateCount}
-              description={`${trustedCandidateCount} trusted candidates ready for review.`}
+              description="Training program records stored in the public directory."
             />
           </div>
 
           <div className="mt-8">
             <NextStepPanel
-              eyebrow="Recommended next step"
-              title="Review imported training candidates before publishing."
-              description="Imported program candidates should be reviewed before they become public records. Start with trusted candidates, promote one at a time, and reject records outside the platform scope."
-              primaryHref="/admin/program-candidates"
-              primaryLabel="Review candidates"
-              secondaryHref="/admin/training-sources"
-              secondaryLabel="Manage training sources"
-              icon={<ClipboardCheck className="h-6 w-6" />}
+              eyebrow="Recommended admin flow"
+              title="Review provider-submitted updates before touching public data."
+              description="Program update requests are now the safest way for providers to suggest corrections while admin review remains the publishing gate."
+              primaryHref="/admin/program-update-requests"
+              primaryLabel="Review update requests"
+              secondaryHref="/admin/program-candidates"
+              secondaryLabel="Review candidates"
+              icon={<FileText className="h-6 w-6" />}
             />
           </div>
 
           <section className="mt-8">
             <div>
-              <p className="eyebrow">Admin workflows</p>
+              <p className="eyebrow">Review queues</p>
 
               <h2 className="section-title mt-3">
-                Choose the workflow you need.
+                Work the highest-impact admin queues first.
               </h2>
 
               <p className="muted-text mt-3 max-w-3xl">
-                Each area has a focused purpose. Review candidate training data
-                before publishing it, and keep employer, opportunity, and
-                provider workflows separated.
+                These workflows protect platform quality. Imported records,
+                provider claims, and provider update requests should move
+                through admin review before becoming public or changing public
+                listings.
               </p>
             </div>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               <AdminActionCard
-                href="/admin/program-candidates"
-                icon={<ClipboardCheck className="h-7 w-7" />}
-                title="Review program candidates"
-                description="Review imported training candidates, promote trusted records, and reject records that do not fit the platform."
-                action="Open candidate queue"
+                href="/admin/program-update-requests"
+                icon={<FileText className="h-7 w-7" />}
+                title="Program update requests"
+                description="Review provider-submitted corrections and apply approved changes to public program records."
+                metric={`${programUpdateRequestCount} requests`}
+                action="Review requests"
                 featured
               />
 
               <AdminActionCard
-                href="/admin/data-expansion"
-                icon={<Database className="h-7 w-7" />}
-                title="Expand real data"
-                description="Use trusted sources, source review, and freshness rules to grow real listings."
-                action="Open workflow"
+                href="/admin/provider-claims"
+                icon={<Building2 className="h-7 w-7" />}
+                title="Provider claims"
+                description="Review provider identity, program evidence, and workspace access requests."
+                metric={`${pendingProviderClaimCount} pending`}
+                action="Review provider claims"
+                featured={pendingProviderClaimCount > 0}
+              />
+
+              <AdminActionCard
+                href="/admin/program-candidates"
+                icon={<ClipboardCheck className="h-7 w-7" />}
+                title="Program candidate review"
+                description="Review imported training candidates, promote trusted records, and reject records outside scope."
+                metric={`${trustedCandidateCount} trusted`}
+                action="Open candidate queue"
+              />
+
+              <AdminActionCard
+                href="/admin/programs"
+                icon={<GraduationCap className="h-7 w-7" />}
+                title="Published programs"
+                description="Review public training programs, apprenticeships, and pathway records."
+                metric={`${programCount} records`}
+                action="Open programs"
               />
 
               <AdminActionCard
                 href="/admin/training-sources"
-                icon={<ShieldCheck className="h-7 w-7" />}
-                title="Manage training sources"
-                description="Review national, state, and provider training data sources."
+                icon={<Database className="h-7 w-7" />}
+                title="Training sources"
+                description="Review source quality, ingestion status, and official data-source tracking."
+                metric={`${trainingSourceCount} sources`}
                 action="Open training sources"
               />
 
               <AdminActionCard
                 href="/admin/opportunity-sources"
                 icon={<ShieldCheck className="h-7 w-7" />}
-                title="Manage opportunity sources"
-                description="Add, review, activate, and check trusted opportunity sources."
+                title="Opportunity sources"
+                description="Manage trusted job and apprenticeship source directories."
+                metric={`${activeOpportunitySourceCount}/${opportunitySourceCount} active`}
                 action="Open opportunity sources"
               />
+            </div>
+          </section>
 
+          <section className="mt-10">
+            <div>
+              <p className="eyebrow">Platform operations</p>
+
+              <h2 className="section-title mt-3">
+                Manage employer, opportunity, and application data.
+              </h2>
+
+              <p className="muted-text mt-3 max-w-3xl">
+                These workflows support the seeker and employer sides of the
+                platform while keeping admin responsibilities separate from
+                provider-facing program workflows.
+              </p>
+            </div>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               <AdminActionCard
                 href="/admin/opportunities"
                 icon={<BriefcaseBusiness className="h-7 w-7" />}
-                title="Review opportunities"
-                description="Review real listings, source attribution, quality, and public visibility."
+                title="Opportunities"
+                description="Review real listings, source attribution, freshness, and public visibility."
+                metric={`${opportunityCount} listings`}
                 action="Open opportunities"
-              />
-
-              <AdminActionCard
-                href="/admin/programs"
-                icon={<GraduationCap className="h-7 w-7" />}
-                title="Review published programs"
-                description="Review public training programs, apprenticeships, and pathway records."
-                action="Open programs"
-              />
-
-              <AdminActionCard
-                href="/admin/applications"
-                icon={<UsersRound className="h-7 w-7" />}
-                title="Review applications"
-                description="Review submitted applications, readiness snapshots, and timeline status."
-                action="Open applications"
               />
 
               <AdminActionCard
                 href="/admin/employers"
                 icon={<Building2 className="h-7 w-7" />}
-                title="Manage employers"
+                title="Employers"
                 description="Review employer records, verification status, and public profiles."
+                metric={`${employerCount} employers`}
                 action="Open employers"
+              />
+
+              <AdminActionCard
+                href="/admin/applications"
+                icon={<UsersRound className="h-7 w-7" />}
+                title="Applications"
+                description="Review submitted applications, readiness snapshots, and status history."
+                metric={`${applicationCount} applications`}
+                action="Open applications"
               />
             </div>
           </section>
 
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
+          <section className="mt-10 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
@@ -239,28 +332,28 @@ export default async function AdminPage() {
                 </p>
 
                 <h2 className="mt-4 text-3xl font-bold tracking-tight">
-                  Broad listings only matter if they stay trustworthy.
+                  Keep the data real, reviewed, and role-safe.
                 </h2>
 
                 <p className="mt-4 leading-7 text-slate-300">
-                  Every public record should serve a seeker. Use source
-                  attribution, review dates, verification status, and official
-                  external links so users can trust what they find.
+                  Career seekers need trustworthy listings. Providers need a
+                  path to request corrections. Admins must remain the final
+                  control point before public data changes.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <QualityCard
                   title="Real"
-                  description="No fake employers or filler listings."
+                  description="No fake employers, programs, or filler listings."
                 />
                 <QualityCard
-                  title="Verified"
-                  description="Review source quality and public status."
+                  title="Reviewed"
+                  description="Imported and provider-submitted data goes through admin review."
                 />
                 <QualityCard
-                  title="Current"
-                  description={`${sourceCount} sources tracked, including ${activeSourceCount} active sources and ${reviewDueSourceCount} due for review.`}
+                  title="Separated"
+                  description="Seeker, provider, employer, and admin workflows stay role-specific."
                 />
               </div>
             </div>
@@ -279,7 +372,7 @@ function AdminMetricCard({
   value,
   description,
 }: {
-  icon: React.ReactNode
+  icon: ReactNode
   eyebrow: string
   value: number
   description: string
@@ -304,13 +397,15 @@ function AdminActionCard({
   icon,
   title,
   description,
+  metric,
   action,
   featured = false,
 }: {
   href: string
-  icon: React.ReactNode
+  icon: ReactNode
   title: string
   description: string
+  metric: string
   action: string
   featured?: boolean
 }) {
@@ -331,7 +426,10 @@ function AdminActionCard({
         {icon}
       </div>
 
-      <h2 className="mt-5 text-2xl font-bold text-slate-950">{title}</h2>
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <h2 className="text-2xl font-bold text-slate-950">{title}</h2>
+        <span className="badge-slate">{metric}</span>
+      </div>
 
       <p className="muted-text mt-3">{description}</p>
 
