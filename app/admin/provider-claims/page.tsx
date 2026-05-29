@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { Building2, Clock, Mail, MapPin } from 'lucide-react'
+import { Building2, Clock, GraduationCap, Mail, MapPin } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
@@ -11,6 +11,36 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: `Provider Claims — ${siteConfig.name}`,
   description: 'Review training provider access and program claim requests.',
+}
+
+type ProviderClaimRow = {
+  id: string
+  submitted_by: string | null
+  contact_name: string
+  contact_email: string
+  organization_name: string
+  website_url: string | null
+  phone: string | null
+  city: string
+  state: string
+  role_title: string | null
+  claim_type: string
+  program_names: string | null
+  evidence_summary: string
+  requested_access: string | null
+  status: string
+  admin_notes: string | null
+  created_at: string
+  reviewed_at: string | null
+  program_id?: string | null
+  programs?: {
+    id: string
+    slug: string
+    name: string
+    provider_name: string
+    location: string
+    state: string
+  } | null
 }
 
 function formatClaimType(value: string) {
@@ -41,7 +71,7 @@ export default async function AdminProviderClaimsPage() {
     redirect('/dashboard')
   }
 
-  const { data: claims, error } = await supabase
+  const { data, error } = await supabase
     .from('provider_claims')
     .select(
       `
@@ -56,13 +86,22 @@ export default async function AdminProviderClaimsPage() {
       state,
       role_title,
       claim_type,
+      program_id,
       program_names,
       evidence_summary,
       requested_access,
       status,
       admin_notes,
       created_at,
-      reviewed_at
+      reviewed_at,
+      programs (
+        id,
+        slug,
+        name,
+        provider_name,
+        location,
+        state
+      )
       `
     )
     .order('created_at', { ascending: false })
@@ -71,9 +110,13 @@ export default async function AdminProviderClaimsPage() {
     console.error('Failed to load provider claims:', error)
   }
 
-  const providerClaims = claims ?? []
+  const providerClaims = ((data ?? []) as unknown as ProviderClaimRow[])
   const pendingCount = providerClaims.filter(
     (claim) => claim.status === 'pending'
+  ).length
+
+  const linkedProgramCount = providerClaims.filter(
+    (claim) => Boolean(claim.program_id)
   ).length
 
   return (
@@ -92,8 +135,8 @@ export default async function AdminProviderClaimsPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Check provider identity, program evidence, and requested access
-              before approving any future provider capability.
+              Check provider identity, linked program context, evidence, and
+              requested access before approving any provider capability.
             </p>
           </div>
         </div>
@@ -104,7 +147,7 @@ export default async function AdminProviderClaimsPage() {
           <div className="-mt-12 grid gap-5 md:grid-cols-3">
             <StatusPanel label="Total requests" value={`${providerClaims.length}`} />
             <StatusPanel label="Pending review" value={`${pendingCount}`} />
-            <StatusPanel label="Review model" value="Manual" />
+            <StatusPanel label="Linked programs" value={`${linkedProgramCount}`} />
           </div>
 
           <div className="mt-8 grid gap-6">
@@ -119,6 +162,10 @@ export default async function AdminProviderClaimsPage() {
                         <span className="badge-slate">
                           {formatClaimType(claim.claim_type)}
                         </span>
+
+                        {claim.program_id && (
+                          <span className="badge-orange">Linked program</span>
+                        )}
                       </div>
 
                       <h2 className="section-title mt-4">
@@ -156,6 +203,29 @@ export default async function AdminProviderClaimsPage() {
                         >
                           {claim.website_url}
                         </a>
+                      )}
+
+                      {claim.programs && (
+                        <div className="mt-6 rounded-3xl border border-orange-200 bg-orange-50 p-5">
+                          <div className="flex items-center gap-2 text-orange-700">
+                            <GraduationCap className="h-5 w-5" />
+                            <p className="text-xs font-bold uppercase tracking-[0.25em]">
+                              Linked public program
+                            </p>
+                          </div>
+
+                          <h3 className="mt-3 text-xl font-bold text-slate-950">
+                            {claim.programs.name}
+                          </h3>
+
+                          <p className="mt-2 text-sm font-semibold text-slate-700">
+                            {claim.programs.provider_name}
+                          </p>
+
+                          <p className="mt-1 text-sm text-slate-600">
+                            {claim.programs.location}, {claim.programs.state}
+                          </p>
+                        </div>
                       )}
 
                       {claim.program_names && (

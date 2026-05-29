@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
-import ProviderClaimForm from '@/components/training-providers/ProviderClaimForm'
+import ProviderClaimForm, {
+  type ClaimLinkedProgram,
+} from '@/components/training-providers/ProviderClaimForm'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
+import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -12,7 +15,43 @@ export const metadata: Metadata = {
     'Submit a real training provider or program access request for admin review.',
 }
 
-export default function TrainingProviderClaimPage() {
+type TrainingProviderClaimPageProps = {
+  searchParams?: Promise<{
+    programId?: string
+  }>
+}
+
+export default async function TrainingProviderClaimPage({
+  searchParams,
+}: TrainingProviderClaimPageProps) {
+  const params = await searchParams
+  const programId = params?.programId?.trim()
+
+  let linkedProgram: ClaimLinkedProgram | null = null
+
+  if (programId) {
+    const supabase = createClient()
+
+    const { data, error } = await supabase
+      .from('programs')
+      .select('id, slug, name, provider_name, location, state, website_url')
+      .eq('id', programId)
+      .eq('is_active', true)
+      .maybeSingle()
+
+    if (!error && data) {
+      linkedProgram = {
+        id: data.id,
+        slug: data.slug,
+        name: data.name,
+        providerName: data.provider_name,
+        location: data.location,
+        state: data.state,
+        websiteUrl: data.website_url,
+      }
+    }
+  }
+
   return (
     <ThemedPublicPage>
       <SiteNavbar />
@@ -29,8 +68,9 @@ export default function TrainingProviderClaimPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              This is the first real provider workflow. Submit a request only
-              for a real organization or program you are authorized to represent.
+              Submit a request only for a real organization or program you are
+              authorized to represent. Admin review is required before provider
+              tools or program updates are enabled.
             </p>
           </div>
         </div>
@@ -39,7 +79,7 @@ export default function TrainingProviderClaimPage() {
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
           <div className="-mt-12">
-            <ProviderClaimForm />
+            <ProviderClaimForm linkedProgram={linkedProgram} />
           </div>
         </div>
       </ThemedPublicSection>

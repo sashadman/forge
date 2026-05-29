@@ -1,10 +1,31 @@
 'use client'
 
 import { FormEvent, useState, useTransition } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Building2, FileCheck2, Loader2 } from 'lucide-react'
+import {
+  Building2,
+  ExternalLink,
+  FileCheck2,
+  GraduationCap,
+  Loader2,
+} from 'lucide-react'
 import StateSelect from '@/components/forms/StateSelect'
 import { submitProviderClaim } from '@/app/actions/provider-claims'
+
+export type ClaimLinkedProgram = {
+  id: string
+  slug: string
+  name: string
+  providerName: string
+  location: string
+  state: string
+  websiteUrl: string | null
+}
+
+type ProviderClaimFormProps = {
+  linkedProgram?: ClaimLinkedProgram | null
+}
 
 const CLAIM_TYPES = [
   {
@@ -21,22 +42,38 @@ const CLAIM_TYPES = [
   },
 ]
 
-export default function ProviderClaimForm() {
+export default function ProviderClaimForm({
+  linkedProgram = null,
+}: ProviderClaimFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   const [contactName, setContactName] = useState('')
   const [contactEmail, setContactEmail] = useState('')
-  const [organizationName, setOrganizationName] = useState('')
-  const [websiteUrl, setWebsiteUrl] = useState('')
+  const [organizationName, setOrganizationName] = useState(
+    linkedProgram?.providerName ?? ''
+  )
+  const [websiteUrl, setWebsiteUrl] = useState(linkedProgram?.websiteUrl ?? '')
   const [phone, setPhone] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('CA')
+  const [city, setCity] = useState(
+    linkedProgram?.location && linkedProgram.location !== 'See provider'
+      ? linkedProgram.location
+      : ''
+  )
+  const [state, setState] = useState(linkedProgram?.state ?? 'CA')
   const [roleTitle, setRoleTitle] = useState('')
-  const [claimType, setClaimType] = useState('provider_profile')
-  const [programNames, setProgramNames] = useState('')
+  const [claimType, setClaimType] = useState(
+    linkedProgram ? 'program_listing' : 'provider_profile'
+  )
+  const [programNames, setProgramNames] = useState(
+    linkedProgram ? `${linkedProgram.name} — ${linkedProgram.providerName}` : ''
+  )
   const [evidenceSummary, setEvidenceSummary] = useState('')
-  const [requestedAccess, setRequestedAccess] = useState('')
+  const [requestedAccess, setRequestedAccess] = useState(
+    linkedProgram
+      ? 'I am requesting to claim or correct this specific public program listing.'
+      : ''
+  )
   const [error, setError] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -46,6 +83,7 @@ export default function ProviderClaimForm() {
     startTransition(async () => {
       try {
         await submitProviderClaim({
+          programId: linkedProgram?.id ?? null,
           contactName,
           contactEmail,
           organizationName,
@@ -93,6 +131,60 @@ export default function ProviderClaimForm() {
           </p>
         </div>
       </div>
+
+      {linkedProgram && (
+        <section className="mt-8 rounded-3xl border border-orange-200 bg-orange-50 p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-orange-700">
+                <GraduationCap className="h-5 w-5" />
+                <p className="text-xs font-bold uppercase tracking-[0.25em]">
+                  Selected program
+                </p>
+              </div>
+
+              <h3 className="mt-3 text-2xl font-bold text-slate-950">
+                {linkedProgram.name}
+              </h3>
+
+              <p className="mt-2 font-semibold text-slate-700">
+                {linkedProgram.providerName}
+              </p>
+
+              <p className="mt-2 text-sm text-slate-600">
+                {linkedProgram.location}, {linkedProgram.state}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/programs/${linkedProgram.slug}`}
+                className="rounded-2xl border border-orange-200 bg-white px-4 py-2.5 text-sm font-bold text-orange-700 transition hover:bg-orange-100"
+              >
+                View listing
+              </Link>
+
+              {linkedProgram.websiteUrl && (
+                <a
+                  href={linkedProgram.websiteUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-orange-200 bg-white px-4 py-2.5 text-sm font-bold text-orange-700 transition hover:bg-orange-100"
+                >
+                  Provider website
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+            </div>
+          </div>
+
+          <p className="mt-4 text-sm leading-6 text-slate-700">
+            Your request will be linked to this exact public program record for
+            admin review. Approval does not automatically grant editing rights;
+            admin verification is still required.
+          </p>
+        </section>
+      )}
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
         <div>

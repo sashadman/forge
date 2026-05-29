@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
 type ProviderClaimInput = {
+  programId?: string | null
   contactName: string
   contactEmail: string
   organizationName: string
@@ -18,6 +19,31 @@ type ProviderClaimInput = {
   requestedAccess: string
 }
 
+type ProviderClaimStatus = 'pending' | 'approved' | 'rejected' | 'needs_more_info'
+
+type LinkedProgramRecord = {
+  id: string
+  name: string
+  provider_name: string
+  location: string
+  state: string
+  website_url: string | null
+}
+
+type LooseProviderClaimTable = {
+  insert: (values: Record<string, unknown>) => Promise<{
+    error: { message: string } | null
+  }>
+  update: (values: Record<string, unknown>) => {
+    eq: (
+      column: string,
+      value: string
+    ) => Promise<{
+      error: { message: string } | null
+    }>
+  }
+}
+
 function cleanString(value: string) {
   return value.trim()
 }
@@ -25,6 +51,11 @@ function cleanString(value: string) {
 function cleanOptionalString(value: string) {
   const cleaned = cleanString(value)
   return cleaned.length > 0 ? cleaned : null
+}
+
+function cleanOptionalId(value: string | null | undefined) {
+  const cleaned = value?.trim()
+  return cleaned && cleaned.length > 0 ? cleaned : null
 }
 
 function cleanUrl(value: string) {
@@ -49,6 +80,10 @@ function requireValue(value: string, message: string) {
   return cleaned
 }
 
+function getProviderClaimsTable(supabase: Awaited<ReturnType<typeof createClient>>) {
+  return supabase.from('provider_claims') as unknown as LooseProviderClaimTable
+}
+
 async function getCurrentUserId() {
   const supabase = createClient()
 
@@ -59,9 +94,50 @@ async function getCurrentUserId() {
   return user?.id ?? null
 }
 
+async function getLinkedProgram(programId: string | null) {
+  if (!programId) return null
+
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('programs')
+    .select('id, name, provider_name, location, state, website_url')
+    .eq('id', programId)
+    .eq('is_active', true)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Failed to validate linked program for provider claim:', error)
+    throw new Error('Could not verify the selected program.')
+  }
+
+  if (!data) {
+    throw new Error('The selected program could not be found.')
+  }
+
+  return data as LinkedProgramRecord
+}
+
+function normalizeClaimType(value: string, hasLinkedProgram: boolean) {
+  const allowedClaimTypes = [
+    'provider_profile',
+    'program_listing',
+    'provider_and_programs',
+  ]
+
+  if (allowedClaimTypes.includes(value)) {
+    return value
+  }
+
+  return hasLinkedProgram ? 'program_listing' : 'provider_profile'
+}
+
 export async function submitProviderClaim(input: ProviderClaimInput) {
   const supabase = createClient()
   const submittedBy = await getCurrentUserId()
+
+  const programId = cleanOptionalId(input.programId)
+  const linkedProgram = await getLinkedProgram(programId)
 
   const contactName = requireValue(input.contactName, 'Contact name is required.')
   const contactEmail = requireValue(input.contactEmail, 'Contact email is required.')
@@ -80,14 +156,19 @@ export async function submitProviderClaim(input: ProviderClaimInput) {
     throw new Error('Please enter a valid contact email.')
   }
 
-  const claimType = ['provider_profile', 'program_listing', 'provider_and_programs'].includes(
-    input.claimType
-  )
-    ? input.claimType
-    : 'provider_profile'
+  const claimType = normalizeClaimType(input.claimType, Boolean(linkedProgram))
 
-  const { error } = await supabase.from('provider_claims').insert({
+  const programNames =
+    cleanOptionalString(input.programNames) ??
+    (linkedProgram
+      ? `${linkedProgram.name} — ${linkedProgram.provider_name}`
+      : null)
+
+  const providerClaims = getProviderClaimsTable(supabase)
+
+  const { error } = await providerClaims.insert({
     submitted_by: submittedBy,
+    program_id: linkedProgram?.id ?? null,
     contact_name: contactName,
     contact_email: contactEmail,
     organization_name: organizationName,
@@ -97,7 +178,7 @@ export async function submitProviderClaim(input: ProviderClaimInput) {
     state,
     role_title: cleanOptionalString(input.roleTitle),
     claim_type: claimType,
-    program_names: cleanOptionalString(input.programNames),
+    program_names: programNames,
     evidence_summary: evidenceSummary,
     requested_access: cleanOptionalString(input.requestedAccess),
     status: 'pending',
@@ -109,6 +190,7 @@ export async function submitProviderClaim(input: ProviderClaimInput) {
   }
 
   revalidatePath('/admin/provider-claims')
+  revalidatePath('/training-providers/claim')
 }
 
 export async function updateProviderClaimStatus({
@@ -117,7 +199,7 @@ export async function updateProviderClaimStatus({
   adminNotes,
 }: {
   claimId: string
-  status: 'pending' | 'approved' | 'rejected' | 'needs_more_info'
+  status: ProviderClaimStatus
   adminNotes: string
 }) {
   const supabase = createClient()
@@ -140,8 +222,9 @@ export async function updateProviderClaimStatus({
     throw new Error('Only admins can update provider claims.')
   }
 
-  const { error } = await supabase
-    .from('provider_claims')
+  const providerClaims = getProviderClaimsTable(supabase)
+
+  const { error } = await providerClaims
     .update({
       status,
       admin_notes: cleanOptionalString(adminNotes),

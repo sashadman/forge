@@ -278,6 +278,26 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                     </a>
                   )}
                 </div>
+
+                <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-700">
+                    Provider access
+                  </p>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    Are you connected to this training provider? Submit a claim
+                    or request corrections so an admin can review your
+                    relationship to this program.
+                  </p>
+
+                  <Link
+                    href={`/training-providers/claim?programId=${program.id}`}
+                    className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-orange-700 hover:text-orange-800"
+                  >
+                    Claim or request update
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               </div>
 
               <div className="dark-panel p-6">
