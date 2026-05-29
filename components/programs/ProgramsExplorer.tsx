@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import {
   ArrowRight,
+  ExternalLink,
   GraduationCap,
   MapPin,
   Search,
@@ -23,6 +24,11 @@ type Program = {
   duration: string | null
   cost: string | null
   description: string
+  website_url: string | null
+  review_status: string
+  data_origin: string | null
+  source_url: string | null
+  source_candidate_id: string | null
 }
 
 type ProgramsExplorerProps = {
@@ -262,6 +268,16 @@ export default function ProgramsExplorer({
                       </span>
 
                       <span className="badge-slate">{program.state}</span>
+
+                      <span className="badge-slate">
+                        {formatTradeSlug(program.trade_slug)}
+                      </span>
+
+                      {program.data_origin === 'candidate_promoted' && (
+                        <span className="badge-slate">
+                          Trusted public-source record
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
@@ -313,6 +329,18 @@ export default function ProgramsExplorer({
                 </div>
               </div>
 
+              {program.source_url && (
+                <a
+                  href={program.source_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
+                >
+                  View official source
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+
               <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
                 <Link
                   href={`/programs/${program.slug}`}
@@ -351,3 +379,5 @@ export default function ProgramsExplorer({
     </div>
   )
 }
+
+export type { Program }

@@ -24,11 +24,37 @@ type PageProps = {
   }
 }
 
+type ProgramDetailRecord = {
+  id: string
+  slug: string
+  name: string
+  provider_name: string
+  program_type: string
+  trade_slug: string
+  location: string
+  state: string
+  duration: string | null
+  cost: string | null
+  description: string
+  requirements: string[] | null
+  outcomes: string[] | null
+  website_url: string | null
+  is_active: boolean
+  review_status?: string | null
+  data_origin?: string | null
+  source_url?: string | null
+  source_candidate_id?: string | null
+}
+
 function formatProgramType(type: string) {
   return type
     .split('_')
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ')
+}
+
+function getSafeString(value: unknown) {
+  return typeof value === 'string' && value.trim().length > 0 ? value : null
 }
 
 export async function generateMetadata({
@@ -58,16 +84,26 @@ export async function generateMetadata({
 export default async function ProgramDetailPage({ params }: PageProps) {
   const supabase = createClient()
 
-  const { data: program } = await supabase
+  const { data, error } = await supabase
     .from('programs')
     .select('*')
     .eq('slug', params.slug)
     .eq('is_active', true)
     .maybeSingle()
 
-  if (!program) {
+  if (error || !data) {
     notFound()
   }
+
+  const program = data as ProgramDetailRecord
+
+  const programDataOrigin = getSafeString(program.data_origin)
+  const programSourceUrl = getSafeString(program.source_url)
+  const officialSourceUrl = programSourceUrl ?? program.website_url
+
+  const isPromotedPublicSource =
+    programDataOrigin === 'candidate_promoted' ||
+    programDataOrigin === 'official_source_import'
 
   return (
     <main className="page-shell">
@@ -134,13 +170,17 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
                 {program.outcomes && program.outcomes.length > 0 && (
                   <div className="mt-8">
-                    <h3 className="text-xl font-bold">Potential outcomes</h3>
+                    <h3 className="text-xl font-bold text-slate-950">
+                      Potential outcomes
+                    </h3>
 
                     <div className="mt-5 grid gap-3">
-                      {program.outcomes.map((outcome: string) => (
+                      {program.outcomes.map((outcome) => (
                         <div key={outcome} className="mini-card flex gap-3">
                           <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
-                          <p className="leading-7 text-slate-700">{outcome}</p>
+                          <p className="leading-7 text-slate-700">
+                            {outcome}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -157,7 +197,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </h2>
 
                   <div className="mt-6 grid gap-3">
-                    {program.requirements.map((requirement: string) => (
+                    {program.requirements.map((requirement) => (
                       <div key={requirement} className="mini-card">
                         <p className="leading-7 text-slate-700">
                           {requirement}
@@ -215,10 +255,29 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </a>
                 )}
 
-                <p className="mt-5 text-xs leading-6 text-slate-500">
-                  This is a public directory listing. Confirm requirements,
-                  dates, cost, and availability directly with the provider.
-                </p>
+                <div className="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+                    Source note
+                  </p>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    {isPromotedPublicSource
+                      ? 'This program was promoted from a trusted public training source. Confirm requirements, cost, dates, and availability directly with the provider before enrolling.'
+                      : 'This is a public directory listing. Confirm requirements, cost, dates, and availability directly with the provider before enrolling.'}
+                  </p>
+
+                  {officialSourceUrl && (
+                    <a
+                      href={officialSourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-orange-700 hover:text-orange-800"
+                    >
+                      View official source
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
+                </div>
               </div>
 
               <div className="dark-panel p-6">

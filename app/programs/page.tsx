@@ -4,7 +4,9 @@ import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
-import ProgramsExplorer from '@/components/programs/ProgramsExplorer'
+import ProgramsExplorer, {
+  type Program,
+} from '@/components/programs/ProgramsExplorer'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 import BackLink from '@/components/ui/BackLink'
@@ -17,6 +19,55 @@ export const metadata: Metadata = {
     'Browse skilled-trades training programs, apprenticeships, pre-apprenticeships, and workforce preparation pathways.',
 }
 
+type ProgramRecord = {
+  id: string
+  slug: string
+  name: string
+  provider_name: string
+  program_type: string
+  trade_slug: string
+  location: string
+  state: string
+  duration: string | null
+  cost: string | null
+  description: string
+  website_url?: unknown
+  review_status?: unknown
+  data_origin?: unknown
+  source_url?: unknown
+  source_candidate_id?: unknown
+}
+
+function normalizeProgram(program: ProgramRecord): Program {
+  return {
+    id: program.id,
+    slug: program.slug,
+    name: program.name,
+    provider_name: program.provider_name,
+    program_type: program.program_type,
+    trade_slug: program.trade_slug,
+    location: program.location,
+    state: program.state,
+    duration: program.duration,
+    cost: program.cost,
+    description: program.description,
+    website_url:
+      typeof program.website_url === 'string' ? program.website_url : null,
+    review_status:
+      typeof program.review_status === 'string'
+        ? program.review_status
+        : 'admin_created',
+    data_origin:
+      typeof program.data_origin === 'string' ? program.data_origin : null,
+    source_url:
+      typeof program.source_url === 'string' ? program.source_url : null,
+    source_candidate_id:
+      typeof program.source_candidate_id === 'string'
+        ? program.source_candidate_id
+        : null,
+  }
+}
+
 export default async function ProgramsPage() {
   const supabase = createClient()
 
@@ -24,12 +75,11 @@ export default async function ProgramsPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: programs, error: programsError } = await supabase
+  const { data: programsData, error: programsError } = await supabase
     .from('programs')
-    .select(
-      'id, slug, name, provider_name, program_type, trade_slug, location, state, duration, cost, description'
-    )
+    .select('*')
     .eq('is_active', true)
+    .in('review_status', ['approved', 'admin_created'])
     .order('provider_name', { ascending: true })
 
   if (programsError) {
@@ -45,12 +95,19 @@ export default async function ProgramsPage() {
       .eq('user_id', user.id)
 
     if (savedProgramsError) {
-      console.error('Failed to load saved training program IDs:', savedProgramsError)
+      console.error(
+        'Failed to load saved training program IDs:',
+        savedProgramsError
+      )
     }
 
     savedProgramIds =
       savedPrograms?.map((savedProgram) => savedProgram.program_id) ?? []
   }
+
+  const normalizedPrograms = ((programsData ?? []) as ProgramRecord[]).map(
+    normalizeProgram
+  )
 
   return (
     <ThemedPublicPage>
@@ -94,7 +151,7 @@ export default async function ProgramsPage() {
 
           <div className="mt-8">
             <ProgramsExplorer
-              programs={programs ?? []}
+              programs={normalizedPrograms}
               savedProgramIds={savedProgramIds}
             />
           </div>
@@ -116,7 +173,8 @@ export default async function ProgramsPage() {
 
                 <p className="mt-4 max-w-4xl leading-7 text-slate-300">
                   Once you understand the training pathway, compare real jobs,
-                  apprenticeships, and trainee roles to see what employers expect.
+                  apprenticeships, and trainee roles to see what employers
+                  expect.
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
