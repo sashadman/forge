@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { Building2, Loader2 } from 'lucide-react'
-import { createProviderProfileFromClaim } from '@/app/actions/training-providers'
+import { createProviderWorkspaceFromClaim } from '@/app/actions/provider-workspaces'
 
 type CreateProviderProfileFromClaimButtonProps = {
   claimId: string
@@ -27,15 +27,15 @@ export default function CreateProviderProfileFromClaimButton({
 
     startTransition(async () => {
       try {
-        await createProviderProfileFromClaim(claimId)
-        setNotice('Provider profile and owner membership created.')
+        await createProviderWorkspaceFromClaim(claimId)
+        setNotice('Provider workspace created and linked programs connected.')
       } catch (caughtError) {
-        console.error('Create provider profile failed:', caughtError)
+        console.error('Create provider workspace failed:', caughtError)
 
         setError(
           caughtError instanceof Error
             ? caughtError.message
-            : 'Could not create provider profile.'
+            : 'Could not create provider workspace.'
         )
       }
     })
@@ -48,8 +48,9 @@ export default function CreateProviderProfileFromClaimButton({
       </p>
 
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        Create a verified provider profile and connect the submitting user as
-        the provider owner after the claim is approved.
+        Create a verified provider profile, connect the submitting user as the
+        provider owner, and attach any linked public program to that provider
+        workspace.
       </p>
 
       {!submittedBy && (

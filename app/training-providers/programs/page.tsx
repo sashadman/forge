@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ArrowRight, GraduationCap, Plus } from 'lucide-react'
+import { ArrowRight, GraduationCap, Plus, ShieldCheck } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
@@ -11,7 +11,28 @@ import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: `Provider Programs — ${siteConfig.name}`,
-  description: 'Manage training programs submitted by an approved provider.',
+  description:
+    'View public program listings and submitted programs connected to an approved training provider workspace.',
+}
+
+type ProviderProgram = {
+  id: string
+  slug: string
+  name: string
+  program_type: string
+  trade_slug: string
+  location: string
+  state: string
+  duration: string | null
+  cost: string | null
+  description: string
+  review_status: string
+  review_notes: string | null
+  is_active: boolean
+  data_origin?: string | null
+  source_url?: string | null
+  created_at: string
+  updated_at: string
 }
 
 function formatProgramType(type: string) {
@@ -19,6 +40,10 @@ function formatProgramType(type: string) {
     .split('_')
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ')
+}
+
+function getSafeString(value: unknown) {
+  return typeof value === 'string' && value.trim().length > 0 ? value : null
 }
 
 export default async function TrainingProviderProgramsPage() {
@@ -65,27 +90,9 @@ export default async function TrainingProviderProgramsPage() {
     redirect('/training-providers/dashboard')
   }
 
-  const { data: programs, error: programsError } = await supabase
+  const { data, error: programsError } = await supabase
     .from('programs')
-    .select(
-      `
-      id,
-      slug,
-      name,
-      program_type,
-      trade_slug,
-      location,
-      state,
-      duration,
-      cost,
-      description,
-      review_status,
-      review_notes,
-      is_active,
-      created_at,
-      updated_at
-      `
-    )
+    .select('*')
     .eq('provider_profile_id', providerProfile.id)
     .order('created_at', { ascending: false })
 
@@ -93,7 +100,21 @@ export default async function TrainingProviderProgramsPage() {
     console.error('Failed to load provider programs:', programsError)
   }
 
-  const providerPrograms = programs ?? []
+  const providerPrograms = ((data ?? []) as unknown as ProviderProgram[]).map(
+    (program) => ({
+      ...program,
+      data_origin: getSafeString(program.data_origin),
+      source_url: getSafeString(program.source_url),
+    })
+  )
+
+  const publicProgramCount = providerPrograms.filter(
+    (program) => program.is_active
+  ).length
+
+  const pendingProgramCount = providerPrograms.filter(
+    (program) => program.review_status === 'pending'
+  ).length
 
   return (
     <ThemedPublicPage>
@@ -107,12 +128,12 @@ export default async function TrainingProviderProgramsPage() {
             <p className="eyebrow-dark">Provider programs</p>
 
             <h1 className="page-title-dark mt-6">
-              Manage submitted training programs.
+              View programs connected to your provider workspace.
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Add real training programs connected to {providerProfile.name}.
-              Programs become public only after admin approval.
+              Claimed public listings and submitted program drafts appear here.
+              Public listings remain protected by admin review and verification.
             </p>
           </div>
         </div>
@@ -138,76 +159,136 @@ export default async function TrainingProviderProgramsPage() {
                 Submit program
               </Link>
             </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <StatusCard
+                label="Connected programs"
+                value={`${providerPrograms.length}`}
+              />
+              <StatusCard
+                label="Public listings"
+                value={`${publicProgramCount}`}
+              />
+              <StatusCard
+                label="Pending review"
+                value={`${pendingProgramCount}`}
+              />
+            </div>
           </section>
 
           <div className="mt-8 grid gap-6">
             {providerPrograms.length > 0 ? (
-              providerPrograms.map((program) => (
-                <article key={program.id} className="card">
-                  <div className="flex flex-col justify-between gap-5 md:flex-row md:items-start">
-                    <div>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="badge-orange">
-                          {formatProgramType(program.program_type)}
-                        </span>
+              providerPrograms.map((program) => {
+                const isClaimedPublicRecord =
+                  program.data_origin === 'candidate_promoted' ||
+                  program.data_origin === 'official_source_import'
 
-                        <span className="badge-slate">
-                          {program.review_status}
-                        </span>
+                return (
+                  <article key={program.id} className="card">
+                    <div className="flex flex-col justify-between gap-5 md:flex-row md:items-start">
+                      <div>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="badge-orange">
+                            {formatProgramType(program.program_type)}
+                          </span>
 
-                        {program.is_active && (
-                          <span className="badge-slate">Public</span>
+                          <span className="badge-slate">
+                            {program.review_status}
+                          </span>
+
+                          {program.is_active && (
+                            <span className="badge-slate">Public</span>
+                          )}
+
+                          {isClaimedPublicRecord && (
+                            <span className="badge-slate">
+                              Claimed public listing
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 className="mt-4 text-2xl font-bold text-slate-950">
+                          {program.name}
+                        </h3>
+
+                        <p className="mt-3 max-w-3xl line-clamp-3 text-slate-600">
+                          {program.description}
+                        </p>
+
+                        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                          <InfoCard
+                            label="Career focus"
+                            value={program.trade_slug}
+                          />
+                          <InfoCard
+                            label="Location"
+                            value={`${program.location}, ${program.state}`}
+                          />
+                          <InfoCard
+                            label="Duration"
+                            value={program.duration || 'Not provided'}
+                          />
+                        </div>
+
+                        {isClaimedPublicRecord && (
+                          <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+                            <div className="flex items-start gap-3">
+                              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
+                              <div>
+                                <p className="text-sm font-bold text-emerald-900">
+                                  Connected claimed listing
+                                </p>
+
+                                <p className="mt-1 text-sm leading-6 text-emerald-800">
+                                  This public listing is now connected to your
+                                  provider workspace. Public edits still require
+                                  admin review.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {program.review_notes && (
+                          <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-4">
+                            <p className="text-sm font-bold text-orange-900">
+                              Admin review notes
+                            </p>
+
+                            <p className="mt-2 text-sm leading-6 text-orange-800">
+                              {program.review_notes}
+                            </p>
+                          </div>
                         )}
                       </div>
 
-                      <h3 className="mt-4 text-2xl font-bold text-slate-950">
-                        {program.name}
-                      </h3>
+                      <div className="flex shrink-0 flex-col gap-3">
+                        {program.is_active ? (
+                          <Link href={`/programs/${program.slug}`} className="btn-dark">
+                            View public page
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        ) : (
+                          <Link href="/for-programs#program-data" className="btn-outline">
+                            Review data model
+                          </Link>
+                        )}
 
-                      <p className="mt-3 max-w-3xl line-clamp-3 text-slate-600">
-                        {program.description}
-                      </p>
-
-                      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                        <InfoCard label="Career focus" value={program.trade_slug} />
-                        <InfoCard
-                          label="Location"
-                          value={`${program.location}, ${program.state}`}
-                        />
-                        <InfoCard
-                          label="Duration"
-                          value={program.duration || 'Not provided'}
-                        />
+                        {program.source_url && (
+                          <a
+                            href={program.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-outline"
+                          >
+                            View source
+                          </a>
+                        )}
                       </div>
-
-                      {program.review_notes && (
-                        <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-4">
-                          <p className="text-sm font-bold text-orange-900">
-                            Admin review notes
-                          </p>
-
-                          <p className="mt-2 text-sm leading-6 text-orange-800">
-                            {program.review_notes}
-                          </p>
-                        </div>
-                      )}
                     </div>
-
-                    <div className="flex shrink-0 flex-col gap-3">
-                      {program.is_active ? (
-                        <Link href={`/programs/${program.slug}`} className="btn-dark">
-                          View public page
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                      ) : (
-                        <Link href="/for-programs#program-data" className="btn-outline">
-                          Review data model
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </article>
-              ))
+                  </article>
+                )
+              })
             ) : (
               <section className="content-panel text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
@@ -215,12 +296,13 @@ export default async function TrainingProviderProgramsPage() {
                 </div>
 
                 <h2 className="section-title mt-6">
-                  No provider programs submitted yet.
+                  No programs connected yet.
                 </h2>
 
                 <p className="muted-text mx-auto mt-4 max-w-2xl">
-                  Submit the first real program for admin review. Keep it
-                  accurate, specific, and connected to your provider profile.
+                  Connected public listings will appear here after an admin
+                  approves a program claim and creates your provider workspace.
+                  You can also submit new real programs for admin review.
                 </p>
 
                 <div className="mt-8 flex justify-center">
@@ -237,6 +319,18 @@ export default async function TrainingProviderProgramsPage() {
 
       <SiteFooter />
     </ThemedPublicPage>
+  )
+}
+
+function StatusCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="mini-card">
+      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+        {label}
+      </p>
+
+      <p className="mt-2 text-2xl font-bold text-slate-950">{value}</p>
+    </div>
   )
 }
 
