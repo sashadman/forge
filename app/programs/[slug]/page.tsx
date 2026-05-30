@@ -17,6 +17,13 @@ import NextStepPanel from '@/components/ui/NextStepPanel'
 import SaveProgramButton from '@/components/programs/SaveProgramButton'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
+import {
+  formatDisplayDate,
+  formatProgramOrigin,
+  getFreshnessLabel,
+  getProgramTrustDescription,
+  getProgramTrustLabel,
+} from '@/lib/training-data/program-trust'
 
 type PageProps = {
   params: {
@@ -44,6 +51,10 @@ type ProgramDetailRecord = {
   data_origin?: string | null
   source_url?: string | null
   source_candidate_id?: string | null
+  provider_profile_id?: string | null
+  published_at?: string | null
+  updated_at?: string | null
+
 }
 
 function formatProgramType(type: string) {
@@ -104,6 +115,10 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   const isPromotedPublicSource =
     programDataOrigin === 'candidate_promoted' ||
     programDataOrigin === 'official_source_import'
+    const trustLabel = getProgramTrustLabel(program)
+const trustDescription = getProgramTrustDescription(program)
+const originLabel = formatProgramOrigin(program.data_origin)
+const freshnessLabel = getFreshnessLabel(program.updated_at)
 
   return (
     <main className="page-shell">
@@ -255,23 +270,65 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </a>
                 )}
 
-                <div className="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                                <div className="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
-                    Source note
+                    Trust & source
                   </p>
 
+                  <h3 className="mt-2 text-lg font-bold text-slate-950">
+                    {trustLabel}
+                  </h3>
+
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    {isPromotedPublicSource
-                      ? 'This program was promoted from a trusted public training source. Confirm requirements, cost, dates, and availability directly with the provider before enrolling.'
-                      : 'This is a public directory listing. Confirm requirements, cost, dates, and availability directly with the provider before enrolling.'}
+                    {trustDescription}
                   </p>
+
+                  <dl className="mt-4 grid gap-3 text-sm">
+                    <div>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Origin
+                      </dt>
+                      <dd className="mt-1 font-semibold text-slate-900">
+                        {originLabel}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Freshness
+                      </dt>
+                      <dd className="mt-1 font-semibold text-slate-900">
+                        {freshnessLabel}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Last updated
+                      </dt>
+                      <dd className="mt-1 font-semibold text-slate-900">
+                        {formatDisplayDate(program.updated_at)}
+                      </dd>
+                    </div>
+
+                    {program.published_at && (
+                      <div>
+                        <dt className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                          Published
+                        </dt>
+                        <dd className="mt-1 font-semibold text-slate-900">
+                          {formatDisplayDate(program.published_at)}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
 
                   {officialSourceUrl && (
                     <a
                       href={officialSourceUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-orange-700 hover:text-orange-800"
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-orange-700 hover:text-orange-800"
                     >
                       View official source
                       <ExternalLink className="h-4 w-4" />

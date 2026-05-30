@@ -36,6 +36,10 @@ type ProgramRecord = {
   data_origin?: unknown
   source_url?: unknown
   source_candidate_id?: unknown
+  provider_profile_id?: unknown
+  published_at?: unknown
+  updated_at?: unknown
+
 }
 
 function normalizeProgram(program: ProgramRecord): Program {
@@ -65,6 +69,14 @@ function normalizeProgram(program: ProgramRecord): Program {
       typeof program.source_candidate_id === 'string'
         ? program.source_candidate_id
         : null,
+    provider_profile_id:
+      typeof program.provider_profile_id === 'string'
+        ? program.provider_profile_id
+        : null,
+    published_at:
+      typeof program.published_at === 'string' ? program.published_at : null,
+    updated_at:
+      typeof program.updated_at === 'string' ? program.updated_at : null,
   }
 }
 

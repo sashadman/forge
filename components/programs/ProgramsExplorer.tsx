@@ -11,6 +11,10 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import SaveProgramButton from '@/components/programs/SaveProgramButton'
+import {
+  getFreshnessLabel,
+  getProgramTrustLabel,
+} from '@/lib/training-data/program-trust'
 
 type Program = {
   id: string
@@ -29,6 +33,9 @@ type Program = {
   data_origin: string | null
   source_url: string | null
   source_candidate_id: string | null
+  provider_profile_id: string | null
+  published_at: string | null
+  updated_at: string | null
 }
 
 type ProgramsExplorerProps = {
@@ -263,22 +270,25 @@ export default function ProgramsExplorer({
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className="flex flex-wrap gap-2">
-                      <span className="badge-orange">
-                        {formatProgramType(program.program_type)}
-                      </span>
+  <span className="badge-orange">
+    {formatProgramType(program.program_type)}
+  </span>
 
-                      <span className="badge-slate">{program.state}</span>
+  <span className="badge-slate">{program.state}</span>
 
-                      <span className="badge-slate">
-                        {formatTradeSlug(program.trade_slug)}
-                      </span>
+  <span className="badge-slate">
+    {formatTradeSlug(program.trade_slug)}
+  </span>
 
-                      {program.data_origin === 'candidate_promoted' && (
-                        <span className="badge-slate">
-                          Trusted public-source record
-                        </span>
-                      )}
-                    </div>
+  <span className="badge-slate">
+    {getProgramTrustLabel(program)}
+  </span>
+
+  <span className="badge-slate">
+    {getFreshnessLabel(program.updated_at)}
+  </span>
+</div>
+                   
 
                     <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 transition group-hover:text-orange-700">
                       {program.name}

@@ -263,3 +263,35 @@
       linear-gradient(to bottom right, #ffffff, #f8fafc);
   }
 }
+/* Focused readability safeguards.
+   Keep this narrow: improve common low-contrast helper text without overriding all Tailwind colors.
+*/
+
+.content-panel .muted-text,
+.card .muted-text,
+.mini-card .muted-text {
+  color: rgb(71 85 105);
+}
+
+.content-panel p,
+.card p,
+.mini-card p {
+  text-rendering: optimizeLegibility;
+}
+
+.input-field,
+.select-field,
+textarea.input-field,
+input.input-field {
+  color: rgb(15 23 42);
+}
+
+.input-field::placeholder,
+textarea.input-field::placeholder {
+  color: rgb(100 116 139);
+}
+
+.dark-panel .muted-text,
+.hero-dark .muted-text {
+  color: rgb(203 213 225);
+}

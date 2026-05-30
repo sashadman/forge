@@ -19,6 +19,7 @@ import PageHero from '@/components/ui/PageHero'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
+import RoleFlowCards from '@/components/ui/RoleFlowCards'
 
 export const metadata: Metadata = {
   title: `Admin — ${siteConfig.name}`,
@@ -312,6 +313,14 @@ export default async function AdminPage() {
                 metric={`${employerCount} employers`}
                 action="Open employers"
               />
+              <AdminActionCard
+                href="/admin/system-readiness"
+                icon={<ShieldCheck className="h-7 w-7" />}
+                title="System readiness"
+                description="Review security, deployment, environment, RLS, and operational readiness before production use."
+                metric="Checklist"
+                action="Open system readiness"
+              />
 
               <AdminActionCard
                 href="/admin/applications"
@@ -323,7 +332,13 @@ export default async function AdminPage() {
               />
             </div>
           </section>
-
+          <section className="mt-10">
+            <RoleFlowCards
+              role="admin"
+              title="Admin workflow map"
+              description="Use these pages to operate platform data quality, review queues, and role-safe publishing workflows."
+            />
+          </section>
           <section className="mt-10 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
               <div>
