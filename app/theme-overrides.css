@@ -14,11 +14,12 @@
   color: #f8fafc;
 }
 
+/* Keep dark theme structurally dark and readable. */
 .theme-dark .page-shell,
 .theme-dark .section-light,
 .theme-dark .section-white {
   background-color: #020617;
-  color: #ffffff;
+  color: #f8fafc;
 }
 
 .theme-dark .hero-fade {
@@ -27,76 +28,95 @@
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+/* Main surfaces: use solid dark panels, not pale translucent cards. */
 .theme-dark .content-panel,
 .theme-dark .card,
-.theme-dark .card-soft {
-  border-color: rgb(255 255 255 / 0.1);
-  background-color: rgb(255 255 255 / 0.06);
-  color: #ffffff;
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.2);
-}
-
+.theme-dark .card-soft,
 .theme-dark .mini-card,
-.theme-dark .mini-card-white {
-  background-color: rgb(255 255 255 / 0.06);
-  color: #ffffff;
-  --tw-ring-color: rgb(255 255 255 / 0.1);
+.theme-dark .mini-card-white,
+.theme-dark .glass-card {
+  border-color: rgb(148 163 184 / 0.24);
+  background-color: #0f172a;
+  color: #f8fafc;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.35);
 }
 
-.theme-dark .eyebrow {
-  background-color: rgb(249 115 22 / 0.15);
-  color: #fdba74;
-  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.2);
+.theme-dark .card-dark,
+.theme-dark .dark-panel,
+.theme-dark .hero-dark {
+  background-color: #020617;
+  color: #f8fafc;
 }
 
+/* Headings and strong text inside dark-theme surfaces. */
 .theme-dark .page-title,
 .theme-dark .section-title,
+.theme-dark .content-panel :is(h1, h2, h3, h4, h5, h6),
+.theme-dark .card :is(h1, h2, h3, h4, h5, h6),
+.theme-dark .card-soft :is(h1, h2, h3, h4, h5, h6),
+.theme-dark .mini-card :is(h1, h2, h3, h4, h5, h6),
+.theme-dark .mini-card-white :is(h1, h2, h3, h4, h5, h6),
 .theme-dark .content-panel .text-slate-950,
 .theme-dark .card .text-slate-950,
 .theme-dark .card-soft .text-slate-950,
 .theme-dark .mini-card .text-slate-950,
 .theme-dark .mini-card-white .text-slate-950 {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
+/* Body/helper text should be bright enough on dark cards. */
 .theme-dark .lead-text,
 .theme-dark .muted-text,
+.theme-dark .content-panel p,
+.theme-dark .card p,
+.theme-dark .card-soft p,
+.theme-dark .mini-card p,
+.theme-dark .mini-card-white p,
+.theme-dark .content-panel li,
+.theme-dark .card li,
+.theme-dark .content-panel label,
+.theme-dark .card label,
 .theme-dark .content-panel .text-slate-700,
 .theme-dark .content-panel .text-slate-600,
+.theme-dark .content-panel .text-slate-500,
+.theme-dark .content-panel .text-slate-400,
 .theme-dark .card .text-slate-700,
 .theme-dark .card .text-slate-600,
+.theme-dark .card .text-slate-500,
+.theme-dark .card .text-slate-400,
 .theme-dark .card-soft .text-slate-700,
 .theme-dark .card-soft .text-slate-600,
 .theme-dark .mini-card .text-slate-700,
 .theme-dark .mini-card .text-slate-600,
-.theme-dark .mini-card-white .text-slate-700,
-.theme-dark .mini-card-white .text-slate-600 {
-  color: #cbd5e1;
-}
-
-.theme-dark .content-panel .text-slate-500,
-.theme-dark .content-panel .text-slate-400,
-.theme-dark .card .text-slate-500,
-.theme-dark .card .text-slate-400,
 .theme-dark .mini-card .text-slate-500,
 .theme-dark .mini-card .text-slate-400,
+.theme-dark .mini-card-white .text-slate-700,
+.theme-dark .mini-card-white .text-slate-600,
 .theme-dark .mini-card-white .text-slate-500,
 .theme-dark .mini-card-white .text-slate-400 {
-  color: #94a3b8;
+  color: #dbeafe !important;
+}
+
+/* Eyebrows and badges. */
+.theme-dark .eyebrow {
+  background-color: rgb(249 115 22 / 0.16);
+  color: #fed7aa;
+  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.3);
 }
 
 .theme-dark .badge-slate {
-  background-color: rgb(255 255 255 / 0.1);
+  background-color: rgb(148 163 184 / 0.14);
   color: #e2e8f0;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
 }
 
 .theme-dark .badge-orange {
-  background-color: rgb(249 115 22 / 0.15);
-  color: #fdba74;
-  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.2);
+  background-color: rgb(249 115 22 / 0.16);
+  color: #fed7aa;
+  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.3);
 }
 
+/* Buttons. */
 .theme-dark .btn-dark {
   background-color: #ffffff;
   color: #0f172a;
@@ -107,83 +127,60 @@
 }
 
 .theme-dark .btn-outline {
-  border-color: rgb(255 255 255 / 0.15);
-  background-color: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.2);
+  background-color: rgb(255 255 255 / 0.08);
   color: #ffffff;
 }
 
 .theme-dark .btn-outline:hover {
-  border-color: rgb(103 232 249 / 0.4);
-  background-color: rgb(255 255 255 / 0.15);
+  background-color: rgb(255 255 255 / 0.14);
 }
 
-.theme-dark .input-field {
-  border-color: rgb(255 255 255 / 0.1);
-  background-color: rgb(255 255 255 / 0.06);
+/* Forms. */
+.theme-dark .input-field,
+.theme-dark .select-field,
+.theme-dark input,
+.theme-dark textarea,
+.theme-dark select {
+  border-color: rgb(148 163 184 / 0.28);
+  background-color: #020617;
   color: #ffffff;
 }
 
-.theme-dark .input-field::placeholder {
-  color: #64748b;
+.theme-dark .input-field::placeholder,
+.theme-dark input::placeholder,
+.theme-dark textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 }
 
-.theme-dark .input-field:focus {
-  border-color: #fb923c;
-  --tw-ring-color: rgb(251 146 60 / 0.2);
-}
-
-.theme-dark .select-field {
-  border-color: rgb(255 255 255 / 0.1);
-  background-color: #020617;
-  color: #f1f5f9;
-}
-
+.theme-dark .input-field:focus,
 .theme-dark .select-field:focus {
   border-color: #fb923c;
-  --tw-ring-color: rgb(251 146 60 / 0.2);
+  --tw-ring-color: rgb(251 146 60 / 0.24);
 }
 
-.theme-dark .content-panel input[type='search'],
-.theme-dark .content-panel input[type='text'],
-.theme-dark .content-panel textarea {
-  color: #ffffff;
-}
-
-.theme-dark .content-panel input[type='search']::placeholder,
-.theme-dark .content-panel input[type='text']::placeholder,
-.theme-dark .content-panel textarea::placeholder {
-  color: #64748b;
-}
-
-.theme-dark .content-panel .bg-slate-50,
-.theme-dark .card .bg-slate-50,
+/* Nested light utility backgrounds become readable dark surfaces in dark theme. */
 .theme-dark .content-panel .bg-white,
+.theme-dark .content-panel .bg-slate-50,
 .theme-dark .card .bg-white,
-.theme-dark .card-soft .bg-white {
-  background-color: rgb(255 255 255 / 0.06);
-}
-
-.theme-dark .content-panel .bg-orange-50,
-.theme-dark .card .bg-orange-50 {
-  background-color: rgb(249 115 22 / 0.1);
-}
-
-.theme-dark .content-panel .bg-green-50,
-.theme-dark .card .bg-green-50 {
-  background-color: rgb(16 185 129 / 0.1);
-}
-
-.theme-dark .content-panel .bg-red-50,
-.theme-dark .card .bg-red-50 {
-  background-color: rgb(239 68 68 / 0.1);
+.theme-dark .card .bg-slate-50,
+.theme-dark .card-soft .bg-white,
+.theme-dark .card-soft .bg-slate-50,
+.theme-dark .mini-card .bg-white,
+.theme-dark .mini-card-white .bg-white {
+  background-color: #1e293b !important;
 }
 
 .theme-dark .content-panel .border-slate-200,
-.theme-dark .card .border-slate-200 {
-  border-color: rgb(255 255 255 / 0.1);
+.theme-dark .card .border-slate-200,
+.theme-dark .card-soft .border-slate-200 {
+  border-color: rgb(148 163 184 / 0.24) !important;
 }
 
 .theme-dark .content-panel .ring-slate-200,
-.theme-dark .card .ring-slate-200 {
-  --tw-ring-color: rgb(255 255 255 / 0.1);
+.theme-dark .card .ring-slate-200,
+.theme-dark .mini-card .ring-slate-200,
+.theme-dark .mini-card-white .ring-slate-200 {
+  --tw-ring-color: rgb(148 163 184 / 0.24) !important;
 }
