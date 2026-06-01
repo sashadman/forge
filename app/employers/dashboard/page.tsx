@@ -6,11 +6,13 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   Circle,
+  Clock3,
   ExternalLink,
+  FileCheck2,
   MapPin,
-  Plus,
   ShieldCheck,
   UsersRound,
+  XCircle,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
@@ -25,11 +27,73 @@ export const metadata: Metadata = {
   description: 'Manage your employer profile, applicant reviews, and job listings.',
 }
 
+type EmployerSubmission = {
+  id: string
+  title: string
+  opportunity_type: string
+  trade_slug: string
+  location: string
+  state: string
+  pay_range: string | null
+  schedule: string | null
+  description: string
+  status: string
+  admin_notes: string | null
+  approved_opportunity_id: string | null
+  created_at: string
+  updated_at: string
+}
+
 function formatOpportunityType(type: string) {
   return type
     .split('_')
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ')
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString()
+}
+
+function getSubmissionStatusMeta(status: string) {
+  switch (status) {
+    case 'approved':
+      return {
+        label: 'Approved',
+        className: 'badge-orange',
+        icon: <CheckCircle2 className="h-4 w-4" />,
+        description: 'Approved by admin and ready to appear as a public listing.',
+      }
+    case 'rejected':
+      return {
+        label: 'Needs revision',
+        className: 'rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-red-700 ring-1 ring-red-200',
+        icon: <XCircle className="h-4 w-4" />,
+        description: 'Reviewed by admin. Check the note and submit an improved listing.',
+      }
+    case 'draft':
+      return {
+        label: 'Draft',
+        className: 'badge-slate',
+        icon: <Circle className="h-4 w-4" />,
+        description: 'Saved but not submitted for admin review.',
+      }
+    case 'archived':
+      return {
+        label: 'Archived',
+        className: 'badge-slate',
+        icon: <Circle className="h-4 w-4" />,
+        description: 'Archived and no longer part of the active review workflow.',
+      }
+    case 'submitted':
+    default:
+      return {
+        label: 'Submitted',
+        className: 'rounded-full bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-blue-700 ring-1 ring-blue-200',
+        icon: <Clock3 className="h-4 w-4" />,
+        description: 'Waiting for admin review before it can appear publicly.',
+      }
+  }
 }
 
 export default async function EmployerDashboardPage() {
@@ -89,16 +153,56 @@ export default async function EmployerDashboardPage() {
     redirect('/employers/new')
   }
 
-  const { count: applicationCount } = await supabase
-    .from('applications')
-    .select('id', { count: 'exact', head: true })
-    .eq('employer_id', employer.id)
+  const [{ count: applicationCount }, { data: submissionData }] =
+    await Promise.all([
+      supabase
+        .from('applications')
+        .select('id', { count: 'exact', head: true })
+        .eq('employer_id', employer.id),
+
+      supabase
+        .from('employer_opportunity_submissions')
+        .select(
+          `
+          id,
+          title,
+          opportunity_type,
+          trade_slug,
+          location,
+          state,
+          pay_range,
+          schedule,
+          description,
+          status,
+          admin_notes,
+          approved_opportunity_id,
+          created_at,
+          updated_at
+          `
+        )
+        .eq('employer_id', employer.id)
+        .order('created_at', { ascending: false }),
+    ])
+
+  const submissions = (submissionData ?? []) as EmployerSubmission[]
 
   const activeOpportunities =
     employer.opportunities?.filter((opportunity) => opportunity.is_active) ?? []
 
   const inactiveOpportunities =
     employer.opportunities?.filter((opportunity) => !opportunity.is_active) ?? []
+
+  const pendingSubmissions = submissions.filter(
+    (submission) => submission.status === 'submitted'
+  )
+
+  const rejectedSubmissions = submissions.filter(
+    (submission) => submission.status === 'rejected'
+  )
+
+  const approvedSubmissions = submissions.filter(
+    (submission) => submission.status === 'approved'
+  )
 
   const hasSocialLink = Boolean(
     employer.linkedin_url ||
@@ -160,7 +264,7 @@ export default async function EmployerDashboardPage() {
       <PageHero
         eyebrow="Employer dashboard"
         title="Manage your employer presence with a clear hiring workflow."
-        description={`Review ${employer.name}, manage real jobs and apprenticeships, and follow up with applicants through one employer workspace.`}
+        description={`Review ${employer.name}, manage submitted opportunities, and follow up with applicants through one employer workspace.`}
       />
 
       <section className="section-light pb-20">
@@ -170,6 +274,12 @@ export default async function EmployerDashboardPage() {
               label="Active listings"
               value={activeOpportunities.length}
               icon={<BriefcaseBusiness className="h-7 w-7" />}
+            />
+
+            <EmployerMetricCard
+              label="Pending review"
+              value={pendingSubmissions.length}
+              icon={<Clock3 className="h-7 w-7" />}
             />
 
             <EmployerMetricCard
@@ -183,25 +293,27 @@ export default async function EmployerDashboardPage() {
               value={`${completenessScore}%`}
               icon={<ShieldCheck className="h-7 w-7" />}
             />
-
-            <EmployerMetricCard
-              label="Hidden listings"
-              value={inactiveOpportunities.length}
-              icon={<Circle className="h-7 w-7" />}
-            />
           </div>
 
           <div className="mt-8">
             <NextStepPanel
               title={
-                applicationCount && applicationCount > 0
-                  ? 'Review applicants and keep your hiring pipeline moving.'
-                  : 'Create a real listing when you are ready to receive applicants.'
+                rejectedSubmissions.length > 0
+                  ? 'Revise rejected submissions before adding more listings.'
+                  : pendingSubmissions.length > 0
+                    ? 'Your submitted opportunities are waiting for review.'
+                    : applicationCount && applicationCount > 0
+                      ? 'Review applicants and keep your hiring pipeline moving.'
+                      : 'Submit a real opportunity when you are ready to receive applicants.'
               }
               description={
-                applicationCount && applicationCount > 0
-                  ? 'Applications are waiting for review. Start there before adding more listings.'
-                  : 'A strong employer profile and one real job or apprenticeship listing are the best next steps for attracting serious applicants.'
+                rejectedSubmissions.length > 0
+                  ? 'Admin feedback is available below. Improve the submission, then resubmit a stronger listing for review.'
+                  : pendingSubmissions.length > 0
+                    ? 'Submitted listings do not appear publicly until admin approval. You can continue improving your employer profile while review is pending.'
+                    : applicationCount && applicationCount > 0
+                      ? 'Applications are waiting for review. Start there before adding more listings.'
+                      : 'A strong employer profile and one real job or apprenticeship submission are the best next steps for attracting serious applicants.'
               }
               primaryHref={
                 applicationCount && applicationCount > 0
@@ -211,7 +323,7 @@ export default async function EmployerDashboardPage() {
               primaryLabel={
                 applicationCount && applicationCount > 0
                   ? 'Review applications'
-                  : 'Create listing'
+                  : 'Submit opportunity'
               }
               secondaryHref="/employers/profile"
               secondaryLabel="Improve profile"
@@ -256,12 +368,23 @@ export default async function EmployerDashboardPage() {
                     label="Public listings"
                     value={`${activeOpportunities.length}`}
                   />
+
+                  <DetailItem
+                    icon={<FileCheck2 className="h-5 w-5" />}
+                    label="Review submissions"
+                    value={`${submissions.length}`}
+                  />
                 </div>
 
                 <div className="mt-8 grid gap-3">
                   <Link href={`/employers/${employer.slug}`} className="btn-dark w-full">
                     View public profile
                     <ExternalLink className="h-4 w-4" />
+                  </Link>
+
+                  <Link href="/employers/opportunities/new" className="btn-primary w-full">
+                    Submit opportunity
+                    <ArrowRight className="h-4 w-4" />
                   </Link>
 
                   <Link href="/employers/profile" className="btn-outline w-full">
@@ -318,15 +441,61 @@ export default async function EmployerDashboardPage() {
               <section className="content-panel">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                   <div>
-                    <p className="eyebrow">Listings</p>
+                    <p className="eyebrow">Review queue</p>
 
                     <h2 className="section-title mt-3">
-                      Active jobs & apprenticeships
+                      Submitted opportunities
                     </h2>
 
                     <p className="muted-text mt-3 max-w-2xl">
-                      These listings appear in the public Jobs & Apprenticeships directory.
-                      Keep them real, current, and easy for applicants to understand.
+                      Employer-submitted opportunities appear here first. They
+                      become public only after admin approval.
+                    </p>
+                  </div>
+
+                  <Link href="/employers/opportunities/new" className="btn-primary">
+                    Submit opportunity
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+
+                {submissions.length > 0 ? (
+                  <div className="mt-8 grid gap-5">
+                    {submissions.map((submission) => (
+                      <EmployerSubmissionCard
+                        key={submission.id}
+                        submission={submission}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-8">
+                    <EmptyState
+                      icon={<FileCheck2 className="h-6 w-6" />}
+                      title="No submitted opportunities yet"
+                      description="Submit your first real job, apprenticeship, trainee role, or pre-apprenticeship for admin review. It will stay private until approved."
+                      primaryHref="/employers/opportunities/new"
+                      primaryLabel="Submit opportunity"
+                      secondaryHref="/employers/profile"
+                      secondaryLabel="Improve profile first"
+                    />
+                  </div>
+                )}
+              </section>
+
+              <section className="content-panel">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                  <div>
+                    <p className="eyebrow">Public listings</p>
+
+                    <h2 className="section-title mt-3">
+                      Approved jobs & apprenticeships
+                    </h2>
+
+                    <p className="muted-text mt-3 max-w-2xl">
+                      These listings appear in the public Jobs & Apprenticeships
+                      directory. Keep them real, current, and easy for applicants
+                      to understand.
                     </p>
                   </div>
                 </div>
@@ -398,10 +567,18 @@ export default async function EmployerDashboardPage() {
                   <div className="mt-8">
                     <EmptyState
                       icon={<BriefcaseBusiness className="h-6 w-6" />}
-                      title="No active listings yet"
-                      description="Create your first real job or apprenticeship listing when you have a job, apprenticeship, trainee role, or pre-apprenticeship that someone can actually review or apply for."
+                      title={
+                        approvedSubmissions.length > 0
+                          ? 'Approved listings will appear here soon'
+                          : 'No approved public listings yet'
+                      }
+                      description={
+                        approvedSubmissions.length > 0
+                          ? 'You have approved submissions. Once they are connected to public listings, they will show here.'
+                          : 'Submit a real opportunity for review. Once approved, it will become a public listing.'
+                      }
                       primaryHref="/employers/opportunities/new"
-                      primaryLabel="Create listing"
+                      primaryLabel="Submit opportunity"
                       secondaryHref="/employers/profile"
                       secondaryLabel="Improve profile first"
                     />
@@ -413,9 +590,7 @@ export default async function EmployerDashboardPage() {
                 <section className="content-panel">
                   <p className="eyebrow">Inactive listings</p>
 
-                  <h2 className="section-title mt-3">
-                    Hidden job listings
-                  </h2>
+                  <h2 className="section-title mt-3">Hidden job listings</h2>
 
                   <p className="muted-text mt-3 max-w-2xl">
                     These listings are not currently active in the public directory.
@@ -456,6 +631,76 @@ export default async function EmployerDashboardPage() {
 
       <SiteFooter />
     </main>
+  )
+}
+
+function EmployerSubmissionCard({
+  submission,
+}: {
+  submission: EmployerSubmission
+}) {
+  const statusMeta = getSubmissionStatusMeta(submission.status)
+
+  return (
+    <article className="card bg-slate-50">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+        <div>
+          <div className="flex flex-wrap gap-2">
+            <span className="badge-orange">
+              {formatOpportunityType(submission.opportunity_type)}
+            </span>
+
+            <span className={statusMeta.className}>
+              <span className="inline-flex items-center gap-2">
+                {statusMeta.icon}
+                {statusMeta.label}
+              </span>
+            </span>
+          </div>
+
+          <h3 className="mt-4 text-2xl font-bold text-slate-950">
+            {submission.title}
+          </h3>
+
+          <p className="mt-2 font-semibold text-slate-600">
+            {submission.trade_slug}
+          </p>
+        </div>
+
+        <p className="text-sm font-semibold text-slate-500">
+          Submitted {formatDate(submission.created_at)}
+        </p>
+      </div>
+
+      <p className="muted-text mt-5 line-clamp-3">{submission.description}</p>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <MiniDetail
+          label="Location"
+          value={`${submission.location}, ${submission.state}`}
+        />
+
+        <MiniDetail
+          label="Schedule"
+          value={submission.schedule || 'See listing'}
+        />
+
+        <MiniDetail
+          label="Pay range"
+          value={submission.pay_range || 'See listing'}
+        />
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4">
+        <p className="font-semibold text-slate-950">{statusMeta.description}</p>
+
+        {submission.admin_notes && (
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Admin note: {submission.admin_notes}
+          </p>
+        )}
+      </div>
+    </article>
   )
 }
 
