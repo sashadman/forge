@@ -91,6 +91,7 @@ export default async function AdminPage() {
     trustedCandidateCountResult,
     providerClaimCountResult,
     pendingProviderClaimCountResult,
+    employerOpportunitySubmissionCountResult,
     trainingSourceCountResult,
     opportunitySourceCountResult,
     activeOpportunitySourceCountResult,
@@ -123,6 +124,11 @@ export default async function AdminPage() {
       .eq('status', 'pending'),
 
     supabase
+      .from('employer_opportunity_submissions')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'submitted'),
+
+    supabase
       .from('training_sources')
       .select('id', { count: 'exact', head: true }),
 
@@ -146,6 +152,8 @@ export default async function AdminPage() {
   const trustedCandidateCount = trustedCandidateCountResult.count ?? 0
   const providerClaimCount = providerClaimCountResult.count ?? 0
   const pendingProviderClaimCount = pendingProviderClaimCountResult.count ?? 0
+  const employerOpportunitySubmissionCount =
+    employerOpportunitySubmissionCountResult.count ?? 0
   const trainingSourceCount = trainingSourceCountResult.count ?? 0
   const opportunitySourceCount = opportunitySourceCountResult.count ?? 0
   const activeOpportunitySourceCount = activeOpportunitySourceCountResult.count ?? 0
@@ -240,6 +248,16 @@ export default async function AdminPage() {
                 metric={`${pendingProviderClaimCount} pending`}
                 action="Review provider claims"
                 featured={pendingProviderClaimCount > 0}
+              />
+
+              <AdminActionCard
+                href="/admin/employer-opportunity-submissions"
+                icon={<BriefcaseBusiness className="h-7 w-7" />}
+                title="Employer opportunity submissions"
+                description="Review employer-submitted jobs, apprenticeships, trainee roles, and pre-apprenticeships before they become public."
+                metric={`${employerOpportunitySubmissionCount} pending`}
+                action="Review submissions"
+                featured={employerOpportunitySubmissionCount > 0}
               />
 
               <AdminActionCard
