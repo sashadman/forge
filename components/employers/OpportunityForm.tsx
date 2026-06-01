@@ -2,9 +2,9 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BriefcaseBusiness, ExternalLink } from 'lucide-react'
+import { BriefcaseBusiness, ExternalLink, Send } from 'lucide-react'
 import StateSelect from '@/components/forms/StateSelect'
-import { createClient } from '@/lib/supabase/client'
+import { createEmployerOpportunitySubmission } from '@/app/actions/employer-opportunity-submissions'
 import type { OpportunityType } from '@/lib/supabase/app-types'
 
 type OpportunityFormProps = {
@@ -32,42 +32,11 @@ const TRADE_OPTIONS = [
   'other',
 ]
 
-function createSlug(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function cleanUrl(value: string) {
-  const trimmed = value.trim()
-
-  if (!trimmed) return null
-
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return trimmed
-  }
-
-  return `https://${trimmed}`
-}
-
-function splitLines(value: string) {
-  const lines = value
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-
-  return lines.length > 0 ? lines : null
-}
-
 export default function OpportunityForm({
   employerId,
   employerSlug,
 }: OpportunityFormProps) {
   const router = useRouter()
-  const supabase = createClient()
 
   const [title, setTitle] = useState('')
   const [opportunityType, setOpportunityType] =
@@ -91,50 +60,37 @@ export default function OpportunityForm({
     setSaving(true)
     setError('')
 
-    const baseSlug = createSlug(title)
+    try {
+      await createEmployerOpportunitySubmission({
+        employerId,
+        employerSlug,
+        title,
+        opportunityType,
+        tradeSlug,
+        location,
+        state,
+        payRange,
+        schedule,
+        description,
+        requirements,
+        benefits,
+        applicationUrl,
+        status: 'submitted',
+      })
 
-    if (!baseSlug) {
-      setError('Please enter a valid job or apprenticeship title.')
+      router.push('/employers/dashboard?submitted=opportunity')
+      router.refresh()
+    } catch (submissionError) {
+      console.error(submissionError)
+
+      setError(
+        submissionError instanceof Error
+          ? submissionError.message
+          : 'Could not submit job or apprenticeship for review. Please try again.'
+      )
+    } finally {
       setSaving(false)
-      return
     }
-
-    const slug = `${employerSlug}-${baseSlug}`
-
-    const { error } = await supabase.from('opportunities').insert({
-      employer_id: employerId,
-      title,
-      slug,
-      opportunity_type: opportunityType,
-      trade_slug: tradeSlug,
-      location,
-      state,
-      pay_range: payRange.trim() || null,
-      schedule: schedule.trim() || null,
-      description,
-      requirements: splitLines(requirements),
-      benefits: splitLines(benefits),
-      application_url: cleanUrl(applicationUrl),
-      is_active: true,
-    })
-
-    if (error) {
-      console.error(error)
-
-      if (error.message.toLowerCase().includes('duplicate')) {
-        setError(
-          'A jobs, an apprenticeship, or a trainee role with this title already exists for this employer. Try a more specific title.'
-        )
-      } else {
-        setError('Could not create job or apprenticeship. Please try again.')
-      }
-
-      setSaving(false)
-      return
-    }
-
-    router.push(`/opportunities/${slug}`)
-    router.refresh()
   }
 
   return (
@@ -145,15 +101,16 @@ export default function OpportunityForm({
         </div>
 
         <div>
-          <p className="eyebrow">Opportunity listing</p>
+          <p className="eyebrow">Opportunity review request</p>
 
           <h2 className="section-title mt-3">
-            Add a real role or training job or apprenticeship.
+            Submit a real role or apprenticeship for review.
           </h2>
 
           <p className="muted-text mt-3 max-w-3xl">
-            This listing will be connected to your employer profile. Only post
-            real jobs and apprenticeships that someone can actually review or apply for.
+            This opportunity will be reviewed before it appears publicly. Only
+            submit real jobs, apprenticeships, trainee roles, or pre-apprenticeship
+            opportunities that someone can actually review or apply for.
           </p>
         </div>
       </div>
@@ -301,11 +258,19 @@ export default function OpportunityForm({
 
       <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-6 text-slate-500">
-          This will publish the job or apprenticeship as an active listing.
+          This will send the opportunity to admin review. It will not appear
+          publicly until approved.
         </p>
 
         <button type="submit" disabled={saving} className="btn-primary">
-          {saving ? 'Creating listing...' : 'Create job or apprenticeship'}
+          {saving ? (
+            'Submitting for review...'
+          ) : (
+            <>
+              Submit for review
+              <Send className="h-4 w-4" />
+            </>
+          )}
         </button>
       </div>
     </form>
