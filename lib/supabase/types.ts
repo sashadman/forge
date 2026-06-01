@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       application_events: {
@@ -258,6 +283,105 @@ export type Database = {
           website_url?: string
         }
         Relationships: []
+      }
+      employer_opportunity_submissions: {
+        Row: {
+          admin_notes: string | null
+          application_url: string | null
+          approved_opportunity_id: string | null
+          benefits: string[] | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string
+          employer_id: string
+          external_url: string | null
+          id: string
+          location: string
+          opportunity_type: string
+          pay_range: string | null
+          requirements: string[] | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          schedule: string | null
+          slug: string | null
+          state: string
+          status: string
+          submitted_by: string
+          title: string
+          trade_slug: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          application_url?: string | null
+          approved_opportunity_id?: string | null
+          benefits?: string[] | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description: string
+          employer_id: string
+          external_url?: string | null
+          id?: string
+          location: string
+          opportunity_type?: string
+          pay_range?: string | null
+          requirements?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          schedule?: string | null
+          slug?: string | null
+          state: string
+          status?: string
+          submitted_by: string
+          title: string
+          trade_slug: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          application_url?: string | null
+          approved_opportunity_id?: string | null
+          benefits?: string[] | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string
+          employer_id?: string
+          external_url?: string | null
+          id?: string
+          location?: string
+          opportunity_type?: string
+          pay_range?: string | null
+          requirements?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          schedule?: string | null
+          slug?: string | null
+          state?: string
+          status?: string
+          submitted_by?: string
+          title?: string
+          trade_slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employer_opportunity_submissions_approved_opportunity_id_fkey"
+            columns: ["approved_opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employer_opportunity_submissions_employer_id_fkey"
+            columns: ["employer_id"]
+            isOneToOne: false
+            referencedRelation: "employers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       employers: {
         Row: {
@@ -876,8 +1000,10 @@ export type Database = {
         Row: {
           cost: string | null
           created_at: string
+          data_origin: string
           description: string
           duration: string | null
+          external_id: string | null
           id: string
           is_active: boolean
           location: string
@@ -893,6 +1019,10 @@ export type Database = {
           reviewed_at: string | null
           reviewed_by: string | null
           slug: string
+          source_candidate_id: string | null
+          source_id: string | null
+          source_metadata: Json
+          source_url: string | null
           state: string
           submitted_by: string | null
           trade_slug: string
@@ -902,8 +1032,10 @@ export type Database = {
         Insert: {
           cost?: string | null
           created_at?: string
+          data_origin?: string
           description: string
           duration?: string | null
+          external_id?: string | null
           id?: string
           is_active?: boolean
           location: string
@@ -919,6 +1051,10 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           slug: string
+          source_candidate_id?: string | null
+          source_id?: string | null
+          source_metadata?: Json
+          source_url?: string | null
           state: string
           submitted_by?: string | null
           trade_slug: string
@@ -928,8 +1064,10 @@ export type Database = {
         Update: {
           cost?: string | null
           created_at?: string
+          data_origin?: string
           description?: string
           duration?: string | null
+          external_id?: string | null
           id?: string
           is_active?: boolean
           location?: string
@@ -945,6 +1083,10 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           slug?: string
+          source_candidate_id?: string | null
+          source_id?: string | null
+          source_metadata?: Json
+          source_url?: string | null
           state?: string
           submitted_by?: string | null
           trade_slug?: string
@@ -957,6 +1099,20 @@ export type Database = {
             columns: ["provider_profile_id"]
             isOneToOne: false
             referencedRelation: "training_provider_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "programs_source_candidate_id_fkey"
+            columns: ["source_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "training_program_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "programs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "training_sources"
             referencedColumns: ["id"]
           },
         ]
@@ -973,6 +1129,7 @@ export type Database = {
           id: string
           organization_name: string
           phone: string | null
+          program_id: string | null
           program_names: string | null
           requested_access: string | null
           reviewed_at: string | null
@@ -995,6 +1152,7 @@ export type Database = {
           id?: string
           organization_name: string
           phone?: string | null
+          program_id?: string | null
           program_names?: string | null
           requested_access?: string | null
           reviewed_at?: string | null
@@ -1017,6 +1175,7 @@ export type Database = {
           id?: string
           organization_name?: string
           phone?: string | null
+          program_id?: string | null
           program_names?: string | null
           requested_access?: string | null
           reviewed_at?: string | null
@@ -1028,7 +1187,78 @@ export type Database = {
           updated_at?: string
           website_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "provider_claims_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_program_update_requests: {
+        Row: {
+          admin_notes: string | null
+          change_summary: string
+          created_at: string
+          id: string
+          program_id: string
+          provider_profile_id: string
+          request_type: string
+          requested_changes: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          change_summary: string
+          created_at?: string
+          id?: string
+          program_id: string
+          provider_profile_id: string
+          request_type?: string
+          requested_changes?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          change_summary?: string
+          created_at?: string
+          id?: string
+          program_id?: string
+          provider_profile_id?: string
+          request_type?: string
+          requested_changes?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_program_update_requests_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_program_update_requests_provider_profile_id_fkey"
+            columns: ["provider_profile_id"]
+            isOneToOne: false
+            referencedRelation: "training_provider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quiz_results: {
         Row: {
@@ -1119,19 +1349,37 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          last_contacted_at: string | null
+          notes: string | null
+          pipeline_status: Database["public"]["Enums"]["program_pipeline_status"]
+          priority: string
           program_id: string
+          target_start_date: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          last_contacted_at?: string | null
+          notes?: string | null
+          pipeline_status?: Database["public"]["Enums"]["program_pipeline_status"]
+          priority?: string
           program_id: string
+          target_start_date?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          last_contacted_at?: string | null
+          notes?: string | null
+          pipeline_status?: Database["public"]["Enums"]["program_pipeline_status"]
+          priority?: string
           program_id?: string
+          target_start_date?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -1626,7 +1874,53 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      is_current_user_admin: { Args: never; Returns: boolean }
+      list_training_program_candidates_for_review: {
+        Args: {
+          requested_status?: string
+          requested_trade_slug?: string
+          result_limit?: number
+          result_offset?: number
+          search_text?: string
+        }
+        Returns: {
+          cip_code: string
+          confidence_score: number
+          country: string
+          created_at: string
+          id: string
+          institution_name: string
+          location: string
+          program_type: string
+          provider_name: string
+          published_program_id: string
+          source_url: string
+          state: string
+          title: string
+          trade_slug: string
+          trust_level: string
+          updated_at: string
+          verification_status: string
+        }[]
+      }
       mark_stale_opportunities: { Args: never; Returns: number }
+      mark_training_program_candidate_duplicate: {
+        Args: {
+          candidate_id: string
+          duplicate_candidate_id: string
+          notes?: string
+        }
+        Returns: string
+      }
+      promote_training_program_candidate: {
+        Args: { candidate_id: string }
+        Returns: string
+      }
+      reject_training_program_candidate: {
+        Args: { candidate_id: string; notes?: string }
+        Returns: string
+      }
+      slugify_program_text: { Args: { input_text: string }; Returns: string }
     }
     Enums: {
       application_status:
@@ -1839,6 +2133,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       application_status: [
