@@ -52,12 +52,12 @@ export default function SiteFooter() {
 
             <p className={descriptionClass}>
               Skilled-trades pathway platform for career seekers, employers, and
-              training providers.
+              verified training providers.
             </p>
           </div>
 
           <div>
-            <p className={headingClass}>Career Seeker</p>
+            <p className={headingClass}>Career Seekers</p>
 
             <div className={linkGroupClass}>
               <Link href="/trades" className={linkClass}>
@@ -79,29 +79,33 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <p className={headingClass}>Employer</p>
+            <p className={headingClass}>Employers</p>
 
             <div className={linkGroupClass}>
               <Link href="/for-employers" className={linkClass}>
-                Employer Overview
+                Employers Overview
               </Link>
 
               <Link href="/employers/sign-up" className={linkClass}>
-                Create Employer Account
+                Create Employers Account
               </Link>
 
               <Link href="/employers/sign-in" className={linkClass}>
-                Employer Sign In
+                Employers Sign In
               </Link>
             </div>
           </div>
 
           <div>
-            <p className={headingClass}>Training Provider</p>
+            <p className={headingClass}>Training Providers</p>
 
             <div className={linkGroupClass}>
               <Link href="/for-programs" className={linkClass}>
                 Provider Overview
+              </Link>
+
+              <Link href="/training-providers/claim" className={linkClass}>
+                Request Provider Access
               </Link>
 
               <Link href="/for-programs#provider-workflow" className={linkClass}>
@@ -113,7 +117,7 @@ export default function SiteFooter() {
               </Link>
 
               <Link href="/for-programs#provider-insights" className={linkClass}>
-                Future Provider Insights
+                Provider Insights
               </Link>
             </div>
           </div>

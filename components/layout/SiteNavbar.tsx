@@ -18,21 +18,21 @@ import { useTheme } from '@/components/theme/ThemeProvider'
 
 const roleLinks = [
   {
-    href: '/trades',
+    href: '/career-seeker',
     label: 'Career Seeker',
-    description: 'Explore paths, training programs, and jobs.',
+    description: 'Explore paths, training programs, jobs, and readiness tools.',
     icon: UserRound,
   },
   {
     href: '/for-employers',
     label: 'Employer',
-    description: 'Create a profile and manage hiring listings.',
+    description: 'Create a profile and submit hiring opportunities for review.',
     icon: BriefcaseBusiness,
   },
   {
     href: '/for-programs',
     label: 'Training Provider',
-    description: 'Review provider workflow, program data, and future tools.',
+    description: 'Request access, manage programs, and submit updates for review.',
     icon: GraduationCap,
   },
 ]
