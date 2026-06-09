@@ -21,7 +21,7 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: `For Employers — ${siteConfig.name}`,
   description:
-    'A focused employer workflow for creating an employer account, building a public profile, posting real jobs or apprenticeships, and reviewing applicants.',
+    'A focused employer workflow for creating an employer account, building a public profile, submitting real jobs or apprenticeships for review, and reviewing applicants.',
 }
 
 const employerActions = [
@@ -50,9 +50,9 @@ const employerActions = [
     primary: false,
   },
   {
-    title: 'Post a listing',
+    title: 'Submit a listing for review',
     description:
-      'Create a real job, apprenticeship, trainee, or pre-apprenticeship listing after your employer profile exists.',
+      'Submit a real job, apprenticeship, trainee, or pre-apprenticeship for admin review after your employer profile exists.',
     href: '/employers/opportunities/new',
     icon: PlusCircle,
     primary: false,
@@ -83,17 +83,17 @@ const benefits = [
 const employerWorkflow = [
   'Create an employer account',
   'Build a public employer profile',
-  'Post real jobs or apprenticeships',
+  'Submit real jobs or apprenticeships for review',
   'Review applications and readiness snapshots',
   'Keep listings current and connected to real hiring needs',
 ]
 
 const employerTools = [
   'Employer profile management',
-  'Real jobs and apprenticeship listings',
+  'Reviewed jobs and apprenticeship listings',
   'Application review workflow',
   'Applicant readiness snapshots',
-  'Listing edit and status control',
+  'Submission review and listing status control',
 ]
 
 export default function ForEmployersPage() {
@@ -114,7 +114,7 @@ export default function ForEmployersPage() {
 
             <p className="lead-text-dark mt-6 max-w-3xl">
               {siteConfig.name} helps skilled-trades employers create a real
-              employer profile, publish honest jobs or apprenticeships, and
+              employer profile, submit honest jobs or apprenticeships for review, and
               review applicants through a focused employer workflow.
             </p>
 

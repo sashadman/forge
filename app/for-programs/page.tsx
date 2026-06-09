@@ -62,7 +62,7 @@ const programDataFields = [
   'Application URL, contact email, and verification status',
 ]
 
-const futureProviderTools = [
+const providerTools = [
   'Provider profile claim and verification',
   'Program listing creation and editing',
   'Application deadline and cohort-date management',
@@ -109,10 +109,10 @@ export default function ForProgramsPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              {siteConfig.name} is being designed so training providers,
+              {siteConfig.name} helps training providers,
               apprenticeship programs, workforce organizations, and schools can
-              manage accurate program information through a verified provider
-              workflow.
+              request access, manage verified provider profiles, submit programs,
+              and request updates through an admin-reviewed workflow.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -130,8 +130,8 @@ export default function ForProgramsPage() {
             </div>
 
             <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-400">
-              Provider tools are opened only after the claim, verification,
-              editing, and security workflow is reviewed. This keeps program
+              Provider tools stay behind claim review, verification,
+              admin approval, and secure provider membership checks. This keeps program
               data trustworthy.
             </p>
           </div>
@@ -152,7 +152,7 @@ export default function ForProgramsPage() {
               </div>
 
               <div className="mt-6 space-y-4">
-                {futureProviderTools.slice(0, 4).map((tool) => (
+                {providerTools.slice(0, 4).map((tool) => (
                   <div key={tool} className="mini-card flex gap-3">
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                     <p className="leading-7 text-slate-700">{tool}</p>
@@ -297,7 +297,7 @@ export default function ForProgramsPage() {
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-start">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
-                  Future provider insights
+                  Provider insights
                 </p>
 
                 <h2 className="mt-4 text-3xl font-bold tracking-tight">
@@ -306,7 +306,7 @@ export default function ForProgramsPage() {
                 </h2>
 
                 <p className="mt-5 max-w-3xl leading-7 text-slate-300">
-                  Future provider dashboards can show how seekers interact with
+                  Provider dashboards can eventually show how seekers interact with
                   program listings: views, saves, career-focus interest,
                   readiness patterns, and application-intent signals. That data
                   should support better program communication without exposing
@@ -340,7 +340,7 @@ export default function ForProgramsPage() {
                 </h3>
 
                 <ul className="mt-5 space-y-3 text-slate-300">
-                  {futureProviderTools.map((tool) => (
+                  {providerTools.map((tool) => (
                     <li key={tool} className="flex gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
                       <span>{tool}</span>
