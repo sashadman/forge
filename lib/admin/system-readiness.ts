@@ -1,4 +1,6 @@
+
 import {
+  BriefcaseBusiness,
   Database,
   FileCheck2,
   KeyRound,
@@ -27,6 +29,7 @@ export type ReadinessSection = {
     | 'server'
     | 'users'
     | 'file'
+    | 'briefcase'
   items: ReadinessItem[]
 }
 
@@ -37,6 +40,7 @@ export function getReadinessIcon(iconName: ReadinessSection['iconName']) {
   if (iconName === 'database') return Database
   if (iconName === 'server') return ServerCog
   if (iconName === 'users') return UsersRound
+  if (iconName === 'briefcase') return BriefcaseBusiness
 
   return FileCheck2
 }
@@ -51,25 +55,25 @@ export const readinessSections: ReadinessSection[] = [
       {
         title: 'Career seekers route to seeker dashboard',
         description:
-          'General users should land in the seeker dashboard or a safe next path.',
-        status: 'manual_check',
-      },
-      {
-        title: 'Training providers route to provider workspace',
-        description:
-          'Approved providers should use provider dashboards, not seeker pages.',
+          'General users should land in the seeker dashboard or a safe next path after sign-in.',
         status: 'manual_check',
       },
       {
         title: 'Employers route to employer workspace',
         description:
-          'Employer users should land in employer onboarding or employer dashboard based on profile status.',
+          'Employer users should land in employer onboarding or employer dashboard based on whether an employer profile exists.',
+        status: 'manual_check',
+      },
+      {
+        title: 'Training providers route to provider workspace',
+        description:
+          'Approved providers should use provider dashboards and provider program/update workflows, not seeker pages.',
         status: 'manual_check',
       },
       {
         title: 'Admins route to admin command center',
         description:
-          'Admin users should be able to access /admin and protected review queues.',
+          'Admin users should be able to access /admin and protected review queues. Non-admin users should be redirected away.',
         status: 'manual_check',
       },
     ],
@@ -83,59 +87,71 @@ export const readinessSections: ReadinessSection[] = [
       {
         title: 'Admin-only review actions protected',
         description:
-          'Candidate promotion, provider claim review, program review, and update-apply actions require admin role checks.',
-        status: 'needs_review',
+          'Candidate promotion, provider claim review, provider program review, update-apply actions, and employer opportunity approval all require admin role checks.',
+        status: 'ready',
+      },
+      {
+        title: 'Employer submissions stay private until review',
+        description:
+          'Employer-submitted opportunities go into employer_opportunity_submissions and do not appear publicly until admin approval promotes them into opportunities.',
+        status: 'ready',
       },
       {
         title: 'Provider-only actions protected',
         description:
-          'Provider program submissions and update requests require active provider membership.',
+          'Provider program submissions and update requests require active provider membership and still require admin approval before public records change.',
+        status: 'ready',
+      },
+      {
+        title: 'Career seeker saved records are private',
+        description:
+          'Saved programs, saved opportunities, readiness items, applications, and planning notes should be visible only to the owning user unless intentionally exposed through employer/admin workflows.',
         status: 'needs_review',
       },
       {
-        title: 'Career seeker saved programs are private',
+        title: 'Public records remain read-only to public users',
         description:
-          'Saved program planning status, notes, dates, and priority should be visible only to the owning user.',
-        status: 'needs_review',
-      },
-      {
-        title: 'Public program records remain read-only to public users',
-        description:
-          'Anonymous and authenticated non-admin users can read approved active records but cannot directly publish edits.',
+          'Anonymous and non-admin authenticated users can read approved active records but cannot directly publish programs, employers, or opportunities.',
         status: 'needs_review',
       },
     ],
   },
   {
-    title: 'Environment and secret handling',
+    title: 'Employer opportunity operations',
     description:
-      'Confirm local and production environments do not leak private keys.',
-    iconName: 'key',
+      'Confirm the employer-side trust workflow is complete before sharing with real employers.',
+    iconName: 'briefcase',
     items: [
       {
-        title: '.env.local is not committed',
+        title: 'Employers submit opportunities for review',
         description:
-          'Run git status and confirm .env.local does not appear in tracked changes.',
-        status: 'manual_check',
+          'Employer-created jobs, apprenticeships, trainee roles, internships, and pre-apprenticeships are submitted to the review queue instead of publishing directly.',
+        status: 'ready',
       },
       {
-        title: 'Supabase anon key only in client-safe variables',
+        title: 'Employer dashboard shows review status',
         description:
-          'NEXT_PUBLIC_SUPABASE_ANON_KEY may be public. Service-role keys must never be exposed to the browser.',
-        status: 'manual_check',
+          'Employers can see submitted, approved, rejected, draft, and archived opportunity states, including admin notes for rejected records.',
+        status: 'ready',
       },
       {
-        title: 'Vercel environment variables configured',
+        title: 'Admins approve and publish employer submissions',
         description:
-          'Production deployment needs Supabase URL and keys configured in Vercel project settings.',
-        status: 'manual_check',
+          'Approved employer submissions are promoted into the public opportunities table and become visible in the public opportunity directory.',
+        status: 'ready',
+      },
+      {
+        title: 'Admins reject with useful feedback',
+        description:
+          'Rejected submissions keep admin notes visible to the employer so unclear or low-quality listings can be revised before publication.',
+        status: 'ready',
       },
     ],
   },
   {
     title: 'Training data operations',
     description:
-      'Confirm imported program records can be reviewed, promoted, and attributed.',
+      'Confirm imported program records can be reviewed, promoted, attributed, and kept separate from raw candidate data.',
     iconName: 'database',
     items: [
       {
@@ -147,13 +163,13 @@ export const readinessSections: ReadinessSection[] = [
       {
         title: 'Program candidates can be reviewed',
         description:
-          'Admin can promote or reject imported candidates without directly exposing raw imported data publicly.',
+          'Admin can promote, reject, or mark imported candidates as duplicates without directly exposing raw imported data publicly.',
         status: 'ready',
       },
       {
         title: 'Promoted candidates show source trust',
         description:
-          'Public program pages display source/trust/freshness information for promoted records.',
+          'Public program pages display source, trust, and freshness information for promoted records.',
         status: 'ready',
       },
     ],
@@ -191,6 +207,38 @@ export const readinessSections: ReadinessSection[] = [
     ],
   },
   {
+    title: 'Environment and secret handling',
+    description:
+      'Confirm local and production environments do not leak private keys.',
+    iconName: 'key',
+    items: [
+      {
+        title: '.env.local is not committed',
+        description:
+          'Run git status and confirm .env.local does not appear in tracked changes.',
+        status: 'manual_check',
+      },
+      {
+        title: 'Supabase anon key only in client-safe variables',
+        description:
+          'NEXT_PUBLIC_SUPABASE_ANON_KEY may be public. Service-role keys must never be exposed to the browser.',
+        status: 'manual_check',
+      },
+      {
+        title: 'Production environment variables configured',
+        description:
+          'Production deployment needs Supabase URL and keys configured in Vercel or the hosting provider.',
+        status: 'manual_check',
+      },
+      {
+        title: 'Auth redirect URLs configured',
+        description:
+          'Supabase auth redirect URLs should include the local URL and the production deployment URL before real users are invited.',
+        status: 'manual_check',
+      },
+    ],
+  },
+  {
     title: 'Deployment readiness',
     description:
       'Confirm the app can build, deploy, and operate without local-only assumptions.',
@@ -209,7 +257,7 @@ export const readinessSections: ReadinessSection[] = [
       {
         title: 'Supabase migrations are pushed',
         description:
-          'Run npx supabase db push --linked --dry-run, then npx supabase db push --linked when ready.',
+          'Run npx supabase db push --linked or confirm all migrations are already applied before deployment.',
         status: 'manual_check',
       },
       {
