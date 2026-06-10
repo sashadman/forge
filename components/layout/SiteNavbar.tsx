@@ -41,6 +41,7 @@ const seekerLinks = [
   { href: '/trades', label: 'Career Paths' },
   { href: '/programs', label: 'Training Programs' },
   { href: '/opportunities', label: 'Jobs & Apprenticeships' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/quiz', label: 'Career Quiz' },
 ]
 
@@ -143,7 +144,7 @@ export default function SiteNavbar() {
           </Link>
 
           <div className={desktopLinksWrapperClass}>
-            {seekerLinks.slice(0, 3).map((link) => (
+            {seekerLinks.slice(0, 4).map((link) => (
               <Link key={link.href} href={link.href} className={desktopLinkClass}>
                 {link.label}
               </Link>

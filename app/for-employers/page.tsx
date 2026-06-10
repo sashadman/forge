@@ -317,6 +317,39 @@ export default function ForEmployersPage() {
         </div>
       </ThemedPublicSection>
 
+      <ThemedPublicSection className="pb-20">
+        <div className="section-shell">
+          <section className="dark-panel p-8 md:p-12">
+            <div className="dark-panel-content grid gap-8 lg:grid-cols-[1fr_0.7fr] lg:items-center">
+              <div>
+                <p className="eyebrow-dark">Employer pricing</p>
+
+                <h2 className="section-title-dark mt-6">
+                  Start free, then upgrade when your hiring pipeline grows.
+                </h2>
+
+                <p className="lead-text-dark mt-5">
+                  Employers can test the platform with one reviewed opportunity. Paid
+                  plans unlock more active listings, applicant review tools, readiness
+                  snapshots, and priority visibility.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <Link href="/pricing" className="btn-primary">
+                  View employer pricing
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <Link href="/employers/sign-up" className="btn-outline">
+                  Create employer account
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      </ThemedPublicSection>
+
       <SiteFooter />
     </ThemedPublicPage>
   )

@@ -363,6 +363,39 @@ export default function ForProgramsPage() {
         </div>
       </ThemedPublicSection>
 
+      <ThemedPublicSection className="pb-20">
+        <div className="section-shell">
+          <section className="dark-panel p-8 md:p-12">
+            <div className="dark-panel-content grid gap-8 lg:grid-cols-[1fr_0.7fr] lg:items-center">
+              <div>
+                <p className="eyebrow-dark">Provider pricing</p>
+
+                <h2 className="section-title-dark mt-6">
+                  Claim your profile and keep program information current.
+                </h2>
+
+                <p className="lead-text-dark mt-5">
+                  Training providers can start with a reviewed claim. Paid plans unlock
+                  enhanced visibility, program update tools, inquiry tracking, analytics,
+                  and regional partnership support.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <Link href="/pricing" className="btn-primary">
+                  View provider pricing
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <Link href="/training-providers/claim" className="btn-outline">
+                  Request provider access
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      </ThemedPublicSection>
+
       <SiteFooter />
     </ThemedPublicPage>
   )
