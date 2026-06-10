@@ -151,7 +151,7 @@ export default function HomePage() {
         </section>
 
         <footer className="relative flex flex-col justify-between gap-3 border-t border-white/10 py-5 text-xs font-semibold text-slate-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} Shadman Consulting.</p>
+          <p>©{new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
           <p>Career Seeker · Employer · Training Provider</p>
         </footer>
       </section>
