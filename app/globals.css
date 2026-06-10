@@ -435,3 +435,125 @@ footer p {
   font-weight: 700;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Orange highlight readability                                                */
+/* Fixes low-contrast text inside border-orange-200 + bg-orange-50 surfaces.    */
+/* -------------------------------------------------------------------------- */
+
+.border-orange-200.bg-orange-50,
+.border-orange-300.bg-orange-50,
+.border-orange-400.bg-orange-50 {
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 16rem),
+    linear-gradient(135deg, #fff7ed, #ffffff);
+  color: rgb(15 23 42);
+}
+
+.border-orange-200.bg-orange-50 h1,
+.border-orange-200.bg-orange-50 h2,
+.border-orange-200.bg-orange-50 h3,
+.border-orange-200.bg-orange-50 h4,
+.border-orange-200.bg-orange-50 p,
+.border-orange-200.bg-orange-50 span,
+.border-orange-200.bg-orange-50 li,
+.border-orange-200.bg-orange-50 label,
+.border-orange-300.bg-orange-50 h1,
+.border-orange-300.bg-orange-50 h2,
+.border-orange-300.bg-orange-50 h3,
+.border-orange-300.bg-orange-50 h4,
+.border-orange-300.bg-orange-50 p,
+.border-orange-300.bg-orange-50 span,
+.border-orange-300.bg-orange-50 li,
+.border-orange-300.bg-orange-50 label,
+.border-orange-400.bg-orange-50 h1,
+.border-orange-400.bg-orange-50 h2,
+.border-orange-400.bg-orange-50 h3,
+.border-orange-400.bg-orange-50 h4,
+.border-orange-400.bg-orange-50 p,
+.border-orange-400.bg-orange-50 span,
+.border-orange-400.bg-orange-50 li,
+.border-orange-400.bg-orange-50 label {
+  color: rgb(15 23 42);
+}
+
+.border-orange-200.bg-orange-50 .text-orange-600,
+.border-orange-200.bg-orange-50 .text-orange-700,
+.border-orange-200.bg-orange-50 .text-orange-800,
+.border-orange-200.bg-orange-50 .text-slate-500,
+.border-orange-200.bg-orange-50 .text-slate-600,
+.border-orange-200.bg-orange-50 .text-slate-700,
+.border-orange-300.bg-orange-50 .text-orange-600,
+.border-orange-300.bg-orange-50 .text-orange-700,
+.border-orange-300.bg-orange-50 .text-orange-800,
+.border-orange-300.bg-orange-50 .text-slate-500,
+.border-orange-300.bg-orange-50 .text-slate-600,
+.border-orange-300.bg-orange-50 .text-slate-700,
+.border-orange-400.bg-orange-50 .text-orange-600,
+.border-orange-400.bg-orange-50 .text-orange-700,
+.border-orange-400.bg-orange-50 .text-orange-800,
+.border-orange-400.bg-orange-50 .text-slate-500,
+.border-orange-400.bg-orange-50 .text-slate-600,
+.border-orange-400.bg-orange-50 .text-slate-700 {
+  color: rgb(51 65 85) !important;
+  font-weight: 700;
+}
+
+.theme-dark .border-orange-200.bg-orange-50,
+.theme-dark .border-orange-300.bg-orange-50,
+.theme-dark .border-orange-400.bg-orange-50 {
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 16rem),
+    #1e293b;
+  color: #ffffff;
+}
+
+.theme-dark .border-orange-200.bg-orange-50 h1,
+.theme-dark .border-orange-200.bg-orange-50 h2,
+.theme-dark .border-orange-200.bg-orange-50 h3,
+.theme-dark .border-orange-200.bg-orange-50 h4,
+.theme-dark .border-orange-200.bg-orange-50 p,
+.theme-dark .border-orange-200.bg-orange-50 span,
+.theme-dark .border-orange-200.bg-orange-50 li,
+.theme-dark .border-orange-200.bg-orange-50 label,
+.theme-dark .border-orange-300.bg-orange-50 h1,
+.theme-dark .border-orange-300.bg-orange-50 h2,
+.theme-dark .border-orange-300.bg-orange-50 h3,
+.theme-dark .border-orange-300.bg-orange-50 h4,
+.theme-dark .border-orange-300.bg-orange-50 p,
+.theme-dark .border-orange-300.bg-orange-50 span,
+.theme-dark .border-orange-300.bg-orange-50 li,
+.theme-dark .border-orange-300.bg-orange-50 label,
+.theme-dark .border-orange-400.bg-orange-50 h1,
+.theme-dark .border-orange-400.bg-orange-50 h2,
+.theme-dark .border-orange-400.bg-orange-50 h3,
+.theme-dark .border-orange-400.bg-orange-50 h4,
+.theme-dark .border-orange-400.bg-orange-50 p,
+.theme-dark .border-orange-400.bg-orange-50 span,
+.theme-dark .border-orange-400.bg-orange-50 li,
+.theme-dark .border-orange-400.bg-orange-50 label {
+  color: #ffffff !important;
+}
+
+.theme-dark .border-orange-200.bg-orange-50 .text-orange-600,
+.theme-dark .border-orange-200.bg-orange-50 .text-orange-700,
+.theme-dark .border-orange-200.bg-orange-50 .text-orange-800,
+.theme-dark .border-orange-200.bg-orange-50 .text-slate-500,
+.theme-dark .border-orange-200.bg-orange-50 .text-slate-600,
+.theme-dark .border-orange-200.bg-orange-50 .text-slate-700,
+.theme-dark .border-orange-300.bg-orange-50 .text-orange-600,
+.theme-dark .border-orange-300.bg-orange-50 .text-orange-700,
+.theme-dark .border-orange-300.bg-orange-50 .text-orange-800,
+.theme-dark .border-orange-300.bg-orange-50 .text-slate-500,
+.theme-dark .border-orange-300.bg-orange-50 .text-slate-600,
+.theme-dark .border-orange-300.bg-orange-50 .text-slate-700,
+.theme-dark .border-orange-400.bg-orange-50 .text-orange-600,
+.theme-dark .border-orange-400.bg-orange-50 .text-orange-700,
+.theme-dark .border-orange-400.bg-orange-50 .text-orange-800,
+.theme-dark .border-orange-400.bg-orange-50 .text-slate-500,
+.theme-dark .border-orange-400.bg-orange-50 .text-slate-600,
+.theme-dark .border-orange-400.bg-orange-50 .text-slate-700 {
+  color: #dbeafe !important;
+  font-weight: 700;
+}
+
