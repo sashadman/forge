@@ -293,7 +293,7 @@ export default function ProgramsExplorer({
 
             <p className="muted-text mt-3 max-w-2xl">
               Search training providers, public program listings, and
-              the platform reviewed training options by keyword, category, and
+              Ara Skills reviewed training options by keyword, category, and
               location.
             </p>
           </div>
@@ -386,7 +386,7 @@ export default function ProgramsExplorer({
         <p className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-600">
           Programs marked{' '}
           <span className="font-semibold text-slate-900">
-            Verified by the platform
+            Verified by Ara Skills
           </span>{' '}
           have been reviewed by the platform. General listings are provided for
           research and discovery from public or submitted sources. Always

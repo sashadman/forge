@@ -124,7 +124,7 @@ export default function SiteFooter() {
         </div>
 
         <div className={bottomClass}>
-          © {currentYear} Shadman Consulting. All rights reserved.
+          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
         </div>
       </div>
     </footer>

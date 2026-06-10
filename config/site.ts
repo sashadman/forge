@@ -1,5 +1,6 @@
 export const siteConfig = {
-  name: 'Trade Platform',
+  name: 'Ara Skills',
+  url: 'https://araskills.com',
   description:
-    'Discover skilled trade careers, apprenticeships, and employers.',
+    'Search training programs, apprenticeships, workforce programs, and career pathways by location, category, and verified status.',
 }
