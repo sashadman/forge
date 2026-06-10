@@ -36,15 +36,19 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-            },
-          },
-        })
+ const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin
+
+const { error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    emailRedirectTo: `${siteUrl}/auth/redirect`,
+    data: {
+      full_name: fullName,
+    },
+  },
+})
 
         if (error) {
           console.error(error)

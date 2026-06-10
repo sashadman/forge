@@ -46,7 +46,10 @@ export default function EmployerAuthForm({ mode }: EmployerAuthFormProps) {
 
     try {
       if (isSignUp) {
-        const redirectTo = `${window.location.origin}/auth/redirect?intent=employer`
+        const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin
+
+const redirectTo = `${siteUrl}/auth/redirect?intent=employer`
 
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
