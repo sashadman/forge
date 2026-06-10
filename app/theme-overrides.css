@@ -1,186 +1,87 @@
+/* ═══════════════════════════════════════════════════════════
+   THEME OVERRIDES — Light mode only
+   The default theme is dark (defined in globals.css).
+   This file overrides CSS variables for .theme-light.
+   Components do NOT need to change — they read variables.
+═══════════════════════════════════════════════════════════ */
+
+.theme-light {
+  /* Surfaces flip to light */
+  --bg-void:     #F4F7FC;
+  --bg-base:     #FFFFFF;
+  --bg-raised:   #F0F4FB;
+  --bg-overlay:  #E8EEF8;
+  --bg-input:    #FFFFFF;
+
+  /* Borders darken */
+  --border:        rgba(15, 30, 60, 0.08);
+  --border-mid:    rgba(15, 30, 60, 0.14);
+  --border-strong: rgba(15, 30, 60, 0.22);
+  --border-cyan:   rgba(0, 160, 180, 0.3);
+
+  /* Text flips */
+  --text-primary:   #0C1428;
+  --text-secondary: #3D5470;
+  --text-muted:     #7A90AA;
+  --text-on-cyan:   #FFFFFF;
+  --text-on-amber:  #FFFFFF;
+
+  /* Accent stays cyan but slightly darker for contrast on light */
+  --cyan:          #008FAF;
+  --cyan-dim:      #007490;
+  --cyan-muted:    rgba(0, 143, 175, 0.08);
+  --cyan-glow:     0 0 20px rgba(0, 143, 175, 0.2), 0 0 6px rgba(0, 143, 175, 0.15);
+  --border-cyan:   rgba(0, 143, 175, 0.25);
+
+  --amber:         #D08000;
+  --amber-dim:     #B06800;
+  --amber-muted:   rgba(208, 128, 0, 0.08);
+  --amber-glow:    0 0 16px rgba(208, 128, 0, 0.2);
+
+  --emerald:       #00954F;
+  --coral:         #D93055;
+}
+
+/* Body background for light theme */
 .theme-light body {
   background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 34rem),
-    radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.06), transparent 32rem),
-    linear-gradient(to bottom, #f8fafc, #eef2f7);
-  color: #0f172a;
+    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(0, 143, 175, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 90% 100%, rgba(208, 128, 0, 0.04) 0%, transparent 70%),
+    var(--bg-void);
 }
 
-.theme-dark body {
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 34rem),
-    radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.1), transparent 32rem),
-    linear-gradient(to bottom, #020617, #0f172a);
-  color: #f8fafc;
+/* Hero fade adapts to light bg */
+.theme-light .hero-fade {
+  background: linear-gradient(to top, var(--bg-void), transparent);
 }
 
-/* Keep dark theme structurally dark and readable. */
-.theme-dark .page-shell,
-.theme-dark .section-light,
-.theme-dark .section-white {
-  background-color: #020617;
-  color: #f8fafc;
+/* Dark panels become light panels in light mode */
+.theme-light .dark-panel,
+.theme-light .card-dark {
+  background: var(--bg-raised);
+  color: var(--text-primary);
 }
 
-.theme-dark .hero-fade {
-  --tw-gradient-from: #020617 var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(2 6 23 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+.theme-light .dark-panel::before {
+  background: radial-gradient(ellipse 50% 40% at 0% 0%, rgba(0, 143, 175, 0.04) 0%, transparent 70%);
 }
 
-/* Main surfaces: use solid dark panels, not pale translucent cards. */
-.theme-dark .content-panel,
-.theme-dark .card,
-.theme-dark .card-soft,
-.theme-dark .mini-card,
-.theme-dark .mini-card-white,
-.theme-dark .glass-card {
-  border-color: rgb(148 163 184 / 0.24);
-  background-color: #0f172a;
-  color: #f8fafc;
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.35);
+/* Scrollbar in light mode */
+.theme-light ::-webkit-scrollbar-track { background: var(--bg-raised); }
+.theme-light ::-webkit-scrollbar-thumb { background: var(--border-mid); }
+
+/* Admin cards light adjustments */
+.theme-light .admin-action-card {
+  background: var(--bg-base);
+  border-color: var(--border);
+  color: var(--text-primary);
 }
 
-.theme-dark .card-dark,
-.theme-dark .dark-panel,
-.theme-dark .hero-dark {
-  background-color: #020617;
-  color: #f8fafc;
+.theme-light .admin-action-card-featured {
+  border-color: var(--border-cyan);
+  background: linear-gradient(135deg, rgba(0, 143, 175, 0.05), var(--bg-base));
 }
 
-/* Headings and strong text inside dark-theme surfaces. */
-.theme-dark .page-title,
-.theme-dark .section-title,
-.theme-dark .content-panel :is(h1, h2, h3, h4, h5, h6),
-.theme-dark .card :is(h1, h2, h3, h4, h5, h6),
-.theme-dark .card-soft :is(h1, h2, h3, h4, h5, h6),
-.theme-dark .mini-card :is(h1, h2, h3, h4, h5, h6),
-.theme-dark .mini-card-white :is(h1, h2, h3, h4, h5, h6),
-.theme-dark .content-panel .text-slate-950,
-.theme-dark .card .text-slate-950,
-.theme-dark .card-soft .text-slate-950,
-.theme-dark .mini-card .text-slate-950,
-.theme-dark .mini-card-white .text-slate-950 {
-  color: #ffffff !important;
-}
-
-/* Body/helper text should be bright enough on dark cards. */
-.theme-dark .lead-text,
-.theme-dark .muted-text,
-.theme-dark .content-panel p,
-.theme-dark .card p,
-.theme-dark .card-soft p,
-.theme-dark .mini-card p,
-.theme-dark .mini-card-white p,
-.theme-dark .content-panel li,
-.theme-dark .card li,
-.theme-dark .content-panel label,
-.theme-dark .card label,
-.theme-dark .content-panel .text-slate-700,
-.theme-dark .content-panel .text-slate-600,
-.theme-dark .content-panel .text-slate-500,
-.theme-dark .content-panel .text-slate-400,
-.theme-dark .card .text-slate-700,
-.theme-dark .card .text-slate-600,
-.theme-dark .card .text-slate-500,
-.theme-dark .card .text-slate-400,
-.theme-dark .card-soft .text-slate-700,
-.theme-dark .card-soft .text-slate-600,
-.theme-dark .mini-card .text-slate-700,
-.theme-dark .mini-card .text-slate-600,
-.theme-dark .mini-card .text-slate-500,
-.theme-dark .mini-card .text-slate-400,
-.theme-dark .mini-card-white .text-slate-700,
-.theme-dark .mini-card-white .text-slate-600,
-.theme-dark .mini-card-white .text-slate-500,
-.theme-dark .mini-card-white .text-slate-400 {
-  color: #dbeafe !important;
-}
-
-/* Eyebrows and badges. */
-.theme-dark .eyebrow {
-  background-color: rgb(249 115 22 / 0.16);
-  color: #fed7aa;
-  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.3);
-}
-
-.theme-dark .badge-slate {
-  background-color: rgb(148 163 184 / 0.14);
-  color: #e2e8f0;
-  box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
-}
-
-.theme-dark .badge-orange {
-  background-color: rgb(249 115 22 / 0.16);
-  color: #fed7aa;
-  box-shadow: inset 0 0 0 1px rgb(251 146 60 / 0.3);
-}
-
-/* Buttons. */
-.theme-dark .btn-dark {
-  background-color: #ffffff;
-  color: #0f172a;
-}
-
-.theme-dark .btn-dark:hover {
-  background-color: #ffedd5;
-}
-
-.theme-dark .btn-outline {
-  border-color: rgb(255 255 255 / 0.2);
-  background-color: rgb(255 255 255 / 0.08);
-  color: #ffffff;
-}
-
-.theme-dark .btn-outline:hover {
-  background-color: rgb(255 255 255 / 0.14);
-}
-
-/* Forms. */
-.theme-dark .input-field,
-.theme-dark .select-field,
-.theme-dark input,
-.theme-dark textarea,
-.theme-dark select {
-  border-color: rgb(148 163 184 / 0.28);
-  background-color: #020617;
-  color: #ffffff;
-}
-
-.theme-dark .input-field::placeholder,
-.theme-dark input::placeholder,
-.theme-dark textarea::placeholder {
-  color: #94a3b8;
-  opacity: 1;
-}
-
-.theme-dark .input-field:focus,
-.theme-dark .select-field:focus {
-  border-color: #fb923c;
-  --tw-ring-color: rgb(251 146 60 / 0.24);
-}
-
-/* Nested light utility backgrounds become readable dark surfaces in dark theme. */
-.theme-dark .content-panel .bg-white,
-.theme-dark .content-panel .bg-slate-50,
-.theme-dark .card .bg-white,
-.theme-dark .card .bg-slate-50,
-.theme-dark .card-soft .bg-white,
-.theme-dark .card-soft .bg-slate-50,
-.theme-dark .mini-card .bg-white,
-.theme-dark .mini-card-white .bg-white {
-  background-color: #1e293b !important;
-}
-
-.theme-dark .content-panel .border-slate-200,
-.theme-dark .card .border-slate-200,
-.theme-dark .card-soft .border-slate-200 {
-  border-color: rgb(148 163 184 / 0.24) !important;
-}
-
-.theme-dark .content-panel .ring-slate-200,
-.theme-dark .card .ring-slate-200,
-.theme-dark .mini-card .ring-slate-200,
-.theme-dark .mini-card-white .ring-slate-200 {
-  --tw-ring-color: rgb(148 163 184 / 0.24) !important;
-}
+.theme-light .admin-card-description { color: var(--text-secondary); }
+.theme-light .admin-card-metric { background: var(--bg-raised); color: var(--text-primary); }
+.theme-light .admin-card-action { color: var(--cyan); }
