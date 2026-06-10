@@ -1,18 +1,346 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* -------------------------------------------------------------------------- */
-/* Empty-state readability and trust styling                                   */
-/* -------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────
+   Base
+───────────────────────────────────────────── */
 
-.empty-state-panel {
-  border: 1px dashed rgb(203 213 225);
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 18rem),
-    rgba(255, 255, 255, 0.96);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --brand-orange: #f97316;
+    --brand-navy: #0f172a;
+    --surface: #ffffff;
+    --surface-soft: #f1f5f9;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.06), transparent 32rem),
+      linear-gradient(to bottom, #f8fafc, #eef2f7);
+    color: var(--foreground);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: #f97316;
+    color: white;
+  }
+
+  a {
+    text-underline-offset: 4px;
+  }
 }
+
+/* ─────────────────────────────────────────────
+   Layout system
+───────────────────────────────────────────── */
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen bg-slate-100 text-slate-950;
+  }
+
+  .section-shell {
+    @apply mx-auto max-w-7xl px-6;
+  }
+
+  .section-padding {
+    @apply py-20 sm:py-24;
+  }
+
+  .section-light {
+    @apply bg-slate-100;
+  }
+
+  .section-white {
+    @apply bg-white;
+  }
+
+  .section-dark {
+    @apply relative overflow-hidden bg-slate-950 text-white;
+  }
+
+  .hero-dark {
+    @apply relative overflow-hidden bg-slate-950 text-white;
+  }
+
+  .hero-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.26), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 30rem);
+    pointer-events: none;
+  }
+
+  .hero-fade {
+    @apply absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-100 to-transparent;
+  }
+
+  .content-panel {
+    @apply rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-2xl shadow-slate-900/10 backdrop-blur;
+  }
+
+  .dark-panel {
+    @apply relative overflow-hidden rounded-[2.25rem] bg-slate-950 text-white shadow-2xl shadow-slate-900/20;
+  }
+
+  .dark-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.22), transparent 30rem),
+      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 28rem);
+    pointer-events: none;
+  }
+
+  .dark-panel-content {
+    @apply relative;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Typography
+───────────────────────────────────────────── */
+
+@layer components {
+  .eyebrow {
+    @apply inline-flex rounded-full bg-orange-100 px-4 py-2 text-sm font-bold uppercase tracking-wide text-orange-700;
+  }
+
+  .eyebrow-dark {
+    @apply inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-bold uppercase tracking-wide text-orange-300;
+  }
+
+  .page-title {
+    @apply text-4xl font-black tracking-tight text-slate-950 sm:text-6xl;
+  }
+
+  .page-title-dark {
+    @apply text-4xl font-black tracking-tight text-white sm:text-6xl;
+  }
+
+  .section-title {
+    @apply text-3xl font-black tracking-tight text-slate-950 sm:text-5xl;
+  }
+
+  .section-title-dark {
+    @apply text-3xl font-black tracking-tight text-white sm:text-5xl;
+  }
+
+  .lead-text {
+    @apply text-lg font-medium leading-8 text-slate-700;
+  }
+
+  .lead-text-dark {
+    @apply text-lg font-medium leading-8 text-slate-300;
+  }
+
+  .muted-text {
+    @apply font-medium leading-7 text-slate-600;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Cards
+───────────────────────────────────────────── */
+
+@layer components {
+  .card {
+    @apply rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10;
+  }
+
+  .card-soft {
+    @apply rounded-[2rem] border border-slate-200 bg-slate-50 p-6 shadow-sm;
+  }
+
+  .card-dark {
+    @apply rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 text-white backdrop-blur;
+  }
+
+  .mini-card {
+    @apply rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200;
+  }
+
+  .mini-card-white {
+    @apply rounded-2xl bg-white p-4 ring-1 ring-slate-200;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Buttons and forms
+───────────────────────────────────────────── */
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-slate-100;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 font-bold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-bold text-white transition hover:bg-white/10;
+  }
+
+  .input-field {
+    @apply w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-medium text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-500 focus:ring-4 focus:ring-orange-100;
+  }
+
+  .label {
+    @apply mb-2 block text-sm font-bold text-slate-700;
+  }
+
+  .select-field {
+    @apply rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Badges and utilities
+───────────────────────────────────────────── */
+
+@layer components {
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold;
+  }
+
+  .badge-orange {
+    @apply badge bg-orange-100 text-orange-700;
+  }
+
+  .badge-slate {
+    @apply badge bg-slate-100 text-slate-700;
+  }
+
+  .badge-dark {
+    @apply badge border border-orange-400/30 bg-orange-500/10 text-orange-300;
+  }
+
+  .subtle-ring {
+    @apply ring-1 ring-slate-200;
+  }
+
+  .trust-badge {
+    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-slate-700;
+  }
+
+  .empty-state-panel {
+    border: 1px dashed rgb(203 213 225);
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 18rem),
+      rgba(255, 255, 255, 0.96);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply border border-white/50 bg-white/80 shadow-sm backdrop-blur;
+  }
+
+  .orange-glow {
+    box-shadow: 0 20px 80px rgba(249, 115, 22, 0.16);
+  }
+
+  .soft-gradient {
+    background:
+      radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 26rem),
+      linear-gradient(to bottom right, #ffffff, #f8fafc);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Focused readability safeguards
+───────────────────────────────────────────── */
+
+.content-panel .muted-text,
+.card .muted-text,
+.card-soft .muted-text,
+.mini-card .muted-text,
+.mini-card-white .muted-text {
+  color: rgb(71 85 105);
+  font-weight: 500;
+}
+
+.content-panel p,
+.card p,
+.card-soft p,
+.mini-card p,
+.mini-card-white p {
+  text-rendering: optimizeLegibility;
+}
+
+.input-field,
+.select-field,
+textarea.input-field,
+input.input-field {
+  color: rgb(15 23 42);
+}
+
+.input-field::placeholder,
+textarea.input-field::placeholder,
+input.input-field::placeholder {
+  color: rgb(100 116 139);
+  opacity: 1;
+}
+
+.dark-panel .muted-text,
+.hero-dark .muted-text {
+  color: rgb(203 213 225);
+}
+
+/* ─────────────────────────────────────────────
+   Navigation readability polish
+───────────────────────────────────────────── */
+
+nav a,
+nav button,
+footer a {
+  text-rendering: optimizeLegibility;
+}
+
+nav a,
+footer a {
+  font-weight: 700;
+}
+
+footer p {
+  text-rendering: optimizeLegibility;
+}
+
+/* ─────────────────────────────────────────────
+   Empty-state readability and trust styling
+───────────────────────────────────────────── */
 
 .theme-dark .empty-state-panel {
   border-color: rgb(148 163 184 / 0.28);
@@ -35,27 +363,12 @@
   color: #dbeafe !important;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Public trust badge readability                                              */
-/* -------------------------------------------------------------------------- */
-
-.trust-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: 9999px;
-  background-color: rgb(241 245 249);
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  color: rgb(51 65 85);
-}
+/* ─────────────────────────────────────────────
+   Public trust badge readability
+───────────────────────────────────────────── */
 
 .theme-dark .trust-badge {
   background-color: rgb(148 163 184 / 0.14);
   color: #e2e8f0;
   box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
 }
-
