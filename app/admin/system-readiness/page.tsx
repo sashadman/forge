@@ -289,7 +289,7 @@ export default async function AdminSystemReadinessPage() {
                 </h2>
 
                 <p className="mt-4 max-w-3xl leading-7 text-slate-300">
-                  Before real users test Forge, verify role routing, public
+                  Before real users test Ara Skills, verify role routing, public
                   visibility, RLS behavior, admin-only controls, environment
                   variables, and Supabase migration state.
                 </p>

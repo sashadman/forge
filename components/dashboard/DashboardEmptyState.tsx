@@ -36,7 +36,7 @@ export default function DashboardEmptyState({
 
             <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-slate-500">
               This dashboard only shows real saved or submitted items. As you
-              explore Forge, save the career paths, training programs, jobs, and
+              explore Ara Skills, save the career paths, training programs, jobs, and
               apprenticeships you want to compare or act on later.
             </p>
           </div>

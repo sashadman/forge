@@ -475,7 +475,7 @@ export default function ProgramsExplorer({
                         Status:
                       </span>{' '}
                       {program.record_kind === 'program'
-                        ? 'Verified by Forge'
+                        ? 'Verified by Ara Skills'
                         : 'Confirm with provider'}
                     </div>
                   </div>

@@ -39,7 +39,7 @@ export default function EmptyState({
           </p>
 
           <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-slate-500">
-            Forge keeps these sections honest: records appear only when they are
+            Ara Skills keeps these sections honest: records appear only when they are
             real, active, reviewed, or saved through the correct workflow.
           </p>
         </div>
