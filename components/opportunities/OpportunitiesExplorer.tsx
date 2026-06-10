@@ -263,8 +263,18 @@ export default function OpportunitiesExplorer({
                           {formatOpportunityType(opportunity.opportunity_type)}
                         </span>
 
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">
+                          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+                          Reviewed listing
+                        </span>
+
+                        <span className="trust-badge">
+                          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+                          Reviewed listing
+                        </span>
+
                         {employer?.is_verified && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700">
+                          <span className="trust-badge">
                             <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
                             Verified employer
                           </span>

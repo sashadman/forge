@@ -34,3 +34,28 @@
 .theme-dark .empty-state-panel .text-slate-500 {
   color: #dbeafe !important;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Public trust badge readability                                              */
+/* -------------------------------------------------------------------------- */
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  background-color: rgb(241 245 249);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: rgb(51 65 85);
+}
+
+.theme-dark .trust-badge {
+  background-color: rgb(148 163 184 / 0.14);
+  color: #e2e8f0;
+  box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
+}
+
