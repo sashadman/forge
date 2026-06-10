@@ -172,14 +172,14 @@ export default async function DashboardPage() {
       <SiteNavbar />
 
       <section className="relative overflow-hidden bg-slate-950">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-fuchsia-500/10 to-cyan-500/10" />
-        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-orange-500/20 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 via-indigo-500/8 to-slate-700/8" />
+        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-500/8 blur-xl" />
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-xl" />
 
         <div className="section-shell relative py-16 md:py-20">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-orange-200 shadow-lg shadow-orange-950/20 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-indigo-200 shadow-lg shadow-slate-950/10 backdrop-blur">
                 <Gamepad2 className="h-4 w-4" />
                 Career seeker mission hub
               </div>
@@ -206,7 +206,7 @@ export default async function DashboardPage() {
               <div className="mt-4 flex items-end gap-4">
                 <p className="text-5xl font-black">{level}</p>
                 <div className="pb-1">
-                  <p className="font-bold text-orange-200">
+                  <p className="font-bold text-indigo-200">
                     {readinessScore}% readiness
                   </p>
                   <p className="text-sm text-slate-400">
@@ -224,14 +224,14 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="mt-10 rounded-[2rem] border border-orange-300/20 bg-slate-900/80 p-6 shadow-2xl shadow-orange-950/20 backdrop-blur md:p-8">
+          <div className="mt-10 rounded-[2rem] border border-indigo-300/20 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/10 backdrop-blur md:p-8">
             <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr_auto] lg:items-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-300 ring-1 ring-orange-300/30">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/8 text-indigo-300 ring-1 ring-orange-300/30">
                 <NextMissionIcon className="h-8 w-8" />
               </div>
 
               <div>
-                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-orange-300">
+                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-indigo-300">
                   <Sparkles className="h-4 w-4" />
                   Next mission
                 </div>
@@ -264,12 +264,12 @@ export default async function DashboardPage() {
                 <Link
                   key={mission.title}
                   href={mission.href}
-                  className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-orange-300/40 hover:bg-white/[0.09]"
+                  className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-indigo-300/30 hover:bg-white/[0.09]"
                 >
                   <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-400 via-fuchsia-400 to-cyan-300 opacity-70" />
 
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/10">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-indigo-300 ring-1 ring-white/10">
                       <Icon className="h-7 w-7" />
                     </div>
 
@@ -286,7 +286,7 @@ export default async function DashboardPage() {
                     {mission.description}
                   </p>
 
-                  <div className="mt-6 flex items-center gap-2 text-sm font-bold text-orange-300">
+                  <div className="mt-6 flex items-center gap-2 text-sm font-bold text-indigo-300">
                     {mission.action}
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </div>
@@ -297,7 +297,7 @@ export default async function DashboardPage() {
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
-              <Trophy className="h-7 w-7 text-orange-300" />
+              <Trophy className="h-7 w-7 text-indigo-300" />
               <p className="mt-4 text-3xl font-black">{applicationCount}</p>
               <p className="mt-1 text-sm font-semibold text-slate-400">
                 Submitted applications
@@ -323,7 +323,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="mt-10 rounded-[2rem] border border-white/10 bg-gradient-to-r from-orange-500/10 via-fuchsia-500/10 to-cyan-500/10 p-8">
+          <div className="mt-10 rounded-[2rem] border border-white/10 bg-gradient-to-r from-orange-500/10 via-indigo-500/8 to-slate-700/8 p-8">
             <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-cyan-200">

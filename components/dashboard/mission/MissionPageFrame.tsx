@@ -53,24 +53,24 @@ export default function MissionPageFrame({
         <div
           className={
             isDay
-              ? 'absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,146,60,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(20,184,166,0.18),transparent_35%)]'
-              : 'absolute inset-0 bg-gradient-to-br from-orange-500/16 via-emerald-500/8 to-cyan-500/10'
+              ? 'absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,146,60,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.14),transparent_35%)]'
+              : 'absolute inset-0 bg-gradient-to-br from-orange-500/16 via-emerald-500/8 to-slate-700/8'
           }
         />
 
         <div
           className={
             isDay
-              ? 'absolute left-1/3 top-0 h-80 w-80 rounded-full bg-orange-300/25 blur-3xl'
-              : 'absolute left-1/3 top-0 h-80 w-80 rounded-full bg-orange-500/15 blur-3xl'
+              ? 'absolute left-1/3 top-0 h-80 w-80 rounded-full bg-indigo-300/10 blur-xl'
+              : 'absolute left-1/3 top-0 h-80 w-80 rounded-full bg-indigo-500/8 blur-xl'
           }
         />
 
         <div
           className={
             isDay
-              ? 'absolute bottom-0 right-0 h-80 w-80 rounded-full bg-teal-300/20 blur-3xl'
-              : 'absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl'
+              ? 'absolute bottom-0 right-0 h-80 w-80 rounded-full bg-teal-300/20 blur-xl'
+              : 'absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/10 blur-xl'
           }
         />
 
@@ -81,7 +81,7 @@ export default function MissionPageFrame({
               className={
                 isDay
                   ? 'inline-flex w-fit items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:border-orange-300 hover:text-orange-700'
-                  : 'inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-slate-200 shadow-sm transition hover:border-orange-300/40 hover:text-orange-200'
+                  : 'inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-slate-200 shadow-sm transition hover:border-indigo-300/30 hover:text-indigo-200'
               }
             >
               <ArrowLeft className="h-4 w-4" />
@@ -96,7 +96,7 @@ export default function MissionPageFrame({
               className={
                 isDay
                   ? 'inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/70 px-4 py-2 text-sm font-black uppercase tracking-[0.25em] text-orange-700 shadow-sm'
-                  : 'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-black uppercase tracking-[0.25em] text-orange-200 shadow-lg shadow-orange-950/20 backdrop-blur'
+                  : 'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-black uppercase tracking-[0.25em] text-indigo-200 shadow-lg shadow-slate-950/10 backdrop-blur'
               }
             >
               <TerminalSquare className="h-4 w-4" />

@@ -86,7 +86,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     <div className="w-full max-w-5xl">
       <div className="grid overflow-hidden rounded-[2.25rem] border border-white/70 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="relative hidden overflow-hidden bg-slate-950 p-10 text-white lg:block">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.28),transparent_28rem)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.10),transparent_28rem)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.14),transparent_24rem)]" />
 
           <div className="relative flex h-full flex-col justify-between">

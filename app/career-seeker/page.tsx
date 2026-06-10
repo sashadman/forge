@@ -79,11 +79,11 @@ export default function CareerSeekerPage() {
       <SiteNavbar />
 
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.22),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(34,197,94,0.12),transparent_30%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.10),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.16),transparent_32%)]" />
 
         <div className="section-shell relative py-24">
           <div className="max-w-4xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-orange-300/20 bg-orange-500/15 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-orange-200">
+            <p className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-indigo-200">
               <Trophy className="h-4 w-4" />
               Career seeker path
             </p>
@@ -145,27 +145,27 @@ export default function CareerSeekerPage() {
                   <Link
                     key={mission.title}
                     href={mission.href}
-                    className="group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl"
+                    className="group rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-1 hover:border-indigo-300/40 hover:bg-slate-900"
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/15 text-indigo-200 ring-1 ring-indigo-300/20">
                         <Icon className="h-7 w-7" />
                       </div>
 
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase tracking-wide text-slate-600">
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-slate-200 ring-1 ring-white/10">
                         {mission.level}
                       </span>
                     </div>
 
-                    <h3 className="mt-6 text-2xl font-black tracking-tight text-slate-950">
+                    <h3 className="mt-6 text-2xl font-black tracking-tight text-white">
                       {mission.title}
                     </h3>
 
-                    <p className="mt-3 leading-7 text-slate-600">
+                    <p className="mt-3 leading-7 text-slate-300">
                       {mission.description}
                     </p>
 
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-black text-orange-700">
+                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-black text-indigo-200">
                       Open mission
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </div>
@@ -202,7 +202,7 @@ function StatCard({
           <p className="mt-2 text-2xl font-black text-slate-950">{value}</p>
         </div>
 
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
           {icon}
         </div>
       </div>

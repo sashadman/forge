@@ -22,17 +22,17 @@ export default function MissionNextStep({
 }: MissionNextStepProps) {
   return (
     <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-2xl shadow-slate-950/20">
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/15 via-emerald-500/10 to-cyan-500/10" />
-      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-orange-500/20 blur-3xl" />
-      <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-cyan-500/10 blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 via-slate-700/10 to-slate-700/8" />
+      <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-indigo-500/8 blur-xl" />
+      <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-cyan-500/10 blur-xl" />
 
       <div className="relative grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-indigo-300 ring-1 ring-white/15">
           <CheckCircle2 className="h-8 w-8" />
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-orange-300">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-indigo-300">
             <Sparkles className="h-4 w-4" />
             {eyebrow}
           </div>

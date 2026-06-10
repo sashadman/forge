@@ -42,11 +42,11 @@ export default function ReadinessMissionGuide() {
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-2xl shadow-slate-950/20">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/15 via-emerald-500/10 to-cyan-500/10" />
-        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-orange-500/20 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 via-slate-700/10 to-slate-700/8" />
+        <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/8 blur-xl" />
 
         <div className="relative">
-          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-orange-300">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-indigo-300">
             <FileText className="h-4 w-4" />
             Readiness strategy
           </div>
@@ -61,9 +61,9 @@ export default function ReadinessMissionGuide() {
             add optional boosters when they make sense.
           </p>
 
-          <div className="mt-6 rounded-2xl border border-orange-300/20 bg-orange-500/10 p-5">
+          <div className="mt-6 rounded-2xl border border-indigo-300/20 bg-orange-500/10 p-5">
             <div className="flex gap-3">
-              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-indigo-300" />
 
               <p className="text-sm leading-6 text-orange-100">
                 Do not wait for a perfect profile forever. The goal is to become

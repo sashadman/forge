@@ -64,15 +64,15 @@ export default function HomePage() {
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-white">
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute left-1/2 top-[-8rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-orange-500/20 blur-3xl" />
-        <div className="absolute bottom-[-8rem] right-[-4rem] h-[30rem] w-[30rem] rounded-full bg-cyan-400/10 blur-3xl" />
-        <div className="absolute bottom-[18rem] left-[-6rem] h-[26rem] w-[26rem] rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="absolute left-1/2 top-[-8rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-indigo-500/8 blur-xl" />
+        <div className="absolute bottom-[-8rem] right-[-4rem] h-[30rem] w-[30rem] rounded-full bg-cyan-400/10 blur-xl" />
+        <div className="absolute bottom-[18rem] left-[-6rem] h-[26rem] w-[26rem] rounded-full bg-emerald-400/10 blur-xl" />
       </div>
 
       <section className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-8 sm:px-8 lg:px-10">
         <header className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg shadow-orange-500/20">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg shadow-slate-950/10">
               <Hammer className="h-6 w-6" />
             </div>
 
@@ -90,11 +90,11 @@ export default function HomePage() {
 
         <section className="grid flex-1 content-center gap-8 py-12">
           <div className="relative overflow-hidden rounded-[2.75rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur md:p-10 lg:p-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.18),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(34,211,238,0.10),transparent_30%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.08),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.12),transparent_30%)]" />
 
             <div className="relative grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-orange-300/20 bg-orange-500/15 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-orange-200">
+                <div className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-500/8 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-indigo-200">
                   <Sparkles className="h-4 w-4" />
                   Welcome
                 </div>
@@ -121,7 +121,7 @@ export default function HomePage() {
                     'Training providers verify and submit programs.',
                   ].map((item) => (
                     <div key={item} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-indigo-300" />
                       <p className="leading-7 text-slate-300">{item}</p>
                     </div>
                   ))}
@@ -179,9 +179,9 @@ function RoleCard({
     role.accent === 'orange'
       ? {
           border: 'hover:border-orange-300/50',
-          glow: 'bg-orange-500/20',
-          icon: 'bg-orange-500/15 text-orange-200 ring-orange-400/20',
-          text: 'text-orange-200',
+          glow: 'bg-indigo-500/8',
+          icon: 'bg-indigo-500/8 text-indigo-200 ring-orange-400/20',
+          text: 'text-indigo-200',
           button: 'group-hover:bg-orange-100',
         }
       : role.accent === 'emerald'
@@ -208,7 +208,7 @@ function RoleCard({
       }`}
     >
       <div
-        className={`absolute right-[-6rem] top-[-6rem] h-56 w-56 rounded-full ${accentClasses.glow} blur-3xl`}
+        className={`absolute right-[-6rem] top-[-6rem] h-56 w-56 rounded-full ${accentClasses.glow} blur-xl`}
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_32%)]" />
 

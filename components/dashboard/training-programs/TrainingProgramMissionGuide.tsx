@@ -52,12 +52,12 @@ export default function TrainingProgramMissionGuide({
   return (
     <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-2xl shadow-slate-950/20">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/15 via-emerald-500/10 to-cyan-500/10" />
-        <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-orange-500/20 blur-3xl" />
-        <div className="absolute -bottom-20 left-8 h-52 w-52 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 via-slate-700/10 to-slate-700/8" />
+        <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-indigo-500/8 blur-xl" />
+        <div className="absolute -bottom-20 left-8 h-52 w-52 rounded-full bg-cyan-500/10 blur-xl" />
 
         <div className="relative">
-          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-orange-300">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-indigo-300">
             <GraduationCap className="h-4 w-4" />
             Training strategy
           </div>
@@ -74,7 +74,7 @@ export default function TrainingProgramMissionGuide({
 
           <div className="mt-7 grid gap-4 sm:grid-cols-4">
             <div className="rounded-2xl border border-white/10 bg-white/10 p-4">
-              <Layers3 className="h-6 w-6 text-orange-300" />
+              <Layers3 className="h-6 w-6 text-indigo-300" />
               <p className="mt-3 text-3xl font-black">{savedCount}</p>
               <p className="mt-1 text-xs font-bold uppercase tracking-wide text-slate-400">
                 Saved
@@ -107,7 +107,7 @@ export default function TrainingProgramMissionGuide({
           </div>
 
           {!hasSavedPrograms && (
-            <div className="mt-7 rounded-2xl border border-orange-300/20 bg-orange-500/10 p-5">
+            <div className="mt-7 rounded-2xl border border-indigo-300/20 bg-orange-500/10 p-5">
               <p className="font-bold text-orange-100">
                 Start by saving training programs that match your career path.
               </p>

@@ -53,13 +53,13 @@ export default function ProfileCompletionMeter({
 
   return (
     <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-950/20">
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/15 via-emerald-500/10 to-cyan-500/10" />
-      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-orange-500/20 blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/8 via-slate-700/10 to-slate-700/8" />
+      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/8 blur-xl" />
 
       <div className="relative">
         <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-orange-300">
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.3em] text-indigo-300">
               <Trophy className="h-4 w-4" />
               Profile status
             </div>
