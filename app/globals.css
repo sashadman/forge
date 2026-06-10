@@ -665,3 +665,81 @@ footer p {
   font-weight: 700;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Admin dashboard card readability                                            */
+/* -------------------------------------------------------------------------- */
+
+.admin-action-card {
+  border: 1px solid rgb(203 213 225);
+  background: #ffffff;
+  color: rgb(15 23 42);
+  box-shadow: 0 12px 30px rgb(15 23 42 / 0.08);
+}
+
+.admin-action-card-featured {
+  border-color: rgb(251 146 60 / 0.7);
+  background:
+    radial-gradient(circle at top left, rgb(255 237 213 / 0.8), transparent 18rem),
+    #ffffff;
+}
+
+.admin-action-card h1,
+.admin-action-card h2,
+.admin-action-card h3,
+.admin-action-card p,
+.admin-action-card span {
+  color: rgb(15 23 42) !important;
+}
+
+.admin-action-card .admin-card-description {
+  color: rgb(51 65 85) !important;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.admin-action-card .admin-card-metric {
+  background: rgb(241 245 249);
+  color: rgb(15 23 42) !important;
+  font-weight: 900;
+}
+
+.admin-action-card .admin-card-action {
+  color: rgb(154 52 18) !important;
+  font-weight: 900;
+}
+
+.theme-dark .admin-action-card {
+  border-color: rgb(148 163 184 / 0.28);
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.theme-dark .admin-action-card-featured {
+  border-color: rgb(251 146 60 / 0.55);
+  background:
+    radial-gradient(circle at top left, rgb(249 115 22 / 0.18), transparent 18rem),
+    #1e293b;
+}
+
+.theme-dark .admin-action-card h1,
+.theme-dark .admin-action-card h2,
+.theme-dark .admin-action-card h3,
+.theme-dark .admin-action-card p,
+.theme-dark .admin-action-card span {
+  color: #ffffff !important;
+}
+
+.theme-dark .admin-action-card .admin-card-description {
+  color: #dbeafe !important;
+}
+
+.theme-dark .admin-action-card .admin-card-metric {
+  background: rgb(255 255 255 / 0.1);
+  color: #ffffff !important;
+}
+
+.theme-dark .admin-action-card .admin-card-action {
+  color: #fed7aa !important;
+}
+

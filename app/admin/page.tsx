@@ -445,10 +445,8 @@ function AdminActionCard({
   return (
     <Link
       href={href}
-      className={`group rounded-3xl border p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
-        featured
-          ? 'highlight-card'
-          : 'border-slate-200 bg-white'
+      className={`admin-action-card group rounded-3xl p-6 transition hover:-translate-y-1 hover:shadow-xl ${
+        featured ? 'admin-action-card-featured' : ''
       }`}
     >
       <div
