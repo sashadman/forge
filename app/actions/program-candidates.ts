@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export type ProgramCandidateReviewFilters = {
   status?: string
@@ -48,6 +49,31 @@ function asRpcClient(client: unknown) {
   return client as SupabaseRpcClient
 }
 
+async function requireAdminUser() {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    throw new Error('You must be signed in.')
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profileError || profile?.role !== 'admin') {
+    throw new Error('You do not have permission to perform this action.')
+  }
+
+  return user
+}
+
 function getCandidateId(input: CandidateActionInput) {
   if (input instanceof FormData) {
     const candidateId = input.get('candidateId')
@@ -85,7 +111,9 @@ export async function getProgramCandidatesForReview({
   limit = 50,
   offset = 0,
 }: ProgramCandidateReviewFilters = {}) {
-  const supabase = asRpcClient(await createClient())
+  await requireAdminUser()
+
+  const supabase = asRpcClient(createAdminClient())
 
   const { data, error } = await supabase.rpc(
     'list_training_program_candidates_for_review',
@@ -107,7 +135,10 @@ export async function getProgramCandidatesForReview({
 
 export async function promoteProgramCandidate(input: CandidateActionInput) {
   const candidateId = getCandidateId(input)
-  const supabase = asRpcClient(await createClient())
+
+  await requireAdminUser()
+
+  const supabase = asRpcClient(createAdminClient())
 
   const { error } = await supabase.rpc('promote_training_program_candidate', {
     candidate_id: candidateId,
@@ -125,7 +156,10 @@ export async function promoteProgramCandidate(input: CandidateActionInput) {
 export async function rejectProgramCandidate(input: CandidateActionInput) {
   const candidateId = getCandidateId(input)
   const notes = getNotes(input, 'Rejected from admin candidate review queue.')
-  const supabase = asRpcClient(await createClient())
+
+  await requireAdminUser()
+
+  const supabase = asRpcClient(createAdminClient())
 
   const { error } = await supabase.rpc('reject_training_program_candidate', {
     candidate_id: candidateId,
@@ -155,7 +189,9 @@ export async function markProgramCandidateDuplicate(formData: FormData) {
     throw new Error('Duplicate candidate ID is required.')
   }
 
-  const supabase = asRpcClient(await createClient())
+  await requireAdminUser()
+
+  const supabase = asRpcClient(createAdminClient())
 
   const { error } = await supabase.rpc(
     'mark_training_program_candidate_duplicate',
@@ -188,9 +224,10 @@ export async function publishProgramCandidate(input: CandidateActionInput) {
  */
 export async function updateProgramCandidateStatus(input: CandidateActionInput) {
   const candidateId = getCandidateId(input)
-  const status = input instanceof FormData 
-  ? input.get('status')
-   : input.status ?? input.verificationStatus
+  const status =
+    input instanceof FormData
+      ? input.get('status')
+      : input.status ?? input.verificationStatus
   const notes = getNotes(input, 'Updated from admin candidate review queue.')
 
   if (status === 'rejected') {
@@ -211,7 +248,9 @@ export async function updateProgramCandidateStatus(input: CandidateActionInput) 
     throw new Error('Unsupported candidate status update.')
   }
 
-  const supabase = asRpcClient(await createClient())
+  await requireAdminUser()
+
+  const supabase = asRpcClient(createAdminClient())
 
   const { error } = await supabase
     .from('training_program_candidates')
