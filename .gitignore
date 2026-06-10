@@ -27,3 +27,11 @@ pnpm-debug.log*
 # system files
 .DS_Store
 .vercel
+
+# Local environment secrets
+.env
+.env.*
+!.env.example
+
+# Supabase local CLI state
+supabase/.temp/
