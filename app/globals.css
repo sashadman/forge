@@ -372,3 +372,66 @@ footer p {
   color: #e2e8f0;
   box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
 }
+/* -------------------------------------------------------------------------- */
+/* Readable highlighted cards                                                  */
+/* -------------------------------------------------------------------------- */
+
+.highlight-card {
+  border-color: rgb(251 146 60 / 0.65) !important;
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.14), transparent 16rem),
+    linear-gradient(135deg, #fff7ed, #ffffff);
+  color: rgb(15 23 42);
+}
+
+.highlight-card h1,
+.highlight-card h2,
+.highlight-card h3,
+.highlight-card h4,
+.highlight-card p,
+.highlight-card span {
+  color: rgb(15 23 42);
+}
+
+.highlight-card .muted-text,
+.highlight-card .text-slate-400,
+.highlight-card .text-slate-500,
+.highlight-card .text-slate-600,
+.highlight-card .text-orange-600,
+.highlight-card .text-orange-700 {
+  color: rgb(51 65 85) !important;
+  font-weight: 700;
+}
+
+.highlight-card .badge-orange {
+  background-color: rgb(234 88 12);
+  color: white;
+}
+
+.theme-dark .highlight-card {
+  border-color: rgb(251 146 60 / 0.45) !important;
+  background:
+    radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 16rem),
+    #1e293b;
+  color: #ffffff;
+}
+
+.theme-dark .highlight-card h1,
+.theme-dark .highlight-card h2,
+.theme-dark .highlight-card h3,
+.theme-dark .highlight-card h4,
+.theme-dark .highlight-card p,
+.theme-dark .highlight-card span {
+  color: #ffffff;
+}
+
+.theme-dark .highlight-card .muted-text,
+.theme-dark .highlight-card .text-slate-400,
+.theme-dark .highlight-card .text-slate-500,
+.theme-dark .highlight-card .text-slate-600,
+.theme-dark .highlight-card .text-orange-600,
+.theme-dark .highlight-card .text-orange-700 {
+  color: #dbeafe !important;
+  font-weight: 700;
+}
+

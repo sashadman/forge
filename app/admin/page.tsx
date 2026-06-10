@@ -447,7 +447,7 @@ function AdminActionCard({
       href={href}
       className={`group rounded-3xl border p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
         featured
-          ? 'border-orange-200 bg-orange-50'
+          ? 'highlight-card'
           : 'border-slate-200 bg-white'
       }`}
     >
