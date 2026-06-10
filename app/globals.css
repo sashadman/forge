@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +10,7 @@
   :root {
     --background: #f8fafc;
     --foreground: #0f172a;
-    --brand-orange: #f97316;
+    --brand-primary: #4f46e5;   /* indigo-600  — swap this one var to recolor everything */
     --brand-navy: #0f172a;
     --surface: #ffffff;
     --surface-soft: #f1f5f9;
@@ -24,8 +23,8 @@
   body {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 34rem),
-      radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.06), transparent 32rem),
+      radial-gradient(circle at top left, rgba(79, 70, 229, 0.07), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.05), transparent 32rem),
       linear-gradient(to bottom, #f8fafc, #eef2f7);
     color: var(--foreground);
     text-rendering: optimizeLegibility;
@@ -34,7 +33,7 @@
   }
 
   ::selection {
-    background: #f97316;
+    background: #4f46e5;
     color: white;
   }
 
@@ -81,8 +80,8 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.26), transparent 34rem),
-      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 30rem);
+      radial-gradient(circle at top left, rgba(79, 70, 229, 0.22), transparent 34rem),
+      radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.12), transparent 30rem);
     pointer-events: none;
   }
 
@@ -103,8 +102,8 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.22), transparent 30rem),
-      radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 28rem);
+      radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 30rem),
+      radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.10), transparent 28rem);
     pointer-events: none;
   }
 
@@ -119,11 +118,11 @@
 
 @layer components {
   .eyebrow {
-    @apply inline-flex rounded-full bg-orange-100 px-4 py-2 text-sm font-bold uppercase tracking-wide text-orange-700;
+    @apply inline-flex rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-indigo-700;
   }
 
   .eyebrow-dark {
-    @apply inline-flex rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2 text-sm font-bold uppercase tracking-wide text-orange-300;
+    @apply inline-flex rounded-full border border-indigo-400/30 bg-indigo-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-indigo-300;
   }
 
   .page-title {
@@ -143,15 +142,15 @@
   }
 
   .lead-text {
-    @apply text-lg font-medium leading-8 text-slate-700;
+    @apply text-lg leading-8 text-slate-600;
   }
 
   .lead-text-dark {
-    @apply text-lg font-medium leading-8 text-slate-300;
+    @apply text-lg leading-8 text-slate-300;
   }
 
   .muted-text {
-    @apply font-medium leading-7 text-slate-600;
+    @apply leading-7 text-slate-500;
   }
 }
 
@@ -165,7 +164,7 @@
   }
 
   .card-hover {
-    @apply hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/10;
+    @apply hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-slate-900/10;
   }
 
   .card-soft {
@@ -191,35 +190,35 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-dark {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-light {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-slate-950 transition hover:bg-slate-100;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-slate-950 transition hover:bg-slate-100;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 font-bold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-6 py-3 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-outline-dark {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-bold text-white transition hover:bg-white/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10;
   }
 
   .input-field {
-    @apply w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-medium text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-500 focus:ring-4 focus:ring-orange-100;
+    @apply w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100;
   }
 
   .label {
-    @apply mb-2 block text-sm font-bold text-slate-700;
+    @apply mb-2 block text-sm font-semibold text-slate-700;
   }
 
   .select-field {
-    @apply rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+    @apply rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100;
   }
 }
 
@@ -229,11 +228,11 @@
 
 @layer components {
   .badge {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-bold;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
   }
 
-  .badge-orange {
-    @apply badge bg-orange-100 text-orange-700;
+  .badge-primary {
+    @apply badge bg-indigo-100 text-indigo-700;
   }
 
   .badge-slate {
@@ -241,7 +240,7 @@
   }
 
   .badge-dark {
-    @apply badge border border-orange-400/30 bg-orange-500/10 text-orange-300;
+    @apply badge border border-indigo-400/30 bg-indigo-500/10 text-indigo-300;
   }
 
   .subtle-ring {
@@ -249,17 +248,19 @@
   }
 
   .trust-badge {
-    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-slate-700;
+    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-700;
   }
 
   .empty-state-panel {
     border: 1px dashed rgb(203 213 225);
-    background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 18rem),
-      rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.96);
     border-radius: 1.5rem;
     padding: 2rem;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .highlight-card {
+    @apply border-indigo-200 bg-indigo-50/60;
   }
 }
 
@@ -268,407 +269,44 @@
     @apply border border-white/50 bg-white/80 shadow-sm backdrop-blur;
   }
 
-  .orange-glow {
-    box-shadow: 0 20px 80px rgba(249, 115, 22, 0.16);
+  .primary-glow {
+    box-shadow: 0 20px 80px rgba(79, 70, 229, 0.14);
   }
 
   .soft-gradient {
-    background:
-      radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 26rem),
-      linear-gradient(to bottom right, #ffffff, #f8fafc);
+    background: linear-gradient(to bottom right, #ffffff, #f8fafc);
   }
 }
 
 /* ─────────────────────────────────────────────
-   Focused readability safeguards
-───────────────────────────────────────────── */
-
-.content-panel .muted-text,
-.card .muted-text,
-.card-soft .muted-text,
-.mini-card .muted-text,
-.mini-card-white .muted-text {
-  color: rgb(71 85 105);
-  font-weight: 500;
-}
-
-.content-panel p,
-.card p,
-.card-soft p,
-.mini-card p,
-.mini-card-white p {
-  text-rendering: optimizeLegibility;
-}
-
-.input-field,
-.select-field,
-textarea.input-field,
-input.input-field {
-  color: rgb(15 23 42);
-}
-
-.input-field::placeholder,
-textarea.input-field::placeholder,
-input.input-field::placeholder {
-  color: rgb(100 116 139);
-  opacity: 1;
-}
-
-.dark-panel .muted-text,
-.hero-dark .muted-text {
-  color: rgb(203 213 225);
-}
-
-/* ─────────────────────────────────────────────
-   Navigation readability polish
-───────────────────────────────────────────── */
-
-nav a,
-nav button,
-footer a {
-  text-rendering: optimizeLegibility;
-}
-
-nav a,
-footer a {
-  font-weight: 700;
-}
-
-footer p {
-  text-rendering: optimizeLegibility;
-}
-
-/* ─────────────────────────────────────────────
-   Empty-state readability and trust styling
+   Dark theme
 ───────────────────────────────────────────── */
 
 .theme-dark .empty-state-panel {
   border-color: rgb(148 163 184 / 0.28);
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 18rem),
-    #0f172a;
+  background: #0f172a;
   color: #f8fafc;
 }
-
-.theme-dark .empty-state-panel h1,
-.theme-dark .empty-state-panel h2,
-.theme-dark .empty-state-panel h3,
-.theme-dark .empty-state-panel .text-slate-950 {
-  color: #ffffff !important;
-}
-
-.theme-dark .empty-state-panel p,
-.theme-dark .empty-state-panel .text-slate-600,
-.theme-dark .empty-state-panel .text-slate-500 {
-  color: #dbeafe !important;
-}
-
-/* ─────────────────────────────────────────────
-   Public trust badge readability
-───────────────────────────────────────────── */
 
 .theme-dark .trust-badge {
   background-color: rgb(148 163 184 / 0.14);
   color: #e2e8f0;
   box-shadow: inset 0 0 0 1px rgb(148 163 184 / 0.22);
 }
-/* -------------------------------------------------------------------------- */
-/* Readable highlighted cards                                                  */
-/* -------------------------------------------------------------------------- */
 
-.highlight-card {
-  border-color: rgb(251 146 60 / 0.65) !important;
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.14), transparent 16rem),
-    linear-gradient(135deg, #fff7ed, #ffffff);
-  color: rgb(15 23 42);
-}
-
-.highlight-card h1,
-.highlight-card h2,
-.highlight-card h3,
-.highlight-card h4,
-.highlight-card p,
-.highlight-card span {
-  color: rgb(15 23 42);
-}
-
-.highlight-card .muted-text,
-.highlight-card .text-slate-400,
-.highlight-card .text-slate-500,
-.highlight-card .text-slate-600,
-.highlight-card .text-orange-600,
-.highlight-card .text-orange-700 {
-  color: rgb(51 65 85) !important;
-  font-weight: 700;
-}
-
-.highlight-card .badge-orange {
-  background-color: rgb(234 88 12);
-  color: white;
-}
-
-.theme-dark .highlight-card {
-  border-color: rgb(251 146 60 / 0.45) !important;
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 16rem),
-    #1e293b;
-  color: #ffffff;
-}
-
-.theme-dark .highlight-card h1,
-.theme-dark .highlight-card h2,
-.theme-dark .highlight-card h3,
-.theme-dark .highlight-card h4,
-.theme-dark .highlight-card p,
-.theme-dark .highlight-card span {
-  color: #ffffff;
-}
-
-.theme-dark .highlight-card .muted-text,
-.theme-dark .highlight-card .text-slate-400,
-.theme-dark .highlight-card .text-slate-500,
-.theme-dark .highlight-card .text-slate-600,
-.theme-dark .highlight-card .text-orange-600,
-.theme-dark .highlight-card .text-orange-700 {
-  color: #dbeafe !important;
-  font-weight: 700;
-}
-
-
-/* -------------------------------------------------------------------------- */
-/* Orange highlight readability                                                */
-/* Fixes low-contrast text inside border-orange-200 + bg-orange-50 surfaces.    */
-/* -------------------------------------------------------------------------- */
-
-.border-orange-200.bg-orange-50,
-.border-orange-300.bg-orange-50,
-.border-orange-400.bg-orange-50 {
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 16rem),
-    linear-gradient(135deg, #fff7ed, #ffffff);
-  color: rgb(15 23 42);
-}
-
-.border-orange-200.bg-orange-50 h1,
-.border-orange-200.bg-orange-50 h2,
-.border-orange-200.bg-orange-50 h3,
-.border-orange-200.bg-orange-50 h4,
-.border-orange-200.bg-orange-50 p,
-.border-orange-200.bg-orange-50 span,
-.border-orange-200.bg-orange-50 li,
-.border-orange-200.bg-orange-50 label,
-.border-orange-300.bg-orange-50 h1,
-.border-orange-300.bg-orange-50 h2,
-.border-orange-300.bg-orange-50 h3,
-.border-orange-300.bg-orange-50 h4,
-.border-orange-300.bg-orange-50 p,
-.border-orange-300.bg-orange-50 span,
-.border-orange-300.bg-orange-50 li,
-.border-orange-300.bg-orange-50 label,
-.border-orange-400.bg-orange-50 h1,
-.border-orange-400.bg-orange-50 h2,
-.border-orange-400.bg-orange-50 h3,
-.border-orange-400.bg-orange-50 h4,
-.border-orange-400.bg-orange-50 p,
-.border-orange-400.bg-orange-50 span,
-.border-orange-400.bg-orange-50 li,
-.border-orange-400.bg-orange-50 label {
-  color: rgb(15 23 42);
-}
-
-.border-orange-200.bg-orange-50 .text-orange-600,
-.border-orange-200.bg-orange-50 .text-orange-700,
-.border-orange-200.bg-orange-50 .text-orange-800,
-.border-orange-200.bg-orange-50 .text-slate-500,
-.border-orange-200.bg-orange-50 .text-slate-600,
-.border-orange-200.bg-orange-50 .text-slate-700,
-.border-orange-300.bg-orange-50 .text-orange-600,
-.border-orange-300.bg-orange-50 .text-orange-700,
-.border-orange-300.bg-orange-50 .text-orange-800,
-.border-orange-300.bg-orange-50 .text-slate-500,
-.border-orange-300.bg-orange-50 .text-slate-600,
-.border-orange-300.bg-orange-50 .text-slate-700,
-.border-orange-400.bg-orange-50 .text-orange-600,
-.border-orange-400.bg-orange-50 .text-orange-700,
-.border-orange-400.bg-orange-50 .text-orange-800,
-.border-orange-400.bg-orange-50 .text-slate-500,
-.border-orange-400.bg-orange-50 .text-slate-600,
-.border-orange-400.bg-orange-50 .text-slate-700 {
-  color: rgb(51 65 85) !important;
-  font-weight: 700;
-}
-
-.theme-dark .border-orange-200.bg-orange-50,
-.theme-dark .border-orange-300.bg-orange-50,
-.theme-dark .border-orange-400.bg-orange-50 {
-  background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.16), transparent 16rem),
-    #1e293b;
-  color: #ffffff;
-}
-
-.theme-dark .border-orange-200.bg-orange-50 h1,
-.theme-dark .border-orange-200.bg-orange-50 h2,
-.theme-dark .border-orange-200.bg-orange-50 h3,
-.theme-dark .border-orange-200.bg-orange-50 h4,
-.theme-dark .border-orange-200.bg-orange-50 p,
-.theme-dark .border-orange-200.bg-orange-50 span,
-.theme-dark .border-orange-200.bg-orange-50 li,
-.theme-dark .border-orange-200.bg-orange-50 label,
-.theme-dark .border-orange-300.bg-orange-50 h1,
-.theme-dark .border-orange-300.bg-orange-50 h2,
-.theme-dark .border-orange-300.bg-orange-50 h3,
-.theme-dark .border-orange-300.bg-orange-50 h4,
-.theme-dark .border-orange-300.bg-orange-50 p,
-.theme-dark .border-orange-300.bg-orange-50 span,
-.theme-dark .border-orange-300.bg-orange-50 li,
-.theme-dark .border-orange-300.bg-orange-50 label,
-.theme-dark .border-orange-400.bg-orange-50 h1,
-.theme-dark .border-orange-400.bg-orange-50 h2,
-.theme-dark .border-orange-400.bg-orange-50 h3,
-.theme-dark .border-orange-400.bg-orange-50 h4,
-.theme-dark .border-orange-400.bg-orange-50 p,
-.theme-dark .border-orange-400.bg-orange-50 span,
-.theme-dark .border-orange-400.bg-orange-50 li,
-.theme-dark .border-orange-400.bg-orange-50 label {
-  color: #ffffff !important;
-}
-
-.theme-dark .border-orange-200.bg-orange-50 .text-orange-600,
-.theme-dark .border-orange-200.bg-orange-50 .text-orange-700,
-.theme-dark .border-orange-200.bg-orange-50 .text-orange-800,
-.theme-dark .border-orange-200.bg-orange-50 .text-slate-500,
-.theme-dark .border-orange-200.bg-orange-50 .text-slate-600,
-.theme-dark .border-orange-200.bg-orange-50 .text-slate-700,
-.theme-dark .border-orange-300.bg-orange-50 .text-orange-600,
-.theme-dark .border-orange-300.bg-orange-50 .text-orange-700,
-.theme-dark .border-orange-300.bg-orange-50 .text-orange-800,
-.theme-dark .border-orange-300.bg-orange-50 .text-slate-500,
-.theme-dark .border-orange-300.bg-orange-50 .text-slate-600,
-.theme-dark .border-orange-300.bg-orange-50 .text-slate-700,
-.theme-dark .border-orange-400.bg-orange-50 .text-orange-600,
-.theme-dark .border-orange-400.bg-orange-50 .text-orange-700,
-.theme-dark .border-orange-400.bg-orange-50 .text-orange-800,
-.theme-dark .border-orange-400.bg-orange-50 .text-slate-500,
-.theme-dark .border-orange-400.bg-orange-50 .text-slate-600,
-.theme-dark .border-orange-400.bg-orange-50 .text-slate-700 {
-  color: #dbeafe !important;
-  font-weight: 700;
-}
-
-
-/* -------------------------------------------------------------------------- */
-/* Global light-surface readability                                            */
-/* Keeps text readable on repeated light card/panel backgrounds.               */
-/* -------------------------------------------------------------------------- */
-
-.bg-white,
-.bg-slate-50,
-.bg-orange-50,
-.bg-orange-50\/60,
-.card,
-.card-soft,
-.mini-card,
-.mini-card-white,
-.content-panel,
-.empty-state-panel {
-  color: rgb(15 23 42);
-}
-
-.bg-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.bg-slate-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.bg-orange-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.bg-orange-50\/60 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.card-soft :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.mini-card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.mini-card-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.content-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.empty-state-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div) {
-  color: rgb(15 23 42);
-}
-
-.bg-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.bg-slate-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.bg-orange-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.bg-orange-50\/60 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.card-soft :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.mini-card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.mini-card-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.content-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.empty-state-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800) {
-  color: rgb(51 65 85) !important;
-  font-weight: 700;
-}
-
-/* Keep dark hero/panel sections readable and prevent light-surface rules from washing them out. */
-.hero-dark :where(h1, h2, h3, h4, h5, h6),
-.section-dark :where(h1, h2, h3, h4, h5, h6),
-.dark-panel :where(h1, h2, h3, h4, h5, h6),
-.card-dark :where(h1, h2, h3, h4, h5, h6),
-.bg-slate-950 :where(h1, h2, h3, h4, h5, h6),
-.bg-slate-900 :where(h1, h2, h3, h4, h5, h6) {
-  color: #ffffff !important;
-}
-
-.hero-dark :where(p, span, li, label, div),
-.section-dark :where(p, span, li, label, div),
-.dark-panel :where(p, span, li, label, div),
-.card-dark :where(p, span, li, label, div),
-.bg-slate-950 :where(p, span, li, label, div),
-.bg-slate-900 :where(p, span, li, label, div) {
-  color: #e2e8f0;
-}
-
-/* Dark theme: convert common light cards into dark readable cards. */
-.theme-dark .bg-white,
-.theme-dark .bg-slate-50,
-.theme-dark .bg-orange-50,
-.theme-dark .bg-orange-50\/60,
 .theme-dark .card,
 .theme-dark .card-soft,
 .theme-dark .mini-card,
 .theme-dark .mini-card-white,
-.theme-dark .content-panel,
-.theme-dark .empty-state-panel {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-  border-color: rgb(148 163 184 / 0.24) !important;
+.theme-dark .content-panel {
+  background-color: #1e293b;
+  border-color: rgb(148 163 184 / 0.2);
+  color: #f8fafc;
 }
 
-.theme-dark .bg-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .bg-slate-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .bg-orange-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .bg-orange-50\/60 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .card-soft :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .mini-card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .mini-card-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .content-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
-.theme-dark .empty-state-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div) {
-  color: #f8fafc !important;
-}
-
-.theme-dark .bg-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .bg-slate-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .bg-orange-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .bg-orange-50\/60 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .card-soft :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .mini-card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .mini-card-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .content-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
-.theme-dark .empty-state-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800) {
-  color: #dbeafe !important;
-  font-weight: 700;
-}
-
-
-/* -------------------------------------------------------------------------- */
-/* Admin dashboard card readability                                            */
-/* -------------------------------------------------------------------------- */
+/* ─────────────────────────────────────────────
+   Admin dashboard cards
+───────────────────────────────────────────── */
 
 .admin-action-card {
   border: 1px solid rgb(203 213 225);
@@ -678,35 +316,24 @@ footer p {
 }
 
 .admin-action-card-featured {
-  border-color: rgb(251 146 60 / 0.7);
-  background:
-    radial-gradient(circle at top left, rgb(255 237 213 / 0.8), transparent 18rem),
-    #ffffff;
+  border-color: rgb(99 102 241 / 0.5);
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
 }
 
-.admin-action-card h1,
-.admin-action-card h2,
-.admin-action-card h3,
-.admin-action-card p,
-.admin-action-card span {
-  color: rgb(15 23 42) !important;
-}
-
-.admin-action-card .admin-card-description {
-  color: rgb(51 65 85) !important;
-  font-weight: 700;
+.admin-card-description {
+  color: rgb(71 85 105);
   line-height: 1.7;
 }
 
-.admin-action-card .admin-card-metric {
+.admin-card-metric {
   background: rgb(241 245 249);
-  color: rgb(15 23 42) !important;
-  font-weight: 900;
+  color: rgb(15 23 42);
+  font-weight: 800;
 }
 
-.admin-action-card .admin-card-action {
-  color: rgb(154 52 18) !important;
-  font-weight: 900;
+.admin-card-action {
+  color: rgb(67 56 202);
+  font-weight: 700;
 }
 
 .theme-dark .admin-action-card {
@@ -716,30 +343,19 @@ footer p {
 }
 
 .theme-dark .admin-action-card-featured {
-  border-color: rgb(251 146 60 / 0.55);
-  background:
-    radial-gradient(circle at top left, rgb(249 115 22 / 0.18), transparent 18rem),
-    #1e293b;
+  border-color: rgb(99 102 241 / 0.4);
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), #1e293b);
 }
 
-.theme-dark .admin-action-card h1,
-.theme-dark .admin-action-card h2,
-.theme-dark .admin-action-card h3,
-.theme-dark .admin-action-card p,
-.theme-dark .admin-action-card span {
-  color: #ffffff !important;
+.theme-dark .admin-card-description {
+  color: #cbd5e1;
 }
 
-.theme-dark .admin-action-card .admin-card-description {
-  color: #dbeafe !important;
+.theme-dark .admin-card-metric {
+  background: rgb(255 255 255 / 0.08);
+  color: #ffffff;
 }
 
-.theme-dark .admin-action-card .admin-card-metric {
-  background: rgb(255 255 255 / 0.1);
-  color: #ffffff !important;
+.theme-dark .admin-card-action {
+  color: #a5b4fc;
 }
-
-.theme-dark .admin-action-card .admin-card-action {
-  color: #fed7aa !important;
-}
-
