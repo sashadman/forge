@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { siteConfig } from '@/config/site'
-import  ThemeProvider  from '@/components/theme/ThemeProvider'
+import ThemeProvider from '@/components/theme/ThemeProvider'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

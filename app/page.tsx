@@ -14,9 +14,9 @@ import {
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} — Skilled-Trades Pathway Platform`,
- description:
-  'Ara Skills helps career seekers discover training programs, apprenticeships, workforce pathways, and verified opportunities by location and category.',
+  title: `${siteConfig.name} — Training Programs, Apprenticeships, and Career Pathways`,
+  description:
+    'Ara Skills helps career seekers discover training programs, apprenticeships, workforce pathways, and verified opportunities by location and category.',
 }
 
 const rolePaths = [

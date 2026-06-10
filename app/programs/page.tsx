@@ -14,9 +14,9 @@ import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 
 export const metadata: Metadata = {
-  title: `Training Programs — ${siteConfig.name}`,
+  title: `Search Training Programs — ${siteConfig.name}`,
   description:
-    'Browse skilled-trades training programs, apprenticeships, pre-apprenticeships, and workforce preparation pathways.',
+    'Search training programs, apprenticeships, community college pathways, workforce programs, and public-source listings by location, category, and verified status.',
 }
 
 type RpcSupabase = {
