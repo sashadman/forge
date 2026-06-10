@@ -557,3 +557,111 @@ footer p {
   font-weight: 700;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Global light-surface readability                                            */
+/* Keeps text readable on repeated light card/panel backgrounds.               */
+/* -------------------------------------------------------------------------- */
+
+.bg-white,
+.bg-slate-50,
+.bg-orange-50,
+.bg-orange-50\/60,
+.card,
+.card-soft,
+.mini-card,
+.mini-card-white,
+.content-panel,
+.empty-state-panel {
+  color: rgb(15 23 42);
+}
+
+.bg-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.bg-slate-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.bg-orange-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.bg-orange-50\/60 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.card-soft :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.mini-card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.mini-card-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.content-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.empty-state-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div) {
+  color: rgb(15 23 42);
+}
+
+.bg-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.bg-slate-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.bg-orange-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.bg-orange-50\/60 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.card-soft :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.mini-card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.mini-card-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.content-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.empty-state-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800) {
+  color: rgb(51 65 85) !important;
+  font-weight: 700;
+}
+
+/* Keep dark hero/panel sections readable and prevent light-surface rules from washing them out. */
+.hero-dark :where(h1, h2, h3, h4, h5, h6),
+.section-dark :where(h1, h2, h3, h4, h5, h6),
+.dark-panel :where(h1, h2, h3, h4, h5, h6),
+.card-dark :where(h1, h2, h3, h4, h5, h6),
+.bg-slate-950 :where(h1, h2, h3, h4, h5, h6),
+.bg-slate-900 :where(h1, h2, h3, h4, h5, h6) {
+  color: #ffffff !important;
+}
+
+.hero-dark :where(p, span, li, label, div),
+.section-dark :where(p, span, li, label, div),
+.dark-panel :where(p, span, li, label, div),
+.card-dark :where(p, span, li, label, div),
+.bg-slate-950 :where(p, span, li, label, div),
+.bg-slate-900 :where(p, span, li, label, div) {
+  color: #e2e8f0;
+}
+
+/* Dark theme: convert common light cards into dark readable cards. */
+.theme-dark .bg-white,
+.theme-dark .bg-slate-50,
+.theme-dark .bg-orange-50,
+.theme-dark .bg-orange-50\/60,
+.theme-dark .card,
+.theme-dark .card-soft,
+.theme-dark .mini-card,
+.theme-dark .mini-card-white,
+.theme-dark .content-panel,
+.theme-dark .empty-state-panel {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: rgb(148 163 184 / 0.24) !important;
+}
+
+.theme-dark .bg-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .bg-slate-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .bg-orange-50 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .bg-orange-50\/60 :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .card-soft :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .mini-card :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .mini-card-white :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .content-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div),
+.theme-dark .empty-state-panel :where(h1, h2, h3, h4, h5, h6, p, span, li, label, div) {
+  color: #f8fafc !important;
+}
+
+.theme-dark .bg-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .bg-slate-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .bg-orange-50 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .bg-orange-50\/60 :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .card-soft :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .mini-card :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .mini-card-white :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .content-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800),
+.theme-dark .empty-state-panel :where(.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-orange-600, .text-orange-700, .text-orange-800) {
+  color: #dbeafe !important;
+  font-weight: 700;
+}
+
