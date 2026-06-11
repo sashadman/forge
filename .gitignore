@@ -35,3 +35,11 @@ pnpm-debug.log*
 
 # Supabase local CLI state
 supabase/.temp/
+
+# Local environment secrets
+.env
+.env.*
+!.env.example
+
+# Supabase local CLI state
+supabase/.temp/

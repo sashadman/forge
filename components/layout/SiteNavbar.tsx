@@ -10,11 +10,11 @@ import {
   Menu,
   UserRound,
   X,
+  Zap,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import AuthNav from '@/components/layout/AuthNav'
 import ThemeToggle from '@/components/theme/ThemeToggle'
-import { useTheme } from '@/components/theme/ThemeProvider'
 
 const roleLinks = [
   {
@@ -46,7 +46,6 @@ const seekerLinks = [
 ]
 
 export default function SiteNavbar() {
-  const { isLight } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false)
 
@@ -55,97 +54,32 @@ export default function SiteNavbar() {
     setIsRoleMenuOpen(false)
   }
 
-  const navClass = isLight
-    ? 'sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur'
-    : 'sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur'
-
-  const brandTextClass = isLight
-    ? 'text-xl font-bold tracking-tight text-slate-950'
-    : 'text-xl font-bold tracking-tight text-white'
-
-  const desktopLinkClass = isLight
-    ? 'transition hover:text-slate-950'
-    : 'transition text-slate-300 hover:text-white'
-
-  const desktopLinksWrapperClass = isLight
-    ? 'hidden items-center gap-6 text-sm font-semibold text-slate-600 lg:flex'
-    : 'hidden items-center gap-6 text-sm font-semibold text-slate-300 lg:flex'
-
-  const roleButtonClass = isLight
-    ? 'inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700'
-    : 'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-slate-200 shadow-sm transition hover:border-orange-300/40 hover:bg-white/15 hover:text-orange-200'
-
-  const roleMenuClass = isLight
-    ? 'absolute right-0 mt-3 w-80 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-950/10'
-    : 'absolute right-0 mt-3 w-80 rounded-3xl border border-white/10 bg-slate-950 p-3 shadow-2xl shadow-black/40'
-
-  const roleMenuEyebrowClass = isLight
-    ? 'text-xs font-bold uppercase tracking-wide text-slate-400'
-    : 'text-xs font-bold uppercase tracking-wide text-slate-500'
-
-  const roleMenuLinkClass = isLight
-    ? 'group rounded-2xl p-3 transition hover:bg-orange-50'
-    : 'group rounded-2xl p-3 transition hover:bg-white/10'
-
-  const roleMenuTitleClass = isLight
-    ? 'font-bold text-slate-950 group-hover:text-orange-700'
-    : 'font-bold text-white group-hover:text-orange-200'
-
-  const roleMenuDescriptionClass = isLight
-    ? 'mt-1 text-sm leading-5 text-slate-500'
-    : 'mt-1 text-sm leading-5 text-slate-400'
-
-  const mobileButtonClass = isLight
-    ? 'inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm'
-    : 'inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-slate-100 shadow-sm'
-
-  const mobileMenuClass = isLight
-    ? 'border-t border-slate-200 py-4 lg:hidden'
-    : 'border-t border-white/10 py-4 lg:hidden'
-
-  const mobileSectionLabelClass = isLight
-    ? 'px-4 text-xs font-bold uppercase tracking-wide text-slate-400'
-    : 'px-4 text-xs font-bold uppercase tracking-wide text-slate-500'
-
-  const mobileRoleLinkClass = isLight
-    ? 'rounded-2xl px-4 py-3 hover:bg-slate-100'
-    : 'rounded-2xl px-4 py-3 hover:bg-white/10'
-
-  const mobileRoleTitleClass = isLight
-    ? 'font-bold text-slate-800'
-    : 'font-bold text-white'
-
-  const mobileRoleDescriptionClass = isLight
-    ? 'mt-1 text-sm leading-5 text-slate-500'
-    : 'mt-1 text-sm leading-5 text-slate-400'
-
-  const mobileDividerClass = isLight
-    ? 'mt-4 border-t border-slate-200 pt-4'
-    : 'mt-4 border-t border-white/10 pt-4'
-
-  const mobileAuthWrapperClass = isLight
-    ? 'mt-4 border-t border-slate-200 px-4 pt-4'
-    : 'mt-4 border-t border-white/10 px-4 pt-4'
-
-  const mobileToolLinkClass = isLight
-    ? 'rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950'
-    : 'rounded-2xl px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white'
-
   return (
-    <nav className={navClass}>
+    <nav className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg-void)]/95 backdrop-blur-xl">
       <div className="section-shell">
-        <div className="flex items-center justify-between py-4">
-          <Link href="/" onClick={closeMenu} className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white shadow-sm shadow-orange-900/20">
+        <div className="flex min-h-[5.25rem] items-center justify-between gap-5 py-4">
+          <Link href="/" onClick={closeMenu} className="group flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-[var(--radius-lg)] bg-[var(--cyan)] text-[var(--text-on-cyan)] shadow-[var(--cyan-glow)] transition group-hover:-translate-y-0.5">
               <Hammer className="h-5 w-5" />
             </div>
 
-            <span className={brandTextClass}>{siteConfig.name}</span>
+            <div className="leading-none">
+              <p className="font-display text-xl font-black tracking-tight text-[var(--text-primary)]">
+                {siteConfig.name}
+              </p>
+              <p className="mt-1 hidden font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--text-muted)] sm:block">
+                Skilled trades
+              </p>
+            </div>
           </Link>
 
-          <div className={desktopLinksWrapperClass}>
+          <div className="hidden items-center gap-8 font-display text-sm font-black leading-tight text-[var(--text-secondary)] lg:flex">
             {seekerLinks.slice(0, 4).map((link) => (
-              <Link key={link.href} href={link.href} className={desktopLinkClass}>
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition hover:text-[var(--cyan)]"
+              >
                 {link.label}
               </Link>
             ))}
@@ -158,17 +92,21 @@ export default function SiteNavbar() {
               <button
                 type="button"
                 onClick={() => setIsRoleMenuOpen((current) => !current)}
-                className={roleButtonClass}
+                className="inline-flex min-w-[18rem] items-center justify-center gap-3 rounded-[var(--radius-md)] border border-[var(--border-mid)] bg-transparent px-6 py-4 font-display text-sm font-black uppercase tracking-[0.16em] text-[var(--text-primary)] transition hover:border-[var(--border-cyan)] hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)]"
                 aria-expanded={isRoleMenuOpen}
+                aria-haspopup="menu"
               >
+                <Zap className="h-4 w-4 text-[var(--amber)]" />
                 Choose your path
                 <ChevronDown className="h-4 w-4" />
               </button>
 
               {isRoleMenuOpen && (
-                <div className={roleMenuClass}>
+                <div className="absolute right-0 mt-3 w-96 rounded-[var(--radius-xl)] border border-[var(--border)] bg-[var(--bg-overlay)] p-3 shadow-2xl shadow-black/40">
                   <div className="px-3 py-2">
-                    <p className={roleMenuEyebrowClass}>Select your role</p>
+                    <p className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
+                      Select your role
+                    </p>
                   </div>
 
                   <div className="grid gap-2">
@@ -180,17 +118,19 @@ export default function SiteNavbar() {
                           key={link.href}
                           href={link.href}
                           onClick={closeMenu}
-                          className={roleMenuLinkClass}
+                          className="group rounded-[var(--radius-lg)] p-3 transition hover:bg-[var(--cyan-muted)]"
                         >
                           <div className="flex gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
+                            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-md)] border border-[var(--border-cyan)] bg-[var(--cyan-muted)] text-[var(--cyan)]">
                               <Icon className="h-5 w-5" />
                             </div>
 
                             <div>
-                              <p className={roleMenuTitleClass}>{link.label}</p>
+                              <p className="font-display font-black text-[var(--text-primary)] group-hover:text-[var(--cyan)]">
+                                {link.label}
+                              </p>
 
-                              <p className={roleMenuDescriptionClass}>
+                              <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">
                                 {link.description}
                               </p>
                             </div>
@@ -212,7 +152,7 @@ export default function SiteNavbar() {
             <button
               type="button"
               onClick={() => setIsOpen((current) => !current)}
-              className={mobileButtonClass}
+              className="grid h-11 w-11 place-items-center rounded-[var(--radius-md)] border border-[var(--border-mid)] bg-[var(--bg-raised)] text-[var(--text-primary)]"
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >
@@ -222,9 +162,11 @@ export default function SiteNavbar() {
         </div>
 
         {isOpen && (
-          <div className={mobileMenuClass}>
+          <div className="border-t border-[var(--border)] py-5 lg:hidden">
             <div className="grid gap-2">
-              <p className={mobileSectionLabelClass}>Choose your path</p>
+              <p className="px-4 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
+                Choose your path
+              </p>
 
               {roleLinks.map((link) => {
                 const Icon = link.icon
@@ -234,15 +176,17 @@ export default function SiteNavbar() {
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={mobileRoleLinkClass}
+                    className="rounded-[var(--radius-lg)] px-4 py-3 transition hover:bg-[var(--cyan-muted)]"
                   >
                     <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-5 w-5 text-orange-600" />
+                      <Icon className="mt-0.5 h-5 w-5 text-[var(--cyan)]" />
 
                       <div>
-                        <p className={mobileRoleTitleClass}>{link.label}</p>
+                        <p className="font-display font-black text-[var(--text-primary)]">
+                          {link.label}
+                        </p>
 
-                        <p className={mobileRoleDescriptionClass}>
+                        <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">
                           {link.description}
                         </p>
                       </div>
@@ -252,8 +196,10 @@ export default function SiteNavbar() {
               })}
             </div>
 
-            <div className={mobileDividerClass}>
-              <p className={mobileSectionLabelClass}>Career seeker tools</p>
+            <div className="mt-5 border-t border-[var(--border)] pt-5">
+              <p className="px-4 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
+                Career seeker tools
+              </p>
 
               <div className="mt-2 grid gap-2">
                 {seekerLinks.map((link) => (
@@ -261,7 +207,7 @@ export default function SiteNavbar() {
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={mobileToolLinkClass}
+                    className="rounded-[var(--radius-lg)] px-4 py-3 text-sm font-bold text-[var(--text-secondary)] transition hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)]"
                   >
                     {link.label}
                   </Link>
@@ -269,7 +215,7 @@ export default function SiteNavbar() {
               </div>
             </div>
 
-            <div className={mobileAuthWrapperClass}>
+            <div className="mt-5 border-t border-[var(--border)] px-4 pt-5">
               <AuthNav />
             </div>
           </div>

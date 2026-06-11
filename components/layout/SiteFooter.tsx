@@ -3,130 +3,100 @@
 import Link from 'next/link'
 import { Hammer } from 'lucide-react'
 import { siteConfig } from '@/config/site'
-import { useTheme } from '@/components/theme/ThemeProvider'
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear()
-  const { isLight } = useTheme()
-
-  const footerClass = isLight
-    ? 'border-t border-slate-200 bg-white'
-    : 'border-t border-white/10 bg-slate-950'
-
-  const brandTextClass = isLight
-    ? 'text-xl font-bold tracking-tight text-slate-950'
-    : 'text-xl font-bold tracking-tight text-white'
-
-  const descriptionClass = isLight
-    ? 'mt-4 max-w-xl text-sm leading-6 text-slate-500'
-    : 'mt-4 max-w-xl text-sm leading-6 text-slate-400'
-
-  const headingClass = isLight
-    ? 'text-sm font-bold uppercase tracking-wide text-slate-950'
-    : 'text-sm font-bold uppercase tracking-wide text-white'
-
-  const linkGroupClass = isLight
-    ? 'mt-4 grid gap-3 text-sm font-semibold text-slate-600'
-    : 'mt-4 grid gap-3 text-sm font-semibold text-slate-400'
-
-  const linkClass = isLight
-    ? 'hover:text-slate-950'
-    : 'hover:text-white'
-
-  const bottomClass = isLight
-    ? 'mt-8 border-t border-slate-200 pt-6 text-sm text-slate-500'
-    : 'mt-8 border-t border-white/10 pt-6 text-sm text-slate-500'
 
   return (
-    <footer className={footerClass}>
-      <div className="section-shell py-10">
-        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+    <footer className="border-t border-[var(--border)] bg-[var(--bg-void)]">
+      <div className="section-shell py-12">
+        <div className="grid gap-10 md:grid-cols-[1.25fr_0.85fr_0.85fr_0.85fr]">
           <div>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-600 text-white">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="grid h-12 w-12 place-items-center rounded-[var(--radius-lg)] bg-[var(--cyan)] text-[var(--text-on-cyan)] shadow-[var(--cyan-glow)]">
                 <Hammer className="h-5 w-5" />
               </div>
 
-              <span className={brandTextClass}>{siteConfig.name}</span>
+              <div>
+                <p className="font-display text-xl font-black tracking-tight text-[var(--text-primary)]">
+                  {siteConfig.name}
+                </p>
+                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--text-muted)]">
+                  Workforce pathways
+                </p>
+              </div>
             </Link>
 
-            <p className={descriptionClass}>
+            <p className="mt-5 max-w-sm text-sm leading-7 text-[var(--text-secondary)]">
               Skilled-trades pathway platform for career seekers, employers, and
               verified training providers.
             </p>
           </div>
 
-          <div>
-            <p className={headingClass}>Career Seekers</p>
+          <FooterGroup
+            title="Career Seekers"
+            links={[
+              { href: '/trades', label: 'Career Paths' },
+              { href: '/programs', label: 'Training Programs' },
+              { href: '/opportunities', label: 'Jobs & Apprenticeships' },
+              { href: '/quiz', label: 'Career Quiz' },
+              { href: '/pricing', label: 'Pricing' },
+            ]}
+          />
 
-            <div className={linkGroupClass}>
-              <Link href="/trades" className={linkClass}>
-                Career Paths
-              </Link>
+          <FooterGroup
+            title="Employers"
+            links={[
+              { href: '/for-employers', label: 'Overview' },
+              { href: '/employers/sign-up', label: 'Create Account' },
+              { href: '/employers/sign-in', label: 'Sign In' },
+              { href: '/pricing', label: 'Pricing' },
+            ]}
+          />
 
-              <Link href="/programs" className={linkClass}>
-                Training Programs
-              </Link>
-
-              <Link href="/opportunities" className={linkClass}>
-                Jobs & Apprenticeships
-              </Link>
-
-              <Link href="/quiz" className={linkClass}>
-                Career Quiz
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <p className={headingClass}>Employers</p>
-
-            <div className={linkGroupClass}>
-              <Link href="/for-employers" className={linkClass}>
-                Employers Overview
-              </Link>
-
-              <Link href="/employers/sign-up" className={linkClass}>
-                Create Employers Account
-              </Link>
-
-              <Link href="/employers/sign-in" className={linkClass}>
-                Employers Sign In
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <p className={headingClass}>Training Providers</p>
-
-            <div className={linkGroupClass}>
-              <Link href="/for-programs" className={linkClass}>
-                Provider Overview
-              </Link>
-
-              <Link href="/training-providers/claim" className={linkClass}>
-                Request Provider Access
-              </Link>
-
-              <Link href="/for-programs#provider-workflow" className={linkClass}>
-                Provider Workflow
-              </Link>
-
-              <Link href="/for-programs#program-data" className={linkClass}>
-                Program Data Model
-              </Link>
-
-              <Link href="/for-programs#provider-insights" className={linkClass}>
-                Provider Insights
-              </Link>
-            </div>
-          </div>
+          <FooterGroup
+            title="Providers"
+            links={[
+              { href: '/for-programs', label: 'Provider Overview' },
+              { href: '/training-providers/claim', label: 'Request Access' },
+              { href: '/for-programs#provider-workflow', label: 'Provider Workflow' },
+              { href: '/pricing', label: 'Pricing' },
+            ]}
+          />
         </div>
 
-        <div className={bottomClass}>
-          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+        <div className="mt-10 border-t border-[var(--border)] pt-6 text-sm text-[var(--text-muted)]">
+          © {currentYear} {siteConfig.name}. All rights reserved.
         </div>
       </div>
     </footer>
+  )
+}
+
+function FooterGroup({
+  title,
+  links,
+}: {
+  title: string
+  links: { href: string; label: string }[]
+}) {
+  return (
+    <div>
+      <p className="font-display text-sm font-black uppercase tracking-[0.28em] text-[var(--text-primary)]">
+        {title}
+      </p>
+
+      <div className="mt-5 grid gap-3 text-sm font-semibold text-[var(--text-secondary)]">
+        {links.map((link) => (
+          <Link
+            key={`${title}-${link.href}-${link.label}`}
+            href={link.href}
+            className="transition hover:text-[var(--cyan)]"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }

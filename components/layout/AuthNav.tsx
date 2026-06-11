@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { useTheme } from '@/components/theme/ThemeProvider'
 
 type AuthUser = {
   id: string
@@ -35,8 +34,6 @@ export default function AuthNav() {
   const router = useRouter()
   const pathname = usePathname()
   const supabase = useMemo(() => createClient(), [])
-  const { isLight } = useTheme()
-
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -124,25 +121,20 @@ export default function AuthNav() {
     router.refresh()
   }
 
-  const loadingClass = isLight
-    ? 'hidden h-10 w-32 rounded-full bg-slate-100 sm:block'
-    : 'hidden h-10 w-32 rounded-full bg-white/10 sm:block'
+  const loadingClass =
+    'hidden h-10 w-32 rounded-[var(--radius-pill)] bg-[var(--bg-raised)] sm:block'
 
-  const secondaryButtonClass = isLight
-    ? 'rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50'
-    : 'rounded-full border border-white/10 px-5 py-2 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:bg-white/10 hover:text-white'
+  const secondaryButtonClass =
+    'rounded-[var(--radius-pill)] border border-[var(--border-mid)] px-5 py-2 text-sm font-bold text-[var(--text-secondary)] transition hover:border-[var(--border-cyan)] hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)]'
 
-  const signInButtonClass = isLight
-    ? 'hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:inline-flex'
-    : 'hidden rounded-full border border-white/10 px-5 py-2 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:bg-white/10 hover:text-white sm:inline-flex'
+  const signInButtonClass =
+    'hidden rounded-[var(--radius-pill)] border border-[var(--border-mid)] px-5 py-2 text-sm font-bold text-[var(--text-secondary)] transition hover:border-[var(--border-cyan)] hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)] sm:inline-flex'
 
-  const adminButtonClass = isLight
-    ? 'rounded-full border border-orange-200 bg-orange-50 px-5 py-2 text-sm font-semibold text-orange-700 transition hover:bg-orange-100'
-    : 'rounded-full border border-orange-300/30 bg-orange-500/15 px-5 py-2 text-sm font-semibold text-orange-200 transition hover:border-orange-300/50 hover:bg-orange-500/20'
+  const adminButtonClass =
+    'rounded-[var(--radius-pill)] border border-[rgba(255,179,0,0.25)] bg-[var(--amber-muted)] px-5 py-2 text-sm font-bold text-[var(--amber)] transition hover:shadow-[var(--amber-glow)]'
 
-  const signOutButtonClass = isLight
-    ? 'rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800'
-    : 'rounded-full bg-white px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-orange-100'
+  const signOutButtonClass =
+    'rounded-[var(--radius-pill)] bg-[var(--text-primary)] px-5 py-2 text-sm font-bold text-[var(--bg-void)] transition hover:bg-[var(--cyan)]'
 
   if (loading) {
     return <div className={loadingClass} />
