@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Check, Circle, ShieldCheck } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Circle, ShieldCheck } from 'lucide-react'
 import type {
   ReadinessItemRow,
   ReadinessScoreRow,
@@ -15,6 +15,14 @@ import {
 type DashboardReadinessWidgetProps = {
   items: ReadinessItemRow[]
   score: ReadinessScoreRow | null
+}
+
+/** Map readiness level to a display label */
+const LEVEL_LABEL: Record<string, string> = {
+  not_started:   'LVL 00',
+  getting_ready: 'LVL 01',
+  almost_ready:  'LVL 02',
+  ready:         'LVL 03',
 }
 
 export default function DashboardReadinessWidget({
@@ -33,69 +41,79 @@ export default function DashboardReadinessWidget({
   })
 
   return (
-    <section className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-cyan)] bg-[var(--bg-raised)] p-6 shadow-2xl shadow-black/20 md:p-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_34%)]" />
-
-      <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
+    <section className="content-panel">
+      {/* Header row */}
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
         <div className="flex items-start gap-4">
-          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-[var(--radius-lg)] bg-[var(--cyan-muted)] text-[var(--cyan)]">
-            <ShieldCheck className="h-7 w-7" />
+          <div
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
+            style={{ background: 'var(--cyan-muted)', color: 'var(--cyan)' }}
+          >
+            <ShieldCheck className="h-6 w-6" />
           </div>
 
           <div>
             <p className="eyebrow">Profile readiness</p>
-
-            <h2 className="mt-3 font-display text-3xl font-black leading-tight text-[var(--text-primary)] md:text-4xl">
-              Prepare before you apply
-            </h2>
-
-            <p className="mt-3 max-w-2xl leading-7 text-[var(--text-secondary)]">
+            <h2 className="section-title mt-3">Prepare before you apply</h2>
+            <p className="muted-text mt-3 max-w-2xl">
               Your readiness profile becomes part of your application package.
-              Complete the required items before applying.
+              Complete the required items before applying to serious jobs or apprenticeships.
             </p>
           </div>
         </div>
 
-        <div className="grid h-24 w-24 shrink-0 place-items-center rounded-[var(--radius-lg)] border border-[var(--border-cyan)] bg-[var(--bg-input)] text-center shadow-[var(--cyan-glow)]">
-          <div>
-            <p className="font-display text-4xl font-black leading-none text-[var(--cyan)]">
-              {percentage}%
-            </p>
-            <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-              Ready
-            </p>
-          </div>
+        {/* Score circle */}
+        <div
+          className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl"
+          style={{
+            background: 'var(--bg-base)',
+            border: '1px solid var(--border-cyan)',
+            boxShadow: 'var(--cyan-glow)',
+          }}
+        >
+          <p
+            className="text-3xl font-black"
+            style={{ color: 'var(--cyan)', fontFamily: 'var(--font-display)', lineHeight: 1 }}
+          >
+            {percentage}
+            <span className="text-lg">%</span>
+          </p>
+          <p className="mono-label mt-1">Ready</p>
         </div>
       </div>
 
-      <div className="relative mt-6 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      {/* XP bar section */}
+      <div
+        className="mt-5 rounded-2xl p-4"
+        style={{ background: 'var(--bg-base)', border: '1px solid var(--border)' }}
+      >
+        <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-display text-xl font-black text-[var(--text-primary)]">
+            <p
+              className="font-bold"
+              style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+            >
               {config.label}
             </p>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              {config.description}
-            </p>
+            <p className="muted-text mt-1 text-sm">{config.description}</p>
           </div>
-
-          <span className="level-badge self-start">LVL {level}</span>
+          <span className="level-badge shrink-0">{LEVEL_LABEL[level] ?? 'LVL 01'}</span>
         </div>
 
-        <div className="mt-5 h-3 overflow-hidden rounded-full bg-[var(--bg-input)] ring-1 ring-[var(--border)]">
-          <div
-            className="h-full rounded-full bg-[var(--cyan)] shadow-[var(--cyan-glow)] transition-all"
-            style={{ width: `${percentage}%` }}
-          />
+        {/* XP bar */}
+        <div className="xp-bar-track mt-4">
+          <div className="xp-bar-fill" style={{ width: `${percentage}%` }} />
         </div>
-
-        <div className="mt-3 flex justify-between font-mono text-xs font-bold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-          <span>Readiness XP</span>
-          <span className="text-[var(--cyan)]">{percentage} / 100</span>
+        <div className="mt-2 flex justify-between">
+          <span className="mono-label">Readiness XP</span>
+          <span className="mono-label" style={{ color: 'var(--cyan)' }}>
+            {percentage} / 100
+          </span>
         </div>
       </div>
 
-      <div className="relative mt-6 grid gap-4 md:grid-cols-2">
+      {/* Checklist items */}
+      <div className="mt-5 grid gap-3 md:grid-cols-2">
         {REQUIRED_READINESS_ITEMS.map((configItem) => {
           const item = itemsByType.get(configItem.type)
           const complete = item ? isReadinessItemComplete(item.status) : false
@@ -104,29 +122,33 @@ export default function DashboardReadinessWidget({
           return (
             <div
               key={configItem.type}
-              className={`rounded-[var(--radius-lg)] border p-5 ${
-                isNext
-                  ? 'border-[var(--border-cyan)] bg-[var(--cyan-muted)]'
-                  : 'border-[var(--border)] bg-[var(--bg-base)]'
-              }`}
+              className="rounded-2xl p-4 transition-colors"
+              style={{
+                border: isNext ? '1px solid var(--border-cyan)' : '1px solid var(--border)',
+                background: isNext ? 'var(--cyan-muted)' : 'var(--bg-base)',
+              }}
             >
-              <div className="flex min-h-[3rem] items-start gap-3">
+              <div className="flex items-start gap-3">
                 {complete ? (
-                  <Check className="mt-1 h-5 w-5 shrink-0 text-[var(--emerald)]" />
+                  <CheckCircle2
+                    className="mt-0.5 h-5 w-5 shrink-0"
+                    style={{ color: 'var(--emerald)' }}
+                  />
                 ) : (
                   <Circle
-                    className={`mt-1 h-5 w-5 shrink-0 ${
-                      isNext ? 'text-[var(--cyan)]' : 'text-[var(--text-muted)]'
-                    }`}
+                    className="mt-0.5 h-5 w-5 shrink-0"
+                    style={{ color: isNext ? 'var(--cyan)' : 'var(--text-muted)' }}
                   />
                 )}
 
-                <div className="grid gap-1 leading-none">
-                  <p className="font-display text-lg font-black leading-6 text-[var(--text-primary)]">
+                <div>
+                  <p
+                    className="font-semibold"
+                    style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-body)' }}
+                  >
                     {configItem.label}
                   </p>
-
-                  <p className="text-sm leading-5 text-[var(--text-muted)]">
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>
                     {item ? getReadinessStatusLabel(item.status) : 'Not started'}
                   </p>
                 </div>
@@ -136,7 +158,8 @@ export default function DashboardReadinessWidget({
         })}
       </div>
 
-      <Link href="/dashboard/readiness" className="btn-outline relative mt-6 w-full rounded-[var(--radius-md)]">
+      {/* CTA */}
+      <Link href="/dashboard/readiness" className="btn-primary mt-6 w-full justify-center">
         {nextItem ? `Complete: ${nextItem.label}` : 'Review readiness profile'}
         <ArrowRight className="h-4 w-4" />
       </Link>

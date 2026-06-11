@@ -21,11 +21,11 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-const THEME_STORAGE_KEY = 'forge-theme'
+const THEME_STORAGE_KEY = 'forge-theme-v2'
 const LEGACY_MISSION_THEME_KEY = 'mission-theme'
 
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark'
+  if (typeof window === 'undefined') return 'light'
 
   const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
 
@@ -38,7 +38,7 @@ function getInitialTheme(): Theme {
   if (legacyMissionTheme === 'day') return 'light'
   if (legacyMissionTheme === 'night') return 'dark'
 
-  return 'dark'
+  return 'light'
 }
 
 function applyThemeToDocument(theme: Theme) {
@@ -50,7 +50,7 @@ function applyThemeToDocument(theme: Theme) {
 }
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('dark')
+  const [theme, setThemeState] = useState<Theme>('light')
 
   useEffect(() => {
     const initialTheme = getInitialTheme()

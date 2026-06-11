@@ -12,8 +12,9 @@ import {
   UserRound,
 } from 'lucide-react'
 
+// MissionNav no longer needs isDay — it reads from CSS variables automatically
 type MissionNavProps = {
-  isDay: boolean
+  isDay?: boolean  // kept for API compat, no longer used
 }
 
 const missions = [
@@ -21,15 +22,17 @@ const missions = [
     href: '/dashboard/profile',
     label: 'Profile',
     shortLabel: 'Profile',
-    description: 'Set up your seeker identity',
+    description: 'Set up your identity',
     icon: UserRound,
+    level: '01',
   },
   {
     href: '/dashboard/readiness',
     label: 'Readiness',
     shortLabel: 'Ready',
-    description: 'Build application strength',
+    description: 'Build strength',
     icon: ShieldCheck,
+    level: '02',
   },
   {
     href: '/dashboard/career-paths',
@@ -37,13 +40,15 @@ const missions = [
     shortLabel: 'Paths',
     description: 'Choose direction',
     icon: Map,
+    level: '03',
   },
   {
     href: '/dashboard/training-programs',
     label: 'Training',
     shortLabel: 'Training',
-    description: 'Compare preparation options',
+    description: 'Compare programs',
     icon: GraduationCap,
+    level: '04',
   },
   {
     href: '/dashboard/jobs',
@@ -51,6 +56,7 @@ const missions = [
     shortLabel: 'Jobs',
     description: 'Track listings',
     icon: BriefcaseBusiness,
+    level: '05',
   },
   {
     href: '/dashboard/applications',
@@ -58,6 +64,7 @@ const missions = [
     shortLabel: 'Apply',
     description: 'Manage follow-ups',
     icon: ClipboardCheck,
+    level: '06',
   },
 ]
 
@@ -65,7 +72,7 @@ export default function MissionNav({ isDay }: MissionNavProps) {
   const pathname = usePathname()
 
   const currentIndex = Math.max(
-    missions.findIndex((mission) => mission.href === pathname),
+    missions.findIndex((m) => m.href === pathname),
     0
   )
 
@@ -74,42 +81,32 @@ export default function MissionNav({ isDay }: MissionNavProps) {
 
   return (
     <section
-      className={
-        isDay
-          ? 'border-y border-slate-200 bg-white/75 backdrop-blur'
-          : 'border-y border-white/10 bg-slate-950/85 backdrop-blur'
-      }
+      style={{
+        borderTop: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(6, 11, 24, 0.8)',
+        backdropFilter: 'blur(12px)',
+      }}
     >
-      <div className="section-shell py-5">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+      <div className="section-shell py-4">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          {/* Label */}
           <div>
             <p
-              className={
-                isDay
-                  ? 'text-xs font-black uppercase tracking-[0.25em] text-orange-700'
-                  : 'text-xs font-black uppercase tracking-[0.25em] text-orange-300'
-              }
+              className="text-xs font-black uppercase tracking-widest"
+              style={{ color: 'var(--cyan)', fontFamily: 'var(--font-display)' }}
             >
               Mission sequence
             </p>
-
-            <p
-              className={
-                isDay
-                  ? 'mt-1 text-sm font-semibold text-slate-600'
-                  : 'mt-1 text-sm font-semibold text-slate-400'
-              }
-            >
-              Move through each focused page without returning to the hub every time.
+            <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>
+              Move through each step without returning to the hub.
             </p>
           </div>
 
+          {/* Mission steps container */}
           <div
-            className={
-              isDay
-                ? 'rounded-2xl border border-slate-200 bg-slate-50 p-3 shadow-sm'
-                : 'rounded-2xl border border-white/10 bg-white/[0.04] p-3 shadow-lg shadow-black/20'
-            }
+            className="rounded-2xl p-3"
+            style={{ background: 'var(--bg-raised)', border: '1px solid var(--border)' }}
           >
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
               {missions.map((mission, index) => {
@@ -117,36 +114,62 @@ export default function MissionNav({ isDay }: MissionNavProps) {
                 const isActive = mission.href === pathname
                 const isComplete = index < currentIndex
 
+                // Icon bg/color
+                let iconBg: string
+                let iconColor: string
+                if (isActive) {
+                  iconBg = 'var(--cyan)'
+                  iconColor = 'var(--text-on-cyan)'
+                } else if (isComplete) {
+                  iconBg = 'rgba(0, 217, 126, 0.15)'
+                  iconColor = 'var(--emerald)'
+                } else {
+                  iconBg = 'var(--bg-overlay)'
+                  iconColor = 'var(--text-muted)'
+                }
+
+                // Card border/bg
+                let cardBorder: string
+                let cardBg: string
+                let cardBoxShadow: string | undefined
+                if (isActive) {
+                  cardBorder = 'var(--border-cyan)'
+                  cardBg = 'var(--cyan-muted)'
+                  cardBoxShadow = '0 0 16px rgba(0,229,255,0.15)'
+                } else {
+                  cardBorder = 'var(--border)'
+                  cardBg = 'var(--bg-base)'
+                  cardBoxShadow = undefined
+                }
+
                 return (
                   <Link
                     key={mission.href}
                     href={mission.href}
-                    className={
-                      isActive
-                        ? isDay
-                          ? 'group rounded-2xl border border-orange-300 bg-orange-50 p-3 text-orange-800 shadow-sm transition hover:-translate-y-0.5'
-                          : 'group rounded-2xl border border-orange-300/40 bg-orange-500/15 p-3 text-orange-200 shadow-lg shadow-orange-950/20 transition hover:-translate-y-0.5'
-                        : isDay
-                          ? 'group rounded-2xl border border-slate-200 bg-white p-3 text-slate-700 transition hover:-translate-y-0.5 hover:border-orange-200 hover:text-orange-700'
-                          : 'group rounded-2xl border border-white/10 bg-slate-900/80 p-3 text-slate-300 transition hover:-translate-y-0.5 hover:border-cyan-300/30 hover:text-cyan-200'
-                    }
+                    className="group rounded-xl p-3 transition-all"
+                    style={{
+                      border: `1px solid ${cardBorder}`,
+                      background: cardBg,
+                      boxShadow: cardBoxShadow,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.borderColor = 'var(--border-cyan)'
+                        e.currentTarget.style.transform = 'translateY(-2px)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.borderColor = cardBorder
+                        e.currentTarget.style.transform = 'none'
+                      }
+                    }}
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <div className="flex items-center gap-2">
                       <div
-                        className={
-                          isActive
-                            ? isDay
-                              ? 'flex h-9 w-9 items-center justify-center rounded-xl bg-orange-600 text-white'
-                              : 'flex h-9 w-9 items-center justify-center rounded-xl bg-orange-400 text-slate-950'
-                            : isComplete
-                              ? isDay
-                                ? 'flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700'
-                                : 'flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-300'
-                              : isDay
-                                ? 'flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-600'
-                                : 'flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-slate-300'
-                        }
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                        style={{ background: iconBg, color: iconColor }}
                       >
                         {isComplete ? (
                           <CheckCircle2 className="h-4 w-4" />
@@ -156,15 +179,18 @@ export default function MissionNav({ isDay }: MissionNavProps) {
                       </div>
 
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-black">
+                        <p
+                          className="truncate text-sm font-black"
+                          style={{
+                            color: isActive ? 'var(--cyan)' : 'var(--text-primary)',
+                            fontFamily: 'var(--font-display)',
+                          }}
+                        >
                           {mission.shortLabel}
                         </p>
                         <p
-                          className={
-                            isDay
-                              ? 'hidden truncate text-xs text-slate-500 lg:block'
-                              : 'hidden truncate text-xs text-slate-500 lg:block'
-                          }
+                          className="hidden truncate text-xs lg:block"
+                          style={{ color: 'var(--text-muted)' }}
                         >
                           {mission.description}
                         </p>
@@ -175,20 +201,11 @@ export default function MissionNav({ isDay }: MissionNavProps) {
               })}
             </div>
 
-            <div
-              className={
-                isDay
-                  ? 'mt-4 h-2 overflow-hidden rounded-full bg-slate-200'
-                  : 'mt-4 h-2 overflow-hidden rounded-full bg-white/10'
-              }
-            >
+            {/* XP-style overall progress bar */}
+            <div className="mt-3 xp-bar-track" style={{ height: '6px' }}>
               <div
-                className={
-                  isDay
-                    ? 'h-full rounded-full bg-gradient-to-r from-orange-500 to-teal-500 transition-all'
-                    : 'h-full rounded-full bg-gradient-to-r from-orange-400 to-cyan-300 transition-all'
-                }
-                style={{ width: `${progressPercent}%` }}
+                className="xp-bar-fill"
+                style={{ width: `${progressPercent}%`, height: '100%' }}
               />
             </div>
           </div>

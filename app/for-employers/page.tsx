@@ -101,18 +101,25 @@ export default function ForEmployersPage() {
     <ThemedPublicPage>
       <SiteNavbar />
 
-      <section className="hero-dark">
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(135deg, #0F172A 0%, #172033 52%, #1E293B 100%)',
+          color: '#F8FAFC',
+        }}
+      >
         <div className="hero-fade" />
 
         <div className="section-shell relative grid gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <p className="eyebrow-dark">For employers</p>
 
-            <h1 className="page-title-dark mt-6">
+            <h1 className="page-title-dark mt-6" style={{ color: '#FFFFFF' }}>
               Build a stronger pipeline for skilled-trades talent.
             </h1>
 
-            <p className="lead-text-dark mt-6 max-w-3xl">
+            <p className="lead-text-dark mt-6 max-w-3xl" style={{ color: '#E2E8F0' }}>
               {siteConfig.name} helps skilled-trades employers create a real
               employer profile, submit honest jobs or apprenticeships for review, and
               review applicants through a focused employer workflow.
@@ -132,7 +139,7 @@ export default function ForEmployersPage() {
               </Link>
             </div>
 
-            <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-400">
+            <p className="mt-5 max-w-2xl text-sm leading-6" style={{ color: '#CBD5E1' }}>
               Employer accounts stay separate from career-seeker dashboards so
               hiring workflows, listings, and applicants remain attached to the
               correct organization.
@@ -140,15 +147,22 @@ export default function ForEmployersPage() {
           </div>
 
           <div className="card-dark p-6 shadow-2xl shadow-black/30">
-            <div className="rounded-[1.5rem] bg-white p-6 text-slate-950">
+            <div
+              className="rounded-[1.5rem] p-6"
+              style={{
+                background: '#D97706',
+                color: '#111827',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.28)',
+              }}
+            >
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-950 shadow-sm">
                   <BriefcaseBusiness className="h-6 w-6" />
                 </div>
 
                 <div>
-                  <p className="font-bold">Employer workflow</p>
-                  <p className="text-sm text-slate-500">
+                  <p className="font-bold text-slate-950">Employer workflow</p>
+                  <p className="text-sm font-semibold text-slate-900">
                     Account · profile · listings · applicants
                   </p>
                 </div>
@@ -156,9 +170,12 @@ export default function ForEmployersPage() {
 
               <div className="mt-6 space-y-4">
                 {employerWorkflow.map((item) => (
-                  <div key={item} className="mini-card flex gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
-                    <p className="leading-7 text-slate-700">{item}</p>
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-2xl border border-white/60 bg-white/90 p-4 shadow-sm"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
+                    <p className="font-semibold leading-7 text-slate-950">{item}</p>
                   </div>
                 ))}
               </div>
@@ -169,7 +186,7 @@ export default function ForEmployersPage() {
 
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <section className="-mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <section className="grid gap-5 pt-8 md:grid-cols-2 xl:grid-cols-4">
             {employerActions.map((action) => {
               const Icon = action.icon
 
@@ -177,49 +194,21 @@ export default function ForEmployersPage() {
                 <Link
                   key={action.title}
                   href={action.href}
-                  className={
-                    action.primary
-                      ? 'group rounded-[2rem] border border-orange-200 bg-orange-600 p-6 text-white shadow-xl shadow-orange-900/10 transition hover:-translate-y-1 hover:bg-orange-700'
-                      : 'group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl'
-                  }
+                  className="group card card-hover p-6"
                 >
-                  <div
-                    className={
-                      action.primary
-                        ? 'flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white'
-                        : 'flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700'
-                    }
-                  >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
                     <Icon className="h-6 w-6" />
                   </div>
 
-                  <h2
-                    className={
-                      action.primary
-                        ? 'mt-5 text-xl font-bold text-white'
-                        : 'mt-5 text-xl font-bold text-slate-950'
-                    }
-                  >
+                  <h2 className="mt-5 text-xl font-bold text-slate-950">
                     {action.title}
                   </h2>
 
-                  <p
-                    className={
-                      action.primary
-                        ? 'mt-3 text-sm leading-6 text-orange-50'
-                        : 'mt-3 text-sm leading-6 text-slate-600'
-                    }
-                  >
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
                     {action.description}
                   </p>
 
-                  <div
-                    className={
-                      action.primary
-                        ? 'mt-5 inline-flex items-center gap-2 text-sm font-bold text-white'
-                        : 'mt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-700'
-                    }
-                  >
+                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-700">
                     Open
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </div>
@@ -249,7 +238,7 @@ export default function ForEmployersPage() {
 
                 return (
                   <div key={benefit.title} className="card card-hover p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
                       <Icon className="h-7 w-7" />
                     </div>
 
@@ -267,7 +256,7 @@ export default function ForEmployersPage() {
           <section className="rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl md:p-12">
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-sky-300">
                   Employer workspace
                 </p>
 
@@ -297,7 +286,7 @@ export default function ForEmployersPage() {
               </div>
 
               <div className="rounded-3xl bg-white/10 p-6 ring-1 ring-white/15">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-300 ring-1 ring-orange-400/20">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20">
                   <HardHat className="h-7 w-7" />
                 </div>
 
@@ -306,7 +295,7 @@ export default function ForEmployersPage() {
                 <ul className="mt-5 space-y-3 text-slate-300">
                   {employerTools.map((tool) => (
                     <li key={tool} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
                       <span>{tool}</span>
                     </li>
                   ))}

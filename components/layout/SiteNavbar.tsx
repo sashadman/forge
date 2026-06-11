@@ -22,18 +22,21 @@ const roleLinks = [
     label: 'Career Seeker',
     description: 'Explore paths, training programs, jobs, and readiness tools.',
     icon: UserRound,
+    level: 'LVL 01',
   },
   {
     href: '/for-employers',
     label: 'Employer',
     description: 'Create a profile and submit hiring opportunities for review.',
     icon: BriefcaseBusiness,
+    level: 'HIRING',
   },
   {
     href: '/for-programs',
     label: 'Training Provider',
     description: 'Request access, manage programs, and submit updates for review.',
     icon: GraduationCap,
+    level: 'PROVIDER',
   },
 ]
 
@@ -42,7 +45,6 @@ const seekerLinks = [
   { href: '/programs', label: 'Training Programs' },
   { href: '/opportunities', label: 'Jobs & Apprenticeships' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/quiz', label: 'Career Quiz' },
 ]
 
 export default function SiteNavbar() {
@@ -55,82 +57,120 @@ export default function SiteNavbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg-void)]/95 backdrop-blur-xl">
+    <nav
+      className="sticky top-0 z-50 backdrop-blur-md"
+      style={{
+        background: 'color-mix(in srgb, var(--bg-base) 92%, transparent)',
+        borderBottom: '1px solid var(--border)',
+      }}
+    >
       <div className="section-shell">
-        <div className="flex min-h-[5.25rem] items-center justify-between gap-5 py-4">
-          <Link href="/" onClick={closeMenu} className="group flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-[var(--radius-lg)] bg-[var(--cyan)] text-[var(--text-on-cyan)] shadow-[var(--cyan-glow)] transition group-hover:-translate-y-0.5">
-              <Hammer className="h-5 w-5" />
-            </div>
+        <div className="flex items-center justify-between py-3">
 
-            <div className="leading-none">
-              <p className="font-display text-xl font-black tracking-tight text-[var(--text-primary)]">
+          {/* Brand */}
+          <Link href="/" onClick={closeMenu} className="flex items-center gap-3 group">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all"
+              style={{
+                background: 'var(--cyan)',
+                color: 'var(--text-on-cyan)',
+                boxShadow: '0 0 14px rgba(0,229,255,0.35)',
+              }}
+            >
+              <Hammer className="h-4 w-4" />
+            </div>
+            <div>
+              <span
+                className="font-display text-base font-800 tracking-tight"
+                style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--text-primary)' }}
+              >
                 {siteConfig.name}
-              </p>
-              <p className="mt-1 hidden font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--text-muted)] sm:block">
-                Skilled trades
-              </p>
+              </span>
             </div>
           </Link>
 
-          <div className="hidden items-center gap-8 font-display text-sm font-black leading-tight text-[var(--text-secondary)] lg:flex">
-            {seekerLinks.slice(0, 4).map((link) => (
+          {/* Desktop nav links */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {seekerLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition hover:text-[var(--cyan)]"
+                className="rounded-lg px-3 py-2 text-sm font-semibold transition-colors"
+                style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cyan)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          {/* Desktop right actions */}
+          <div className="hidden items-center gap-2 lg:flex">
             <ThemeToggle />
 
+            {/* Role picker */}
             <div className="relative">
               <button
                 type="button"
-                onClick={() => setIsRoleMenuOpen((current) => !current)}
-                className="inline-flex min-w-[18rem] items-center justify-center gap-3 rounded-[var(--radius-md)] border border-[var(--border-mid)] bg-transparent px-6 py-4 font-display text-sm font-black uppercase tracking-[0.16em] text-[var(--text-primary)] transition hover:border-[var(--border-cyan)] hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)]"
+                onClick={() => setIsRoleMenuOpen((v) => !v)}
+                className="btn-outline"
+                style={{ padding: '8px 16px', fontSize: '12px' }}
                 aria-expanded={isRoleMenuOpen}
-                aria-haspopup="menu"
               >
-                <Zap className="h-4 w-4 text-[var(--amber)]" />
+                <Zap className="h-3.5 w-3.5" />
                 Choose your path
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown
+                  className="h-3.5 w-3.5 transition-transform"
+                  style={{ transform: isRoleMenuOpen ? 'rotate(180deg)' : 'none' }}
+                />
               </button>
 
               {isRoleMenuOpen && (
-                <div className="absolute right-0 mt-3 w-96 rounded-[var(--radius-xl)] border border-[var(--border)] bg-[var(--bg-overlay)] p-3 shadow-2xl shadow-black/40">
-                  <div className="px-3 py-2">
-                    <p className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
-                      Select your role
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2">
+                <div
+                  className="absolute right-0 mt-2 w-80 rounded-2xl p-2 shadow-2xl"
+                  style={{
+                    background: 'var(--bg-overlay)',
+                    border: '1px solid var(--border-mid)',
+                    boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+                  }}
+                >
+                  <p
+                    className="px-3 py-2 text-xs font-bold uppercase tracking-widest"
+                    style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}
+                  >
+                    Select your role
+                  </p>
+                  <div className="grid gap-1">
                     {roleLinks.map((link) => {
                       const Icon = link.icon
-
                       return (
                         <Link
                           key={link.href}
                           href={link.href}
                           onClick={closeMenu}
-                          className="group rounded-[var(--radius-lg)] p-3 transition hover:bg-[var(--cyan-muted)]"
+                          className="group rounded-xl p-3 transition-colors"
+                          style={{ color: 'var(--text-primary)' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-raised)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                         >
                           <div className="flex gap-3">
-                            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[var(--radius-md)] border border-[var(--border-cyan)] bg-[var(--cyan-muted)] text-[var(--cyan)]">
-                              <Icon className="h-5 w-5" />
+                            <div
+                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                              style={{ background: 'var(--cyan-muted)', color: 'var(--cyan)' }}
+                            >
+                              <Icon className="h-4 w-4" />
                             </div>
-
                             <div>
-                              <p className="font-display font-black text-[var(--text-primary)] group-hover:text-[var(--cyan)]">
-                                {link.label}
-                              </p>
-
-                              <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                                  {link.label}
+                                </p>
+                                <span className="level-badge" style={{ fontSize: '9px', padding: '2px 6px' }}>
+                                  {link.level}
+                                </span>
+                              </div>
+                              <p className="mt-0.5 text-xs leading-5" style={{ color: 'var(--text-secondary)' }}>
                                 {link.description}
                               </p>
                             </div>
@@ -146,13 +186,18 @@ export default function SiteNavbar() {
             <AuthNav />
           </div>
 
+          {/* Mobile controls */}
           <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
-
             <button
               type="button"
-              onClick={() => setIsOpen((current) => !current)}
-              className="grid h-11 w-11 place-items-center rounded-[var(--radius-md)] border border-[var(--border-mid)] bg-[var(--bg-raised)] text-[var(--text-primary)]"
+              onClick={() => setIsOpen((v) => !v)}
+              className="flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
+              style={{
+                border: '1px solid var(--border-mid)',
+                background: 'var(--bg-raised)',
+                color: 'var(--text-primary)',
+              }}
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >
@@ -161,61 +206,67 @@ export default function SiteNavbar() {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {isOpen && (
-          <div className="border-t border-[var(--border)] py-5 lg:hidden">
-            <div className="grid gap-2">
-              <p className="px-4 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
+          <div
+            className="pb-4 lg:hidden"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <div className="mt-4 grid gap-1">
+              <p
+                className="px-3 pb-2 text-xs font-bold uppercase tracking-widest"
+                style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}
+              >
                 Choose your path
               </p>
-
               {roleLinks.map((link) => {
                 const Icon = link.icon
-
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className="rounded-[var(--radius-lg)] px-4 py-3 transition hover:bg-[var(--cyan-muted)]"
+                    className="flex items-start gap-3 rounded-xl px-3 py-3 transition-colors"
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-raised)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
-                    <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-5 w-5 text-[var(--cyan)]" />
-
-                      <div>
-                        <p className="font-display font-black text-[var(--text-primary)]">
-                          {link.label}
-                        </p>
-
-                        <p className="mt-1 text-sm leading-5 text-[var(--text-secondary)]">
-                          {link.description}
-                        </p>
-                      </div>
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color: 'var(--cyan)' }} />
+                    <div>
+                      <p className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                        {link.label}
+                      </p>
+                      <p className="mt-0.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                        {link.description}
+                      </p>
                     </div>
                   </Link>
                 )
               })}
             </div>
 
-            <div className="mt-5 border-t border-[var(--border)] pt-5">
-              <p className="px-4 font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)]">
+            <div className="mt-4 grid gap-1" style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+              <p
+                className="px-3 pb-2 text-xs font-bold uppercase tracking-widest"
+                style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}
+              >
                 Career seeker tools
               </p>
-
-              <div className="mt-2 grid gap-2">
-                {seekerLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={closeMenu}
-                    className="rounded-[var(--radius-lg)] px-4 py-3 text-sm font-bold text-[var(--text-secondary)] transition hover:bg-[var(--cyan-muted)] hover:text-[var(--cyan)]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
+              {seekerLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="rounded-xl px-3 py-2 text-sm font-semibold transition-colors"
+                  style={{ color: 'var(--text-secondary)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cyan)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
 
-            <div className="mt-5 border-t border-[var(--border)] px-4 pt-5">
+            <div className="mt-4 px-3" style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
               <AuthNav />
             </div>
           </div>

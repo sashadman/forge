@@ -12,41 +12,41 @@
 @layer base {
   :root {
     /* ── Core palette ── */
-    --cyan:        #00E5FF;   /* primary / interactive / glow */
-    --cyan-dim:    #00B8CC;   /* hover state */
-    --cyan-muted:  rgba(0, 229, 255, 0.12);  /* tinted surface */
-    --cyan-glow:   0 0 24px rgba(0, 229, 255, 0.35), 0 0 8px rgba(0, 229, 255, 0.2);
+    --cyan:        #38BDF8;   /* primary / interactive / glow */
+    --cyan-dim:    #0EA5E9;   /* hover state */
+    --cyan-muted:  rgba(56, 189, 248, 0.12);  /* tinted surface */
+    --cyan-glow:   0 10px 32px rgba(14, 165, 233, 0.2);
 
-    --amber:       #FFB300;   /* XP / achievement / warning */
-    --amber-dim:   #E09B00;
-    --amber-muted: rgba(255, 179, 0, 0.12);
-    --amber-glow:  0 0 20px rgba(255, 179, 0, 0.3);
+    --amber:       #D97706;   /* XP / achievement / warning */
+    --amber-dim:   #D97706;
+    --amber-muted: rgba(217, 119, 6, 0.12);
+    --amber-glow:  0 10px 28px rgba(217, 119, 6, 0.18);
 
-    --emerald:     #00D97E;   /* success / complete */
-    --coral:       #FF4D6D;   /* danger / error */
+    --emerald:     #10B981;   /* success / complete */
+    --coral:       #E11D48;   /* danger / error */
 
     /* ── Surfaces (dark default) ── */
-    --bg-void:     #060B18;   /* page background */
-    --bg-base:     #0C1428;   /* main surface */
-    --bg-raised:   #111E38;   /* card, panel */
-    --bg-overlay:  #1A2A4A;   /* dropdown, tooltip bg */
-    --bg-input:    #0A1020;   /* form inputs */
+    --bg-void:     #101827;   /* page background */
+    --bg-base:     #172033;   /* main surface */
+    --bg-raised:   #1F2A3D;   /* card, panel */
+    --bg-overlay:  #273449;   /* dropdown, tooltip bg */
+    --bg-input:    #111827;   /* form inputs */
 
     /* ── Borders ── */
-    --border:      rgba(255, 255, 255, 0.08);
-    --border-mid:  rgba(255, 255, 255, 0.14);
-    --border-strong: rgba(255, 255, 255, 0.22);
-    --border-cyan: rgba(0, 229, 255, 0.3);
+    --border:      rgba(226, 232, 240, 0.10);
+    --border-mid:  rgba(226, 232, 240, 0.18);
+    --border-strong: rgba(226, 232, 240, 0.28);
+    --border-cyan: rgba(56, 189, 248, 0.32);
 
     /* ── Text ── */
-    --text-primary:   #F0F6FF;
-    --text-secondary: #8DA4C4;
-    --text-muted:     #4A6080;
-    --text-on-cyan:   #060B18;  /* text placed on cyan bg */
-    --text-on-amber:  #060B18;
+    --text-primary:   #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted:     #94A3B8;
+    --text-on-cyan:   #082F49;  /* text placed on cyan bg */
+    --text-on-amber:  #451A03;
 
     /* ── Typography ── */
-    --font-display: var(--font-barlow), 'Barlow', sans-serif;
+    --font-display: var(--font-dm-sans), 'DM Sans', sans-serif;
     --font-body:    var(--font-dm-sans), 'DM Sans', sans-serif;
     --font-mono:    var(--font-jetbrains), 'JetBrains Mono', monospace;
 
@@ -225,7 +225,7 @@
     font-family: var(--font-display);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--cyan);
     background: var(--cyan-muted);
@@ -241,7 +241,7 @@
     font-family: var(--font-display);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--cyan);
     background: var(--cyan-muted);
@@ -258,7 +258,7 @@
     font-family: var(--font-display);
     font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--amber);
     background: var(--amber-muted);
@@ -271,36 +271,36 @@
   .page-title {
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 6vw, 4rem);
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1.05;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
   .page-title-dark {
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 6vw, 4rem);
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1.05;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
   .section-title {
     font-family: var(--font-display);
     font-size: clamp(1.75rem, 4vw, 2.75rem);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
   .section-title-dark {
     font-family: var(--font-display);
     font-size: clamp(1.75rem, 4vw, 2.75rem);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
@@ -646,7 +646,7 @@
     @apply badge;
     color: var(--amber);
     background: var(--amber-muted);
-    border: 1px solid rgba(255, 179, 0, 0.25);
+    border: 1px solid #D97706;
   }
 }
 
@@ -697,6 +697,119 @@
 ═══════════════════════════════════════════════════════════ */
 
 @layer utilities {
+  .text-orange-50,
+  .text-orange-100,
+  .text-orange-200,
+  .text-orange-300,
+  .text-orange-400,
+  .text-orange-500,
+  .text-orange-600,
+  .text-orange-700,
+  .text-orange-800,
+  .text-orange-900,
+  .text-orange-100\/80,
+  .text-orange-200\/80,
+  .text-orange-900\/80 {
+    color: #D97706 !important;
+  }
+
+  .hover\:text-orange-700:hover,
+  .hover\:text-orange-800:hover,
+  .group:hover .group-hover\:text-orange-700,
+  .group:hover .group-hover\:text-orange-800 {
+    color: #D97706 !important;
+  }
+
+  .bg-orange-50,
+  .bg-orange-50\/40,
+  .bg-orange-50\/50,
+  .bg-orange-50\/60,
+  .bg-orange-100,
+  .bg-orange-200,
+  .bg-orange-300,
+  .bg-orange-400,
+  .bg-orange-500,
+  .bg-orange-500\/10,
+  .bg-orange-500\/15,
+  .bg-orange-500\/20,
+  .bg-orange-600,
+  .bg-orange-700,
+  .bg-orange-800,
+  .bg-orange-900 {
+    background-color: #D97706 !important;
+  }
+
+  .hover\:bg-orange-50:hover,
+  .hover\:bg-orange-50\/50:hover,
+  .hover\:bg-orange-100:hover,
+  .hover\:bg-orange-200:hover,
+  .hover\:bg-orange-500\/20:hover,
+  .hover\:bg-orange-600:hover,
+  .hover\:bg-orange-700:hover,
+  .group:hover .group-hover\:bg-orange-100,
+  .group:hover .group-hover\:bg-orange-600 {
+    background-color: #D97706 !important;
+  }
+
+  .border-orange-100,
+  .border-orange-200,
+  .border-orange-300,
+  .border-orange-400,
+  .border-orange-500,
+  .border-orange-300\/30,
+  .border-orange-400\/20,
+  .border-orange-400\/30 {
+    border-color: #D97706 !important;
+  }
+
+  .hover\:border-orange-200:hover,
+  .hover\:border-orange-300:hover,
+  .hover\:border-orange-400\/30:hover,
+  .focus\:border-orange-400:focus,
+  .focus\:border-orange-600:focus,
+  .focus-within\:border-orange-400:focus-within,
+  .group:hover .group-hover\:ring-orange-200 {
+    border-color: #D97706 !important;
+  }
+
+  .ring-orange-100,
+  .ring-orange-200,
+  .ring-orange-300\/30,
+  .ring-orange-400\/20,
+  .group:hover .group-hover\:ring-orange-200,
+  .focus\:ring-orange-100:focus,
+  .focus\:ring-orange-500:focus,
+  .focus-within\:ring-orange-100:focus-within {
+    --tw-ring-color: #D97706 !important;
+  }
+
+  .shadow-orange-900\/10 {
+    --tw-shadow-color: rgba(217, 119, 6, 0.1) !important;
+    --tw-shadow: var(--tw-shadow-colored) !important;
+  }
+
+  .from-orange-300,
+  .from-orange-400,
+  .from-orange-500,
+  .from-orange-500\/10,
+  .from-orange-500\/16 {
+    --tw-gradient-from: #D97706 var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgba(217, 119, 6, 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+  }
+
+  .via-orange-50,
+  .via-orange-400,
+  .via-orange-500 {
+    --tw-gradient-to: rgba(217, 119, 6, 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), #D97706 var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+  }
+
+  .to-orange-400,
+  .to-orange-500 {
+    --tw-gradient-to: #D97706 var(--tw-gradient-to-position) !important;
+  }
+
   .glass-card {
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
@@ -729,114 +842,6 @@
     );
     pointer-events: none;
     border-radius: inherit;
-  }
-
-  /*
-   * Legacy Tailwind color overrides
-   *
-   * A number of components in the codebase still reference the default
-   * Tailwind slate and orange color palette. These overrides remap
-   * commonly‑used slate/orange classes to our unified Ara Skills
-   * dark palette. This approach avoids hunting down every class in
-   * hundreds of files while still harmonising the overall look and
-   * improving legibility. If you refactor components later, remove
-   * reliance on these overrides and use the ara‑prefixed tokens
-   * directly.
-   */
-
-  /* Text colours */
-  .text-slate-950,
-  .text-slate-900,
-  .text-slate-800 {
-    color: var(--text-primary);
-  }
-  .text-slate-700 {
-    color: var(--text-secondary);
-  }
-  .text-slate-600,
-  .text-slate-500,
-  .text-slate-400 {
-    color: var(--text-muted);
-  }
-  .text-slate-300,
-  .text-slate-200,
-  .text-slate-100 {
-    color: var(--text-muted);
-  }
-
-  /* Background colours */
-  .bg-slate-50,
-  .bg-slate-100,
-  .bg-slate-200,
-  .bg-slate-300,
-  .bg-slate-400 {
-    background-color: var(--bg-raised);
-  }
-  .bg-slate-800,
-  .bg-slate-900,
-  .bg-slate-950 {
-    background-color: var(--bg-base);
-  }
-
-  /* Border colours */
-  .border-slate-200,
-  .border-slate-300 {
-    border-color: var(--border-mid);
-  }
-  .border-slate-400,
-  .border-slate-500 {
-    border-color: var(--border-strong);
-  }
-
-  /* Orange palette remapped to amber */
-  .text-orange-600,
-  .text-orange-700,
-  .text-orange-800 {
-    color: var(--amber);
-  }
-  .bg-orange-100 {
-    background-color: var(--amber-muted);
-    color: var(--amber);
-  }
-  .border-orange-400,
-  .border-orange-500,
-  .border-orange-300 {
-    border-color: var(--amber);
-  }
-  .ring-orange-100 {
-    --tw-ring-color: var(--amber-muted);
-  }
-  .ring-orange-200 {
-    --tw-ring-color: var(--amber);
-  }
-
-  /* Focus/interactive states remapped from orange to cyan */
-  .focus\:border-orange-400:focus {
-    border-color: var(--cyan);
-  }
-  .focus\:ring-4:focus {
-    /* Preserve existing ring width; this rule only sets the colour */
-    --tw-ring-color: var(--cyan-muted);
-  }
-  .focus\:ring-orange-100:focus {
-    --tw-ring-color: var(--cyan-muted);
-  }
-  .group:hover .group-hover\:bg-orange-600 {
-    background-color: var(--cyan);
-  }
-  .group:hover .group-hover\:text-orange-700 {
-    color: var(--cyan);
-  }
-  .group:hover .group-hover\:text-orange-800 {
-    color: var(--cyan-dim);
-  }
-
-  /* Badge slate uses muted colouring */
-  .badge-slate {
-    @apply badge;
-    color: var(--text-secondary);
-    background: var(--bg-base);
-    border: 1px solid var(--border);
   }
 
   .animate-fade-in-up {

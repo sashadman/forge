@@ -10,27 +10,33 @@ type ThemeToggleProps = {
 export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
   const { isLight, toggleTheme } = useTheme()
 
-  const buttonClass =
-    variant === 'mission'
-      ? isLight
-        ? 'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white/80 text-slate-700 shadow-sm transition hover:border-teal-300 hover:text-teal-700'
-        : 'inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-slate-200 shadow-sm transition hover:border-cyan-300/40 hover:text-cyan-200'
-      : isLight
-        ? 'inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700'
-        : 'inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-900 text-slate-100 shadow-sm transition hover:border-cyan-300/40 hover:bg-slate-800 hover:text-cyan-200'
+  const size = variant === 'mission' ? 'h-11 w-11' : 'h-10 w-10'
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      className={buttonClass}
+      className={`inline-flex items-center justify-center rounded-full transition-all ${size}`}
+      style={{
+        border: '1px solid var(--border-mid)',
+        background: 'var(--bg-raised)',
+        color: 'var(--text-secondary)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'var(--border-cyan)'
+        e.currentTarget.style.color = 'var(--cyan)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'var(--border-mid)'
+        e.currentTarget.style.color = 'var(--text-secondary)'
+      }}
       aria-label={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
       title={isLight ? 'Switch to dark theme' : 'Switch to light theme'}
     >
       {isLight ? (
-        <Moon className="h-5 w-5" aria-hidden="true" />
+        <Moon className="h-4 w-4" aria-hidden="true" />
       ) : (
-        <SunMedium className="h-5 w-5" aria-hidden="true" />
+        <SunMedium className="h-4 w-4" aria-hidden="true" />
       )}
     </button>
   )

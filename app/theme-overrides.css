@@ -1,16 +1,16 @@
 /* ═══════════════════════════════════════════════════════════
-   THEME OVERRIDES — Light mode only
-   The default theme is dark (defined in globals.css).
+   THEME OVERRIDES — Light mode
+   Root tokens still define dark mode; .theme-light is the default app skin.
    This file overrides CSS variables for .theme-light.
    Components do NOT need to change — they read variables.
 ═══════════════════════════════════════════════════════════ */
 
 .theme-light {
   /* Surfaces flip to light */
-  --bg-void:     #F4F7FC;
+  --bg-void:     #F6F8FB;
   --bg-base:     #FFFFFF;
-  --bg-raised:   #F0F4FB;
-  --bg-overlay:  #E8EEF8;
+  --bg-raised:   #FFFFFF;
+  --bg-overlay:  #F8FAFC;
   --bg-input:    #FFFFFF;
 
   /* Borders darken */
@@ -20,26 +20,26 @@
   --border-cyan:   rgba(0, 160, 180, 0.3);
 
   /* Text flips */
-  --text-primary:   #0C1428;
-  --text-secondary: #3D5470;
-  --text-muted:     #7A90AA;
+  --text-primary:   #172033;
+  --text-secondary: #334155;
+  --text-muted:     #64748B;
   --text-on-cyan:   #FFFFFF;
   --text-on-amber:  #FFFFFF;
 
   /* Accent stays cyan but slightly darker for contrast on light */
-  --cyan:          #008FAF;
-  --cyan-dim:      #007490;
-  --cyan-muted:    rgba(0, 143, 175, 0.08);
-  --cyan-glow:     0 0 20px rgba(0, 143, 175, 0.2), 0 0 6px rgba(0, 143, 175, 0.15);
-  --border-cyan:   rgba(0, 143, 175, 0.25);
+  --cyan:          #0369A1;
+  --cyan-dim:      #075985;
+  --cyan-muted:    rgba(3, 105, 161, 0.08);
+  --cyan-glow:     0 12px 30px rgba(3, 105, 161, 0.14);
+  --border-cyan:   rgba(3, 105, 161, 0.22);
 
-  --amber:         #D08000;
-  --amber-dim:     #B06800;
-  --amber-muted:   rgba(208, 128, 0, 0.08);
-  --amber-glow:    0 0 16px rgba(208, 128, 0, 0.2);
+  --amber:         #D97706;
+  --amber-dim:     #D97706;
+  --amber-muted:   rgba(180, 83, 9, 0.08);
+  --amber-glow:    0 12px 28px rgba(180, 83, 9, 0.12);
 
-  --emerald:       #00954F;
-  --coral:         #D93055;
+  --emerald:       #047857;
+  --coral:         #BE123C;
 }
 
 /* Body background for light theme */
@@ -85,3 +85,48 @@
 .theme-light .admin-card-description { color: var(--text-secondary); }
 .theme-light .admin-card-metric { background: var(--bg-raised); color: var(--text-primary); }
 .theme-light .admin-card-action { color: var(--cyan); }
+
+/*
+  Compatibility pass for older pages that still hard-code dark Tailwind
+  utilities. These keep the app readable while components migrate to tokens.
+*/
+.theme-light .bg-slate-950,
+.theme-light .bg-slate-900,
+.theme-light .bg-slate-900\/80,
+.theme-light .bg-slate-950\/70,
+.theme-light .bg-slate-950\/60 {
+  background-color: var(--bg-raised) !important;
+}
+
+.theme-light .text-white {
+  color: var(--text-primary) !important;
+}
+
+.theme-light .text-slate-300,
+.theme-light .text-slate-400 {
+  color: var(--text-secondary) !important;
+}
+
+.theme-light .text-slate-500,
+.theme-light .text-slate-600 {
+  color: var(--text-muted) !important;
+}
+
+.theme-light .border-white\/10,
+.theme-light .border-white\/15,
+.theme-light .border-white\/20 {
+  border-color: var(--border) !important;
+}
+
+.theme-light .bg-white\/5,
+.theme-light .bg-white\/10,
+.theme-light .bg-white\/\[0\.06\] {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+.theme-light .shadow-slate-950\/10,
+.theme-light .shadow-slate-950\/15,
+.theme-light .shadow-slate-950\/20,
+.theme-light .shadow-slate-950\/25 {
+  --tw-shadow-color: rgba(15, 23, 42, 0.08) !important;
+}

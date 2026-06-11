@@ -97,74 +97,98 @@ export default function ForProgramsPage() {
     <ThemedPublicPage>
       <SiteNavbar />
 
-      <section className="hero-dark">
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(135deg, #0F172A 0%, #172033 52%, #1E293B 100%)',
+          color: '#F8FAFC',
+        }}
+      >
         <div className="hero-fade" />
 
-        <div className="section-shell relative grid gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div>
+        <div className="section-shell relative grid gap-8 py-14 sm:py-16 lg:grid-cols-[0.95fr_0.75fr] lg:items-center">
+          <div className="max-w-3xl">
             <p className="eyebrow-dark">For training providers</p>
 
-            <h1 className="page-title-dark mt-6">
+            <h1
+              className="mt-5 font-bold leading-tight tracking-tight"
+              style={{ color: '#FFFFFF', fontSize: 'clamp(1.8rem, 3.2vw, 2.65rem)' }}
+            >
               Help future skilled workers find accurate training pathways.
             </h1>
 
-            <p className="lead-text-dark mt-6 max-w-3xl">
+            <p className="mt-5 max-w-2xl text-base leading-7 sm:text-lg" style={{ color: '#E2E8F0' }}>
               {siteConfig.name} helps training providers,
               apprenticeship programs, workforce organizations, and schools can
               request access, manage verified provider profiles, submit programs,
               and request updates through an admin-reviewed workflow.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/training-providers/claim"
-                className="btn-primary px-7 py-4"
+                className="btn-primary px-6 py-3"
               >
                 Request provider access
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
-              <Link href="#provider-workflow" className="btn-outline-dark px-7 py-4">
+              <Link
+                href="#provider-workflow"
+                className="btn-outline px-6 py-3"
+                style={{ borderColor: 'rgba(255,255,255,0.28)', color: '#F8FAFC' }}
+              >
                 Review provider workflow
               </Link>
             </div>
 
-            <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-400">
+            <p className="mt-4 max-w-2xl text-sm leading-6" style={{ color: '#CBD5E1' }}>
               Provider tools stay behind claim review, verification,
               admin approval, and secure provider membership checks. This keeps program
               data trustworthy.
             </p>
           </div>
 
-          <div className="card-dark p-6 shadow-2xl shadow-black/30">
-            <div className="rounded-[1.5rem] bg-white p-6 text-slate-950">
+          <div className="card-dark p-4 shadow-2xl shadow-black/30">
+            <div
+              className="rounded-[1.25rem] p-5"
+              style={{
+                background: '#D97706',
+                color: '#111827',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.24)',
+              }}
+            >
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
-                  <GraduationCap className="h-6 w-6" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-slate-950 shadow-sm">
+                  <GraduationCap className="h-5 w-5" />
                 </div>
 
                 <div>
-                  <p className="font-bold">Provider access model</p>
-                  <p className="text-sm text-slate-500">
+                  <p className="font-bold text-slate-950">Provider access model</p>
+                  <p className="text-sm font-semibold text-slate-900">
                     Claim · review · verify · manage programs
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-4">
-                {providerTools.slice(0, 4).map((tool) => (
-                  <div key={tool} className="mini-card flex gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
-                    <p className="leading-7 text-slate-700">{tool}</p>
+              <div className="mt-5 space-y-3">
+                {providerTools.slice(0, 3).map((tool) => (
+                  <div
+                    key={tool}
+                    className="flex gap-3 rounded-xl border border-white/60 bg-white/90 p-3 shadow-sm"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
+                    <p className="text-sm font-semibold leading-6 text-slate-950">{tool}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 rounded-2xl border border-orange-200 bg-orange-50 p-4">
-                <p className="text-sm font-semibold text-orange-900">
+              <div className="mt-5 rounded-xl border border-white/60 bg-white p-3 shadow-sm">
+                <p className="text-sm font-bold text-slate-950">
                   First live provider step
                 </p>
-                <p className="mt-1 text-sm leading-6 text-orange-800">
+                <p className="mt-1 text-sm font-medium leading-6 text-slate-800">
                   Training providers can now request access. Admin review comes
                   before any provider profile or program-editing privileges.
                 </p>
@@ -209,7 +233,10 @@ export default function ForProgramsPage() {
 
                 return (
                   <div key={step.title} className="card card-hover p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                      style={{ background: '#D97706', color: '#FFFFFF' }}
+                    >
                       <Icon className="h-7 w-7" />
                     </div>
 
@@ -226,17 +253,31 @@ export default function ForProgramsPage() {
 
           <section
             id="program-data"
-            className="scroll-mt-28 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-12"
+            className="scroll-mt-28 rounded-[2rem] p-8 shadow-sm md:p-12"
+            style={{
+              background:
+                'linear-gradient(135deg, #111827 0%, #172033 60%, #1E293B 100%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+            }}
           >
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <div>
-                <p className="eyebrow">Program data model</p>
+                <p
+                  className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em]"
+                  style={{
+                    borderColor: 'rgba(217,119,6,0.45)',
+                    background: 'rgba(217,119,6,0.18)',
+                    color: '#FDBA74',
+                  }}
+                >
+                  Program data model
+                </p>
 
-                <h2 className="section-title mt-4">
+                <h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-white">
                   What a provider should be able to enter and maintain.
                 </h2>
 
-                <p className="lead-text mt-5">
+                <p className="mt-5 text-base leading-7 text-slate-200">
                   Before provider editing is enabled, the platform should define
                   program fields clearly. This prevents fake listings,
                   incomplete records, and confusing provider claims.
@@ -245,9 +286,16 @@ export default function ForProgramsPage() {
 
               <div className="grid gap-3">
                 {programDataFields.map((field) => (
-                  <div key={field} className="mini-card flex gap-3">
-                    <ListChecks className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
-                    <p className="leading-7 text-slate-700">{field}</p>
+                  <div
+                    key={field}
+                    className="flex gap-3 rounded-xl border p-4 shadow-sm"
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      borderColor: 'rgba(255,255,255,0.14)',
+                    }}
+                  >
+                    <ListChecks className="mt-0.5 h-5 w-5 shrink-0" style={{ color: '#D97706' }} />
+                    <p className="font-medium leading-7 text-slate-100">{field}</p>
                   </div>
                 ))}
               </div>
@@ -275,7 +323,10 @@ export default function ForProgramsPage() {
 
                 return (
                   <div key={principle.title} className="card card-hover p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                      style={{ background: '#D97706', color: '#FFFFFF' }}
+                    >
                       <Icon className="h-7 w-7" />
                     </div>
 
@@ -292,20 +343,26 @@ export default function ForProgramsPage() {
 
           <section
             id="provider-insights"
-            className="scroll-mt-28 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl md:p-12"
+            className="scroll-mt-28 rounded-[2rem] p-8 shadow-xl md:p-12"
+            style={{
+              background:
+                'linear-gradient(135deg, #0F172A 0%, #172033 55%, #1E293B 100%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              color: '#F8FAFC',
+            }}
           >
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-start">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
+                <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: '#D97706' }}>
                   Provider insights
                 </p>
 
-                <h2 className="mt-4 text-3xl font-bold tracking-tight">
+                <h2 className="mt-4 text-3xl font-bold tracking-tight" style={{ color: '#FFFFFF' }}>
                   Providers should eventually see useful data, not just public
                   listing text.
                 </h2>
 
-                <p className="mt-5 max-w-3xl leading-7 text-slate-300">
+                <p className="mt-5 max-w-3xl leading-7" style={{ color: '#E2E8F0' }}>
                   Provider dashboards can eventually show how seekers interact with
                   program listings: views, saves, career-focus interest,
                   readiness patterns, and application-intent signals. That data
@@ -318,40 +375,48 @@ export default function ForProgramsPage() {
                     Request provider access
                     <ArrowRight className="h-4 w-4" />
                   </Link>
-<Link href="/training-providers/dashboard" className="btn-outline-dark px-7 py-4">
-  Track provider request
-</Link>
+                  <Link
+                    href="/training-providers/dashboard"
+                    className="btn-outline px-7 py-4"
+                    style={{ borderColor: 'rgba(255,255,255,0.28)', color: '#F8FAFC' }}
+                  >
+                    Track provider request
+                  </Link>
                   <Link
                     href="#provider-workflow"
-                    className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
+                    className="btn-outline"
+                    style={{ borderColor: 'rgba(255,255,255,0.28)', color: '#F8FAFC' }}
                   >
                     Back to provider workflow
                   </Link>
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-white/10 p-6 ring-1 ring-white/15">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-300 ring-1 ring-orange-400/20">
+              <div className="rounded-3xl bg-white p-6 text-slate-950 shadow-lg">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{ background: '#D97706', color: '#FFFFFF' }}
+                >
                   <BarChart3 className="h-7 w-7" />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-bold">
+                <h3 className="mt-6 text-2xl font-bold text-slate-950">
                   Future provider dashboard
                 </h3>
 
-                <ul className="mt-5 space-y-3 text-slate-300">
+                <ul className="mt-5 space-y-3 text-slate-800">
                   {providerTools.map((tool) => (
                     <li key={tool} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
-                      <span>{tool}</span>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
+                      <span className="font-medium">{tool}</span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-6 rounded-2xl border p-4" style={{ borderColor: 'rgba(217,119,6,0.28)', background: 'rgba(217,119,6,0.08)' }}>
                   <div className="flex items-start gap-3">
-                    <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-orange-300" />
-                    <p className="text-sm leading-6 text-slate-300">
+                    <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
+                    <p className="text-sm font-medium leading-6 text-slate-800">
                       Provider tools should be built as a secured workflow, not
                       as a simple public form that anyone can submit.
                     </p>

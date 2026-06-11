@@ -54,7 +54,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${barlow.variable} ${dmSans.variable} ${jetbrains.variable}`}>
+    <html
+      lang="en"
+      data-theme="light"
+      className={`theme-light ${barlow.variable} ${dmSans.variable} ${jetbrains.variable}`}
+    >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>

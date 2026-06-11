@@ -1,17 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
-  ArrowRight,
-  BriefcaseBusiness,
   CheckCircle2,
-  GraduationCap,
   Hammer,
   ShieldCheck,
-  Sparkles,
-  Trophy,
-  UserRound,
+  Zap,
 } from 'lucide-react'
 import { siteConfig } from '@/config/site'
+import RoleCard, { type RoleCardData } from '@/components/home/RoleCard'
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} — Training Programs, Apprenticeships, and Career Pathways`,
@@ -19,15 +15,15 @@ export const metadata: Metadata = {
     'Ara Skills helps career seekers discover training programs, apprenticeships, workforce pathways, and verified opportunities by location and category.',
 }
 
-const rolePaths = [
+const rolePaths: RoleCardData[] = [
   {
     title: 'Career Seeker',
     label: 'Main player path',
+    levelTag: 'LVL 01',
     description:
       'Explore skilled-trades careers, build readiness, compare training programs, save jobs or apprenticeships, and track applications.',
     href: '/career-seeker',
-    icon: UserRound,
-    accent: 'orange',
+    icon: 'career-seeker',
     size: 'large',
     steps: [
       'Explore career paths',
@@ -35,114 +31,139 @@ const rolePaths = [
       'Compare training',
       'Apply to real listings',
     ],
+    accentColor: 'var(--cyan)',
+    accentMuted: 'var(--cyan-muted)',
+    accentBorder: 'var(--border-cyan)',
+    glowColor: 'rgba(0,229,255,0.12)',
   },
   {
     title: 'Employer',
     label: 'Hiring path',
+    levelTag: 'HIRING',
     description:
       'Create an employer profile, post real jobs or apprenticeships, and review applicants through a dedicated employer workspace.',
     href: '/for-employers',
-    icon: BriefcaseBusiness,
-    accent: 'emerald',
+    icon: 'employer',
     size: 'small',
     steps: ['Create profile', 'Post listings', 'Review applicants'],
+    accentColor: 'var(--amber)',
+    accentMuted: 'var(--amber-muted)',
+    accentBorder: 'rgba(255,179,0,0.28)',
+    glowColor: 'rgba(255,179,0,0.10)',
   },
   {
     title: 'Training Provider',
     label: 'Program path',
+    levelTag: 'PROVIDER',
     description:
       'Request provider access, manage verified provider information, and submit real training programs for admin review.',
     href: '/for-programs',
-    icon: GraduationCap,
-    accent: 'cyan',
+    icon: 'training-provider',
     size: 'small',
     steps: ['Request access', 'Verify profile', 'Submit programs'],
+    accentColor: 'var(--emerald)',
+    accentMuted: 'rgba(0,217,126,0.1)',
+    accentBorder: 'rgba(0,217,126,0.28)',
+    glowColor: 'rgba(0,217,126,0.10)',
   },
 ]
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div className="pointer-events-none fixed inset-0">
-        <div className="absolute left-1/2 top-[-8rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-indigo-500/8 blur-xl" />
-        <div className="absolute bottom-[-8rem] right-[-4rem] h-[30rem] w-[30rem] rounded-full bg-cyan-400/10 blur-xl" />
-        <div className="absolute bottom-[18rem] left-[-6rem] h-[26rem] w-[26rem] rounded-full bg-emerald-400/10 blur-xl" />
+    <main
+      className="relative min-h-screen overflow-hidden"
+      style={{ background: 'var(--bg-void)', color: 'var(--text-primary)' }}
+    >
+      {/* Ambient background glows */}
+      <div className="pointer-events-none fixed inset-0" aria-hidden="true">
+        <div className="absolute" style={{ top: '-12rem', left: '50%', transform: 'translateX(-50%)', width: '48rem', height: '48rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%)' }} />
+        <div className="absolute" style={{ bottom: '-8rem', right: '-6rem', width: '36rem', height: '36rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,179,0,0.05) 0%, transparent 70%)' }} />
+        <div className="absolute" style={{ bottom: '20rem', left: '-8rem', width: '32rem', height: '32rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,217,126,0.04) 0%, transparent 70%)' }} />
       </div>
 
-      <section className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-8 sm:px-8 lg:px-10">
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-8 sm:px-8 lg:px-10">
+
+        {/* Header */}
         <header className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg shadow-slate-950/10">
-              <Hammer className="h-6 w-6" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl" style={{ background: 'var(--cyan)', color: 'var(--text-on-cyan)', boxShadow: '0 0 20px rgba(0,229,255,0.4)' }}>
+              <Hammer className="h-5 w-5" />
             </div>
-
             <div>
-              <p className="text-lg font-black tracking-tight">
+              <p style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                 {siteConfig.name}
               </p>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500">
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--text-muted)', marginTop: '1px' }}>
                 Skilled-trades platform
               </p>
             </div>
           </Link>
 
+          <nav className="hidden items-center gap-6 lg:flex">
+            <Link href="/trades" style={{ fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Career Paths</Link>
+            <Link href="/programs" style={{ fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Training</Link>
+            <Link href="/opportunities" style={{ fontFamily: 'var(--font-display)', fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Jobs</Link>
+          </nav>
+
+          <Link href="/auth/sign-in" className="btn-outline" style={{ fontSize: '12px', padding: '9px 20px' }}>
+            Sign in
+          </Link>
         </header>
 
+        {/* Hero content */}
         <section className="grid flex-1 content-center gap-8 py-12">
-          <div className="relative overflow-hidden rounded-[2.75rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur md:p-10 lg:p-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(79,70,229,0.08),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.12),transparent_30%)]" />
+
+          {/* Top hero card */}
+          <div className="relative overflow-hidden" style={{ background: 'var(--bg-raised)', border: '1px solid var(--border-mid)', borderRadius: '2.5rem', padding: 'clamp(28px, 5vw, 56px)' }}>
+            <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 55% 50% at 100% 0%, rgba(0,229,255,0.06) 0%, transparent 65%), radial-gradient(ellipse 40% 40% at 0% 100%, rgba(255,179,0,0.04) 0%, transparent 65%)' }} aria-hidden="true" />
 
             <div className="relative grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-500/8 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-indigo-200">
-                  <Sparkles className="h-4 w-4" />
-                  Welcome
-                </div>
+                <span className="eyebrow">
+                  <Zap className="h-3 w-3" aria-hidden="true" />
+                  Choose your path
+                </span>
 
-                <h1 className="mt-6 max-w-4xl text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-5xl">
-                  Choose your path. Build what’s next.
+                <h1 className="mt-6" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', fontWeight: 900, lineHeight: 1.02, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+                  Choose your path.{' '}
+                  <span style={{ color: 'var(--cyan)' }}>Build what&apos;s next.</span>
                 </h1>
 
-                <p className="mt-6 max-w-3xl text-xl leading-8 text-slate-300">
-                  Skilled trades should feel easier to explore, not harder to understand. 
-                  Choose your role, enter the right path, and move through a focused experience built around careers, training, hiring, and workforce connections.
+                <p className="mt-6 max-w-xl" style={{ fontSize: '1.125rem', lineHeight: 1.75, color: 'var(--text-secondary)' }}>
+                  Skilled trades should feel easier to explore, not harder to understand. Choose your role, enter the right path, and move through a focused experience built around careers, training, hiring, and workforce connections.
                 </p>
               </div>
 
-              <div className="rounded-[2rem] border border-white/10 bg-slate-950/60 p-6">
-                <p className="text-sm font-black uppercase tracking-[0.25em] text-slate-500">
+              {/* Platform logic panel */}
+              <div style={{ background: 'var(--bg-void)', border: '1px solid var(--border)', borderRadius: '1.5rem', padding: '24px' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '20px' }}>
                   Platform logic
                 </p>
-
-                <div className="mt-5 grid gap-4">
+                <div style={{ display: 'grid', gap: '14px' }}>
                   {[
                     'Career seekers explore and prepare.',
                     'Employers post and review applicants.',
                     'Training providers verify and submit programs.',
                   ].map((item) => (
-                    <div key={item} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-indigo-300" />
-                      <p className="leading-7 text-slate-300">{item}</p>
+                    <div key={item} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" style={{ color: 'var(--cyan)' }} aria-hidden="true" />
+                      <p style={{ fontSize: '15px', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{item}</p>
                     </div>
                   ))}
                 </div>
-
-                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="flex gap-3">
-                    <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
-                    <p className="text-sm leading-6 text-slate-400">
-                      Each path is kept separate so users do not cross into the
-                      wrong dashboard or workflow.
-                    </p>
-                  </div>
+                <div style={{ marginTop: '20px', borderRadius: '14px', background: 'var(--cyan-muted)', border: '1px solid var(--border-cyan)', padding: '14px 16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" style={{ color: 'var(--cyan)' }} aria-hidden="true" />
+                  <p style={{ fontSize: '13px', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                    Each path is kept separate so users do not cross into the wrong dashboard or workflow.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Role cards — client components, hover handled inside */}
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <RoleCard role={rolePaths[0]} />
-
             <div className="grid gap-6">
               <RoleCard role={rolePaths[1]} />
               <RoleCard role={rolePaths[2]} />
@@ -150,129 +171,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        <footer className="relative flex flex-col justify-between gap-3 border-t border-white/10 py-5 text-xs font-semibold text-slate-500 sm:flex-row">
-          <p>©{new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+        {/* Footer strip */}
+        <footer style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', paddingBottom: '20px', display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
+          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
           <p>Career Seeker · Employer · Training Provider</p>
         </footer>
-      </section>
-    </main>
-  )
-}
-
-function RoleCard({
-  role,
-}: {
-  role: {
-    title: string
-    label: string
-    description: string
-    href: string
-    icon: typeof UserRound
-    accent: string
-    size: string
-    steps: string[]
-  }
-}) {
-  const Icon = role.icon
-
-  const accentClasses =
-    role.accent === 'orange'
-      ? {
-          border: 'hover:border-orange-300/50',
-          glow: 'bg-indigo-500/8',
-          icon: 'bg-indigo-500/8 text-indigo-200 ring-orange-400/20',
-          text: 'text-indigo-200',
-          button: 'group-hover:bg-orange-100',
-        }
-      : role.accent === 'emerald'
-        ? {
-            border: 'hover:border-emerald-300/40',
-            glow: 'bg-emerald-500/15',
-            icon: 'bg-emerald-500/15 text-emerald-200 ring-emerald-400/20',
-            text: 'text-emerald-200',
-            button: 'group-hover:bg-emerald-100',
-          }
-        : {
-            border: 'hover:border-cyan-300/40',
-            glow: 'bg-cyan-500/15',
-            icon: 'bg-cyan-500/15 text-cyan-200 ring-cyan-400/20',
-            text: 'text-cyan-200',
-            button: 'group-hover:bg-cyan-100',
-          }
-
-  return (
-    <Link
-      href={role.href}
-      className={`group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/20 transition hover:-translate-y-1 ${accentClasses.border} ${
-        role.size === 'large' ? 'min-h-[31rem] md:p-8 lg:p-10' : 'md:p-7'
-      }`}
-    >
-      <div
-        className={`absolute right-[-6rem] top-[-6rem] h-56 w-56 rounded-full ${accentClasses.glow} blur-xl`}
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_32%)]" />
-
-      <div className="relative flex h-full flex-col">
-        <div className="flex items-start justify-between gap-5">
-          <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl ring-1 ${accentClasses.icon}`}
-          >
-            <Icon className="h-7 w-7" />
-          </div>
-
-          <div
-            className={`flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-950 transition ${accentClasses.button}`}
-          >
-            <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
-          </div>
-        </div>
-
-        <div className={role.size === 'large' ? 'mt-10' : 'mt-7'}>
-          <p
-            className={`text-xs font-black uppercase tracking-[0.25em] ${accentClasses.text}`}
-          >
-            {role.label}
-          </p>
-
-          <h2
-            className={
-              role.size === 'large'
-                ? 'mt-4 text-5xl font-black tracking-tight text-white'
-                : 'mt-3 text-3xl font-black tracking-tight text-white'
-            }
-          >
-            {role.title}
-          </h2>
-
-          <p
-            className={
-              role.size === 'large'
-                ? 'mt-5 max-w-2xl text-lg leading-8 text-slate-300'
-                : 'mt-4 leading-7 text-slate-400'
-            }
-          >
-            {role.description}
-          </p>
-        </div>
-
-        <div className="mt-8 grid gap-3">
-          {role.steps.map((step) => (
-            <div
-              key={step}
-              className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3"
-            >
-              <p className="text-sm font-bold text-slate-200">{step}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-auto pt-8">
-          <div className="inline-flex items-center gap-2 text-sm font-black text-white">
-            Enter {role.title} path
-            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-          </div>
-        </div>
       </div>
-    </Link>
+    </main>
   )
 }

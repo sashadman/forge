@@ -117,7 +117,7 @@ export default function CareerSeekerPage() {
 
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <section className="-mt-12 grid gap-5 md:grid-cols-3">
+          <section className="grid gap-5 pt-8 md:grid-cols-3">
             <StatCard label="Start" value="Profile" icon={<UserRound />} />
             <StatCard label="Build" value="Readiness" icon={<BarChart3 />} />
             <StatCard label="Move" value="Apply" icon={<BriefcaseBusiness />} />

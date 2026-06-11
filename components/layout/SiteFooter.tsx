@@ -4,99 +4,99 @@ import Link from 'next/link'
 import { Hammer } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 
+const footerLinks = [
+  {
+    heading: 'Career Seekers',
+    links: [
+      { href: '/trades', label: 'Career Paths' },
+      { href: '/programs', label: 'Training Programs' },
+      { href: '/opportunities', label: 'Jobs & Apprenticeships' },
+      { href: '/quiz', label: 'Career Quiz' },
+    ],
+  },
+  {
+    heading: 'Employers',
+    links: [
+      { href: '/for-employers', label: 'Employers Overview' },
+      { href: '/employers/sign-up', label: 'Create Account' },
+      { href: '/employers/sign-in', label: 'Sign In' },
+    ],
+  },
+  {
+    heading: 'Training Providers',
+    links: [
+      { href: '/for-programs', label: 'Provider Overview' },
+      { href: '/training-providers/claim', label: 'Request Access' },
+      { href: '/for-programs#provider-workflow', label: 'Provider Workflow' },
+    ],
+  },
+]
+
 export default function SiteFooter() {
-  const currentYear = new Date().getFullYear()
-
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--bg-void)]">
+    <footer style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-base)' }}>
       <div className="section-shell py-12">
-        <div className="grid gap-10 md:grid-cols-[1.25fr_0.85fr_0.85fr_0.85fr]">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
+          {/* Brand column */}
           <div>
-            <Link href="/" className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-[var(--radius-lg)] bg-[var(--cyan)] text-[var(--text-on-cyan)] shadow-[var(--cyan-glow)]">
-                <Hammer className="h-5 w-5" />
+            <Link href="/" className="inline-flex items-center gap-3">
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-xl"
+                style={{ background: 'var(--cyan)', color: 'var(--text-on-cyan)' }}
+              >
+                <Hammer className="h-4 w-4" />
               </div>
-
-              <div>
-                <p className="font-display text-xl font-black tracking-tight text-[var(--text-primary)]">
-                  {siteConfig.name}
-                </p>
-                <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--text-muted)]">
-                  Workforce pathways
-                </p>
-              </div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 800,
+                  fontSize: '16px',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                {siteConfig.name}
+              </span>
             </Link>
 
-            <p className="mt-5 max-w-sm text-sm leading-7 text-[var(--text-secondary)]">
-              Skilled-trades pathway platform for career seekers, employers, and
-              verified training providers.
+            <p className="mt-4 max-w-xs text-sm leading-6" style={{ color: 'var(--text-secondary)' }}>
+              Skilled-trades pathway platform for career seekers, employers, and verified training providers.
             </p>
           </div>
 
-          <FooterGroup
-            title="Career Seekers"
-            links={[
-              { href: '/trades', label: 'Career Paths' },
-              { href: '/programs', label: 'Training Programs' },
-              { href: '/opportunities', label: 'Jobs & Apprenticeships' },
-              { href: '/quiz', label: 'Career Quiz' },
-              { href: '/pricing', label: 'Pricing' },
-            ]}
-          />
-
-          <FooterGroup
-            title="Employers"
-            links={[
-              { href: '/for-employers', label: 'Overview' },
-              { href: '/employers/sign-up', label: 'Create Account' },
-              { href: '/employers/sign-in', label: 'Sign In' },
-              { href: '/pricing', label: 'Pricing' },
-            ]}
-          />
-
-          <FooterGroup
-            title="Providers"
-            links={[
-              { href: '/for-programs', label: 'Provider Overview' },
-              { href: '/training-providers/claim', label: 'Request Access' },
-              { href: '/for-programs#provider-workflow', label: 'Provider Workflow' },
-              { href: '/pricing', label: 'Pricing' },
-            ]}
-          />
+          {/* Link columns */}
+          {footerLinks.map((group) => (
+            <div key={group.heading}>
+              <p
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+              >
+                {group.heading}
+              </p>
+              <div className="mt-4 grid gap-3">
+                {group.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-sm font-medium transition-colors"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cyan)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-10 border-t border-[var(--border)] pt-6 text-sm text-[var(--text-muted)]">
-          © {currentYear} {siteConfig.name}. All rights reserved.
+        <div
+          className="mt-10 pt-6 text-sm"
+          style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}
+        >
+          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
         </div>
       </div>
     </footer>
-  )
-}
-
-function FooterGroup({
-  title,
-  links,
-}: {
-  title: string
-  links: { href: string; label: string }[]
-}) {
-  return (
-    <div>
-      <p className="font-display text-sm font-black uppercase tracking-[0.28em] text-[var(--text-primary)]">
-        {title}
-      </p>
-
-      <div className="mt-5 grid gap-3 text-sm font-semibold text-[var(--text-secondary)]">
-        {links.map((link) => (
-          <Link
-            key={`${title}-${link.href}-${link.label}`}
-            href={link.href}
-            className="transition hover:text-[var(--cyan)]"
-          >
-            {link.label}
-          </Link>
-        ))}
-      </div>
-    </div>
   )
 }

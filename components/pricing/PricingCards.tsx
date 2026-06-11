@@ -37,6 +37,7 @@ const employerPlans = [
     ],
     ctaLabel: 'Start employer plan',
     ctaHref: '/employers/sign-up',
+    checkoutPlanId: 'employer-starter',
     featured: true,
   },
   {
@@ -53,6 +54,7 @@ const employerPlans = [
     ],
     ctaLabel: 'Choose Pro',
     ctaHref: '/employers/sign-up',
+    checkoutPlanId: 'employer-pro',
   },
   {
     name: 'Partner',
@@ -100,6 +102,7 @@ const providerPlans = [
     ],
     ctaLabel: 'Start provider plan',
     ctaHref: '/training-providers/claim',
+    checkoutPlanId: 'provider-growth',
     featured: true,
   },
   {
@@ -116,6 +119,7 @@ const providerPlans = [
     ],
     ctaLabel: 'Choose Pro',
     ctaHref: '/training-providers/claim',
+    checkoutPlanId: 'provider-pro',
   },
   {
     name: 'Regional Partner',
@@ -134,7 +138,17 @@ const providerPlans = [
   },
 ]
 
-type PricingPlan = (typeof employerPlans)[number]
+type PricingPlan = {
+  name: string
+  price: string
+  period: string
+  description: string
+  features: string[]
+  ctaLabel: string
+  ctaHref: string
+  checkoutPlanId?: string
+  featured?: boolean
+}
 
 type PricingCardProps = {
   plan: PricingPlan
@@ -182,10 +196,20 @@ function PricingCard({ plan }: PricingCardProps) {
         ))}
       </ul>
 
-      <Link href={plan.ctaHref} className={plan.featured ? 'btn-primary mt-8 w-full' : 'btn-outline mt-8 w-full'}>
-        {plan.ctaLabel}
-        <ArrowRight className="h-4 w-4" />
-      </Link>
+      {plan.checkoutPlanId ? (
+        <form action="/api/billing/checkout" method="POST" className="mt-8">
+          <input type="hidden" name="planId" value={plan.checkoutPlanId} />
+          <button type="submit" className={plan.featured ? 'btn-primary w-full' : 'btn-outline w-full'}>
+            {plan.ctaLabel}
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </form>
+      ) : (
+        <Link href={plan.ctaHref} className={plan.featured ? 'btn-primary mt-8 w-full' : 'btn-outline mt-8 w-full'}>
+          {plan.ctaLabel}
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      )}
     </article>
   )
 }
