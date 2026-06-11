@@ -87,42 +87,57 @@ const { error } = await supabase.auth.signUp({
   }
 
   return (
-    <div className="w-full max-w-5xl">
-      <div className="grid overflow-hidden rounded-[2.25rem] border border-white/70 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="relative hidden overflow-hidden bg-slate-950 p-10 text-white lg:block">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.10),transparent_28rem)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.14),transparent_24rem)]" />
+    <div className="w-full max-w-6xl">
+      <div className="grid min-h-[34rem] overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 lg:grid-cols-[1.05fr_1fr]">
+        <div
+          className="relative hidden overflow-hidden p-10 text-white lg:block xl:p-12"
+          style={{
+            background:
+              'linear-gradient(135deg, #0F172A 0%, #172033 52%, #1E293B 100%)',
+          }}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(217,119,6,0.18),transparent_26rem)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.08),transparent_24rem)]" />
 
           <div className="relative flex h-full flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-600 text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ background: '#D97706' }}>
                 <Hammer className="h-6 w-6" />
               </div>
 
-              <p className="eyebrow-dark mt-8">{siteConfig.name}</p>
+              <p
+                className="mt-8 inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em]"
+                style={{
+                  borderColor: 'rgba(217,119,6,0.45)',
+                  background: 'rgba(217,119,6,0.18)',
+                  color: '#FDBA74',
+                }}
+              >
+                {siteConfig.name}
+              </p>
 
-              <h1 className="mt-6 text-4xl font-bold tracking-tight">
+              <h1 className="mt-5 max-w-md text-4xl font-bold leading-tight tracking-tight text-white">
                 {isSignUp ? 'Start building your trade path.' : 'Welcome back.'}
               </h1>
 
-              <p className="lead-text-dark mt-5">
+              <p className="mt-5 max-w-md text-base leading-7 text-slate-200">
                 {isSignUp
                   ? 'Create an account to save career paths, training programs, and build your skilled-trades roadmap.'
                   : 'Sign in to continue exploring career paths, training programs, and your saved career path.'}
               </p>
             </div>
 
-            <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur">
+            <div className="mt-10 rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur">
               <p className="font-bold text-white">Marketplace progress</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
+              <p className="mt-2 text-sm leading-6 text-slate-200">
                 Discover career paths, compare training programs, save what matters, and prepare for real jobs or apprenticeships.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="p-8 sm:p-10">
-          <div>
+        <div className="flex items-center p-7 sm:p-10 lg:p-12">
+          <div className="w-full">
             <p className="eyebrow">{siteConfig.name}</p>
 
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
