@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { ArrowRight, BriefcaseBusiness, MapPin } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
@@ -34,32 +35,55 @@ export default async function EmployerJobsPage() {
     <>
       <SiteNavbar />
 
-      <main className="min-h-screen bg-slate-50">
+      <main className="page-shell">
+        <section className="hero-dark">
+          <div className="hero-fade" />
+
+          <div className="section-shell relative py-14">
+            <p className="eyebrow-dark">
+              <BriefcaseBusiness className="h-4 w-4" />
+              Employer workspace
+            </p>
+
+            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="page-title-dark max-w-4xl">
+                  Manage jobs
+                </h1>
+
+                <p className="lead-text-dark mt-4 max-w-3xl">
+                  Create, review, and manage your Ara Skills job posts.
+                </p>
+              </div>
+
+              <Link
+                href="/employer/jobs/new"
+                className="btn-primary shrink-0"
+              >
+                Post a new job
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <section className="section-shell py-12">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-cyan-700">
-                Employer workspace
-              </p>
-              <h1 className="mt-3 text-4xl font-black text-slate-950">
-                Manage jobs
-              </h1>
-              <p className="mt-3 text-slate-600">
-                Create, review, and manage your Ara Skills job posts.
+              <p className="eyebrow">Hiring board</p>
+              <h2 className="section-title mt-3">
+                Your job posts
+              </h2>
+              <p className="muted-text mt-2">
+                {employerJobs.length} record
+                {employerJobs.length === 1 ? '' : 's'} in your workspace.
               </p>
             </div>
-
-            <Link
-              href="/employer/jobs/new"
-              className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
-            >
-              Post a new job
-            </Link>
           </div>
 
           <div className="mt-10">
             {employerJobs.length === 0 ? (
-              <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+              <div className="content-panel border-dashed p-10">
                 <h2 className="text-xl font-black text-slate-950">
                   No jobs posted yet.
                 </h2>
@@ -70,9 +94,10 @@ export default async function EmployerJobsPage() {
 
                 <Link
                   href="/employer/jobs/new"
-                  className="mt-6 inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="btn-primary mt-6"
                 >
                   Create first job
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             ) : (
@@ -80,11 +105,11 @@ export default async function EmployerJobsPage() {
                 {employerJobs.map((job) => (
                   <div
                     key={job.id}
-                    className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                    className="card"
                   >
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                       <div>
-                        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">
+                        <span className="badge-slate">
                           {job.status}
                         </span>
 
@@ -96,7 +121,8 @@ export default async function EmployerJobsPage() {
                           {job.company_name}
                         </p>
 
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-500">
+                          <MapPin className="h-4 w-4" />
                           {[job.city, job.state].filter(Boolean).join(', ') ||
                             job.location ||
                             'Location not listed'}
@@ -105,9 +131,10 @@ export default async function EmployerJobsPage() {
 
                       <Link
                         href={`/jobs/${job.id}`}
-                        className="inline-flex rounded-full border border-slate-300 px-5 py-3 text-sm font-black text-slate-800 transition hover:border-slate-950 hover:bg-slate-950 hover:text-white"
+                        className="btn-outline"
                       >
                         View public page
+                        <ArrowRight className="h-4 w-4" />
                       </Link>
                     </div>
                   </div>

@@ -36,8 +36,8 @@ const config: Config = {
         // Legacy forge colors — kept so existing inline classes don't break
         forge: {
           orange:       '#D97706',
-          'orange-light':'#D97706',
-          'orange-dark': '#D97706',
+          'orange-light':'#FEF3C7',
+          'orange-dark': '#92400E',
           navy:         '#0F172A',
           slate:        '#1E293B',
           blue:         '#3B82F6',

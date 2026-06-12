@@ -2,6 +2,13 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  ExternalLink,
+  MapPin,
+  ShieldCheck,
+} from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
@@ -33,32 +40,43 @@ export default async function JobsPage() {
     <>
       <SiteNavbar />
 
-      <main className="min-h-screen bg-slate-50">
-        <section className="bg-slate-950 text-white">
-          <div className="section-shell py-20">
-            <p className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-cyan-200">
+      <main className="page-shell">
+        <section className="hero-dark">
+          <div className="hero-fade" />
+
+          <div className="section-shell relative py-20">
+            <p className="eyebrow-dark">
+              <BriefcaseBusiness className="h-4 w-4" />
               Skilled-trades jobs
             </p>
 
-            <h1 className="mt-6 max-w-4xl text-5xl font-black tracking-tight sm:text-6xl">
+            <h1 className="page-title-dark mt-6 max-w-4xl">
               Find real skilled-trades opportunities.
             </h1>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            <p className="lead-text-dark mt-6 max-w-3xl">
               Browse jobs posted by Ara Skills employers and trusted external
               hiring sources. External jobs will take you to the original
               application page.
             </p>
+
+            <div className="mt-8 rounded-lg border border-white/10 bg-white/10 p-4 text-sm leading-6 text-slate-200 backdrop-blur">
+              Ara Skills helps you discover skilled-trades opportunities. Some
+              jobs are posted directly by employers, while others link to
+              trusted external hiring pages.
+            </div>
           </div>
         </section>
 
         <section className="section-shell py-12">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl font-black text-slate-950">
+              <p className="eyebrow">Live board</p>
+
+              <h2 className="section-title mt-3">
                 Open opportunities
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="muted-text mt-2">
                 {activeJobs.length} active job
                 {activeJobs.length === 1 ? '' : 's'} available.
               </p>
@@ -66,14 +84,15 @@ export default async function JobsPage() {
 
             <Link
               href="/employer/jobs/new"
-              className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+              className="btn-primary"
             >
               Post a job
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           {activeJobs.length === 0 ? (
-            <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+            <div className="content-panel border-dashed p-10">
               <h3 className="text-xl font-black text-slate-950">
                 No jobs are active yet.
               </h3>
@@ -88,29 +107,31 @@ export default async function JobsPage() {
                 <Link
                   key={job.id}
                   href={`/jobs/${job.id}`}
-                  className="block rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  className="card card-hover block"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                       <div className="flex flex-wrap gap-2">
                         {job.is_external ? (
-                          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-800">
+                          <span className="trust-badge">
+                            <ExternalLink className="h-3.5 w-3.5 text-orange-600" />
                             External Opportunity
                           </span>
                         ) : (
-                          <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-black text-cyan-800">
+                          <span className="trust-badge">
+                            <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
                             Ara Skills Employer
                           </span>
                         )}
 
                         {job.is_verified && (
-                          <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800">
+                          <span className="badge-success">
                             Verified
                           </span>
                         )}
 
                         {job.trade_category && (
-                          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                          <span className="badge-slate">
                             {job.trade_category}
                           </span>
                         )}
@@ -124,7 +145,8 @@ export default async function JobsPage() {
                         {job.company_name}
                       </p>
 
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-500">
+                        <MapPin className="h-4 w-4" />
                         {[job.city, job.state].filter(Boolean).join(', ') ||
                           job.location ||
                           'Location not listed'}
@@ -144,8 +166,9 @@ export default async function JobsPage() {
                         </p>
                       )}
 
-                      <p className="mt-4 inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white">
+                      <p className="btn-dark mt-4">
                         View job
+                        <ArrowRight className="h-4 w-4" />
                       </p>
                     </div>
                   </div>

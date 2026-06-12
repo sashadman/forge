@@ -1,6 +1,8 @@
 // app/employer/jobs/new/page.tsx
 
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowLeft, BriefcaseBusiness, CheckCircle2 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
@@ -79,32 +81,55 @@ export default async function NewEmployerJobPage() {
     <>
       <SiteNavbar />
 
-      <main className="min-h-screen bg-slate-50">
-        <section className="section-shell py-12">
-          <div className="max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.25em] text-cyan-700">
+      <main className="page-shell">
+        <section className="hero-dark">
+          <div className="hero-fade" />
+
+          <div className="section-shell relative py-14">
+            <Link
+              href="/jobs"
+              className="inline-flex items-center gap-2 text-sm font-bold text-cyan-100 transition hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to jobs
+            </Link>
+
+            <p className="eyebrow-dark mt-8">
+              <BriefcaseBusiness className="h-4 w-4" />
               Employer workspace
             </p>
 
-            <h1 className="mt-3 text-4xl font-black text-slate-950">
+            <h1 className="page-title-dark mt-5 max-w-4xl">
               Post a job
             </h1>
 
-            <p className="mt-3 text-slate-600">
+            <p className="lead-text-dark mt-5 max-w-3xl">
               Create a skilled-trades job for Ara Skills career seekers. You
               can save it as a draft or publish it immediately.
             </p>
           </div>
+        </section>
 
+        <section className="section-shell py-12">
           <form
             action={createJob}
-            className="mt-10 max-w-3xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+            className="content-panel max-w-3xl p-8"
           >
+            <div className="mb-8 rounded-lg border border-orange-200 bg-orange-50 p-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-orange-700" />
+                <p className="text-sm font-semibold leading-6 text-slate-800">
+                  Direct employer jobs should be real openings with clear pay,
+                  location, requirements, and current application instructions.
+                </p>
+              </div>
+            </div>
+
             <div className="grid gap-6">
               <div>
                 <label
                   htmlFor="title"
-                  className="text-sm font-black text-slate-950"
+                  className="label"
                 >
                   Job title
                 </label>
@@ -113,14 +138,14 @@ export default async function NewEmployerJobPage() {
                   name="title"
                   required
                   placeholder="Electrician Apprentice"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                  className="input-field mt-2"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="company_name"
-                  className="text-sm font-black text-slate-950"
+                  className="label"
                 >
                   Company name
                 </label>
@@ -129,7 +154,7 @@ export default async function NewEmployerJobPage() {
                   name="company_name"
                   required
                   placeholder="Ara Electrical Services"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                  className="input-field mt-2"
                 />
               </div>
 
@@ -137,7 +162,7 @@ export default async function NewEmployerJobPage() {
                 <div>
                   <label
                     htmlFor="city"
-                    className="text-sm font-black text-slate-950"
+                    className="label"
                   >
                     City
                   </label>
@@ -145,14 +170,14 @@ export default async function NewEmployerJobPage() {
                     id="city"
                     name="city"
                     placeholder="San Diego"
-                    className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                    className="input-field mt-2"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="state"
-                    className="text-sm font-black text-slate-950"
+                    className="label"
                   >
                     State
                   </label>
@@ -161,7 +186,7 @@ export default async function NewEmployerJobPage() {
                     name="state"
                     placeholder="CA"
                     maxLength={2}
-                    className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                    className="input-field mt-2"
                   />
                 </div>
               </div>
@@ -170,14 +195,14 @@ export default async function NewEmployerJobPage() {
                 <div>
                   <label
                     htmlFor="trade_category"
-                    className="text-sm font-black text-slate-950"
+                    className="label"
                   >
                     Trade category
                   </label>
                   <select
                     id="trade_category"
                     name="trade_category"
-                    className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                    className="select-field mt-2 w-full"
                   >
                     <option value="">Select category</option>
                     <option value="Electrical">Electrical</option>
@@ -194,14 +219,14 @@ export default async function NewEmployerJobPage() {
                 <div>
                   <label
                     htmlFor="employment_type"
-                    className="text-sm font-black text-slate-950"
+                    className="label"
                   >
                     Employment type
                   </label>
                   <select
                     id="employment_type"
                     name="employment_type"
-                    className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                    className="select-field mt-2 w-full"
                   >
                     <option value="">Select type</option>
                     <option value="Full-time">Full-time</option>
@@ -216,7 +241,7 @@ export default async function NewEmployerJobPage() {
               <div>
                 <label
                   htmlFor="salary_text"
-                  className="text-sm font-black text-slate-950"
+                  className="label"
                 >
                   Pay / salary
                 </label>
@@ -224,14 +249,14 @@ export default async function NewEmployerJobPage() {
                   id="salary_text"
                   name="salary_text"
                   placeholder="$22 - $30 per hour"
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                  className="input-field mt-2"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="description_summary"
-                  className="text-sm font-black text-slate-950"
+                  className="label"
                 >
                   Short summary
                 </label>
@@ -240,14 +265,14 @@ export default async function NewEmployerJobPage() {
                   name="description_summary"
                   rows={3}
                   placeholder="Write a short summary of the opportunity."
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                  className="input-field mt-2"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="full_description"
-                  className="text-sm font-black text-slate-950"
+                  className="label"
                 >
                   Full job description
                 </label>
@@ -256,11 +281,11 @@ export default async function NewEmployerJobPage() {
                   name="full_description"
                   rows={8}
                   placeholder="Responsibilities, requirements, schedule, benefits, and application instructions."
-                  className="mt-2 w-full rounded-2xl border border-slate-300 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                  className="input-field mt-2"
                 />
               </div>
 
-              <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <label className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <input
                   type="checkbox"
                   name="publish_now"
@@ -279,14 +304,14 @@ export default async function NewEmployerJobPage() {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   type="submit"
-                  className="rounded-full bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="btn-primary"
                 >
                   Save job
                 </button>
 
                 <a
                   href="/employer/jobs"
-                  className="rounded-full border border-slate-300 px-6 py-3 text-center text-sm font-black text-slate-800 transition hover:border-slate-950 hover:bg-slate-950 hover:text-white"
+                  className="btn-outline"
                 >
                   Cancel
                 </a>

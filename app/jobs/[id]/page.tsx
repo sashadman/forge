@@ -2,6 +2,14 @@
 
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import {
+  ArrowLeft,
+  ArrowRight,
+  BriefcaseBusiness,
+  ExternalLink,
+  MapPin,
+  ShieldCheck,
+} from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
@@ -33,35 +41,40 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     <>
       <SiteNavbar />
 
-      <main className="min-h-screen bg-slate-50">
-        <section className="bg-slate-950 text-white">
-          <div className="section-shell py-16">
+      <main className="page-shell">
+        <section className="hero-dark">
+          <div className="hero-fade" />
+
+          <div className="section-shell relative py-16">
             <Link
               href="/jobs"
-              className="text-sm font-bold text-cyan-200 transition hover:text-white"
+              className="inline-flex items-center gap-2 text-sm font-bold text-cyan-100 transition hover:text-white"
             >
-              ← Back to jobs
+              <ArrowLeft className="h-4 w-4" />
+              Back to jobs
             </Link>
 
             <div className="mt-8 flex flex-wrap gap-2">
               {job.is_external ? (
-                <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-800">
+                <span className="inline-flex items-center gap-2 rounded-full border border-orange-300/30 bg-orange-400/15 px-3 py-1 text-xs font-black uppercase tracking-wide text-orange-100">
+                  <ExternalLink className="h-3.5 w-3.5" />
                   External Opportunity
                 </span>
               ) : (
-                <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-black text-cyan-800">
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/15 px-3 py-1 text-xs font-black uppercase tracking-wide text-cyan-100">
+                  <ShieldCheck className="h-3.5 w-3.5" />
                   Ara Skills Employer
                 </span>
               )}
 
               {job.trade_category && (
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-white">
+                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
                   {job.trade_category}
                 </span>
               )}
             </div>
 
-            <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
+            <h1 className="page-title-dark mt-6 max-w-4xl">
               {job.title}
             </h1>
 
@@ -69,7 +82,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               {job.company_name}
             </p>
 
-            <p className="mt-2 text-slate-300">
+            <p className="mt-2 inline-flex items-center gap-2 text-slate-300">
+              <MapPin className="h-4 w-4" />
               {[job.city, job.state].filter(Boolean).join(', ') ||
                 job.location ||
                 'Location not listed'}
@@ -79,8 +93,10 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
         <section className="section-shell py-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-            <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-black text-slate-950">
+            <article className="content-panel p-8">
+              <p className="eyebrow">Role brief</p>
+
+              <h2 className="section-title mt-3">
                 Job details
               </h2>
 
@@ -104,8 +120,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
               )}
             </article>
 
-            <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-black text-slate-950">
+            <aside className="content-panel p-6">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                <BriefcaseBusiness className="h-6 w-6" />
+              </div>
+
+              <h2 className="mt-4 text-xl font-black text-slate-950">
                 Opportunity summary
               </h2>
 
@@ -155,23 +175,25 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                   href={job.apply_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="btn-primary mt-8 w-full"
                 >
                   {job.is_external
-                    ? 'Apply on original site'
+                    ? 'Apply on Employer Site'
                     : 'Apply for this job'}
+                  <ExternalLink className="h-4 w-4" />
                 </a>
               ) : (
                 <Link
                   href="/dashboard"
-                  className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="btn-primary mt-8 w-full"
                 >
                   Apply through Ara Skills
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
 
               {job.is_external && (
-                <p className="mt-4 text-xs leading-5 text-slate-500">
+                <p className="mt-4 rounded-lg border border-orange-200 bg-orange-50 p-3 text-xs font-semibold leading-5 text-slate-700">
                   This is an external opportunity. Ara Skills helps you discover
                   the job, but the application is completed on the original
                   employer or partner site.
