@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   ArrowRight,
-  BarChart3,
   BriefcaseBusiness,
   Compass,
   GraduationCap,
@@ -116,12 +115,6 @@ export default function CareerSeekerPage() {
 
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <section className="grid gap-5 pt-8 md:grid-cols-3">
-            <StatCard label="Start" value="Profile" icon={<UserRound />} />
-            <StatCard label="Build" value="Readiness" icon={<BarChart3 />} />
-            <StatCard label="Move" value="Apply" icon={<BriefcaseBusiness />} />
-          </section>
-
           <section className="section-padding">
             <div className="max-w-3xl">
               <p className="eyebrow">Mission map</p>
@@ -176,33 +169,5 @@ export default function CareerSeekerPage() {
         </div>
       </ThemedPublicSection>
     </ThemedPublicPage>
-  )
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string
-  value: string
-  icon: React.ReactNode
-}) {
-  return (
-    <div className="content-panel">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-slate-500">
-            {label}
-          </p>
-
-          <p className="mt-2 text-2xl font-black text-slate-950">{value}</p>
-        </div>
-
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700">
-          {icon}
-        </div>
-      </div>
-    </div>
   )
 }
