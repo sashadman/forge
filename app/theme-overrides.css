@@ -6,6 +6,8 @@
 ═══════════════════════════════════════════════════════════ */
 
 .theme-light {
+  color-scheme: light;
+
   /* Surfaces flip to light */
   --bg-void:     #F4F7FB;
   --bg-base:     #FFFFFF;
@@ -42,8 +44,49 @@
   --coral:         #BE123C;
 }
 
+.theme-dark {
+  color-scheme: dark;
+
+  --bg-void:     #101827;
+  --bg-base:     #172033;
+  --bg-raised:   #1F2A3D;
+  --bg-overlay:  #273449;
+  --bg-input:    #111827;
+
+  --border:        rgba(226, 232, 240, 0.10);
+  --border-mid:    rgba(226, 232, 240, 0.18);
+  --border-strong: rgba(226, 232, 240, 0.28);
+  --border-cyan:   rgba(56, 189, 248, 0.32);
+
+  --text-primary:   #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted:     #94A3B8;
+  --text-on-cyan:   #082F49;
+  --text-on-amber:  #451A03;
+
+  --cyan:        #38BDF8;
+  --cyan-dim:    #0EA5E9;
+  --cyan-muted:  rgba(56, 189, 248, 0.12);
+  --cyan-glow:   0 10px 32px rgba(14, 165, 233, 0.2);
+
+  --amber:       #D97706;
+  --amber-dim:   #D97706;
+  --amber-muted: rgba(217, 119, 6, 0.12);
+  --amber-glow:  0 10px 28px rgba(217, 119, 6, 0.18);
+
+  --emerald:     #10B981;
+  --coral:       #E11D48;
+}
+
 /* Body background for light theme */
 .theme-light body {
+  background:
+    linear-gradient(180deg, rgba(14, 165, 233, 0.06) 0%, transparent 18rem),
+    linear-gradient(135deg, rgba(217, 119, 6, 0.04) 0%, transparent 30rem),
+    var(--bg-void);
+}
+
+.theme-dark body {
   background:
     linear-gradient(180deg, rgba(14, 165, 233, 0.06) 0%, transparent 18rem),
     linear-gradient(135deg, rgba(217, 119, 6, 0.04) 0%, transparent 30rem),

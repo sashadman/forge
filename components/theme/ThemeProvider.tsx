@@ -45,8 +45,19 @@ function applyThemeToDocument(theme: Theme) {
   if (typeof document === 'undefined') return
 
   document.documentElement.dataset.theme = theme
+  document.documentElement.style.colorScheme = theme
   document.documentElement.classList.toggle('theme-light', theme === 'light')
   document.documentElement.classList.toggle('theme-dark', theme === 'dark')
+}
+
+function persistTheme(theme: Theme) {
+  if (typeof window === 'undefined') return
+
+  window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+  window.localStorage.setItem(
+    LEGACY_MISSION_THEME_KEY,
+    theme === 'dark' ? 'night' : 'day'
+  )
 }
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
@@ -56,17 +67,19 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     const initialTheme = getInitialTheme()
     setThemeState(initialTheme)
     applyThemeToDocument(initialTheme)
-    window.localStorage.setItem(THEME_STORAGE_KEY, initialTheme)
+    persistTheme(initialTheme)
   }, [])
 
   function setTheme(nextTheme: Theme) {
     setThemeState(nextTheme)
     applyThemeToDocument(nextTheme)
-    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme)
+    persistTheme(nextTheme)
   }
 
   function toggleTheme() {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
+    const nextTheme = theme === 'dark' ? 'light' : 'dark'
+
+    setTheme(nextTheme)
   }
 
   const value = useMemo(

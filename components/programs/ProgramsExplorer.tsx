@@ -310,15 +310,15 @@ export default function ProgramsExplorer({
           }}
           className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.6fr_auto_auto_auto]"
         >
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
-            <Search className="h-5 w-5 text-slate-400" />
+          <div className="program-search-field">
+            <Search className="h-5 w-5" style={{ color: 'var(--text-muted)' }} />
 
             <input
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search provider, program, city, state, trade..."
-              className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-400"
+              className="program-search-input"
             />
           </div>
 
@@ -345,28 +345,28 @@ export default function ProgramsExplorer({
               </option>
             ))}
           </select>
-<label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-orange-300 hover:bg-orange-50">
-  <input
-    type="checkbox"
-    checked={verifiedOnly}
-    onChange={(event) => setVerifiedOnly(event.target.checked)}
-    className="sr-only"
-  />
+          <label className="program-filter-toggle">
+            <input
+              type="checkbox"
+              checked={verifiedOnly}
+              onChange={(event) => setVerifiedOnly(event.target.checked)}
+              className="sr-only"
+            />
 
-  <span
-    className={
-      verifiedOnly
-        ? 'flex h-5 w-5 items-center justify-center rounded-md bg-orange-500 text-xs font-bold text-white'
-        : 'flex h-5 w-5 items-center justify-center rounded-md border border-slate-300 bg-white text-xs font-bold text-slate-400'
-    }
-    aria-hidden="true"
-  >
-    {verifiedOnly ? '✓' : '×'}
-  </span>
+            <span
+              className={
+                verifiedOnly
+                  ? 'program-check-indicator program-check-indicator-active'
+                  : 'program-check-indicator'
+              }
+              aria-hidden="true"
+            >
+              {verifiedOnly ? '✓' : '×'}
+            </span>
 
-  <span>Verified only</span>
-</label>
-        
+            <span>Verified only</span>
+          </label>
+
 
           <button type="submit" className="btn-dark rounded-2xl px-4 py-3">
             Search
@@ -383,11 +383,11 @@ export default function ProgramsExplorer({
           </button>
         </form>
 
-        <p className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-600">
+        <p className="program-info-note">
           Programs marked{' '}
-          <span className="font-semibold text-slate-900">
+          <strong>
             Verified by Ara Skills
-          </span>{' '}
+          </strong>{' '}
           have been reviewed by the platform. General listings are provided for
           research and discovery from public or submitted sources. Always
           confirm program details, cost, eligibility, accreditation, and
@@ -402,7 +402,7 @@ export default function ProgramsExplorer({
             No matching training programs found
           </h3>
 
-          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+          <p className="program-empty-copy mx-auto mt-3 max-w-2xl">
             Try a different provider, location, program type, or turn off
             Verified only.
           </p>
@@ -447,9 +447,9 @@ export default function ProgramsExplorer({
 
               const cardMeta = (
                 <>
-                  <div className="mt-5 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+                  <div className="program-card-meta mt-5 grid gap-3 text-sm sm:grid-cols-2">
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-slate-400" />
+                      <MapPin className="h-4 w-4" style={{ color: 'var(--text-muted)' }} />
 
                       <span>
                         {program.location}, {program.state}
@@ -457,21 +457,21 @@ export default function ProgramsExplorer({
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-900">
+                      <span className="program-card-meta-label">
                         Duration:
                       </span>{' '}
                       {program.duration || 'See provider'}
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-900">
+                      <span className="program-card-meta-label">
                         Cost:
                       </span>{' '}
                       {program.cost || 'See provider'}
                     </div>
 
                     <div>
-                      <span className="font-semibold text-slate-900">
+                      <span className="program-card-meta-label">
                         Status:
                       </span>{' '}
                       {program.record_kind === 'program'
@@ -480,7 +480,7 @@ export default function ProgramsExplorer({
                     </div>
                   </div>
 
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  <p className="program-card-freshness mt-4 text-xs font-semibold uppercase tracking-[0.2em]">
                     {freshnessText}
                   </p>
 
@@ -530,7 +530,7 @@ export default function ProgramsExplorer({
               )
 
               return (
-                <article key={program.directory_id} className="card">
+                <article key={program.directory_id} className="card program-card">
                   {programHref ? (
                     <Link
                       href={programHref}
@@ -550,11 +550,11 @@ export default function ProgramsExplorer({
                         <div>
                           {badges}
 
-                          <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950 group-hover:text-orange-700">
+                          <h3 className="program-card-title mt-4 text-2xl font-bold tracking-tight">
                             {program.name}
                           </h3>
 
-                          <p className="mt-2 font-semibold text-slate-700">
+                          <p className="program-card-provider mt-2 font-semibold">
                             {program.provider_name}
                           </p>
                         </div>
@@ -562,7 +562,7 @@ export default function ProgramsExplorer({
                         {cardIcon}
                       </div>
 
-                      <p className="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
+                      <p className="program-card-description mt-4 line-clamp-3 text-sm leading-6">
                         {program.description}
                       </p>
                     </Link>
@@ -572,11 +572,11 @@ export default function ProgramsExplorer({
                         <div>
                           {badges}
 
-                          <h3 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
+                          <h3 className="program-card-title mt-4 text-2xl font-bold tracking-tight">
                             {program.name}
                           </h3>
 
-                          <p className="mt-2 font-semibold text-slate-700">
+                          <p className="program-card-provider mt-2 font-semibold">
                             {program.provider_name}
                           </p>
                         </div>
@@ -584,7 +584,7 @@ export default function ProgramsExplorer({
                         {cardIcon}
                       </div>
 
-                      <p className="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
+                      <p className="program-card-description mt-4 line-clamp-3 text-sm leading-6">
                         {program.description}
                       </p>
                     </div>
@@ -597,7 +597,7 @@ export default function ProgramsExplorer({
           </div>
 
           <div className="card flex flex-col items-center justify-between gap-4 p-5 sm:flex-row">
-            <p className="text-sm font-semibold text-slate-600">
+            <p className="program-pagination-copy text-sm font-semibold">
               Page {currentPage} of {totalPages.toLocaleString()} ·{' '}
               {totalPrograms.toLocaleString()} total programs
             </p>
