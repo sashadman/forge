@@ -14,6 +14,7 @@ export type Database = {
   }
   graphql_public: {
     Tables: {
+      
       [_ in never]: never
     }
     Views: {
@@ -39,7 +40,117 @@ export type Database = {
   }
   public: {
     Tables: {
-      application_events: {
+      jobs: {
+  Row: {
+    id: string
+    employer_id: string | null
+    title: string
+    company_name: string
+    location: string | null
+    city: string | null
+    state: string | null
+    trade_category: string | null
+    employment_type: string | null
+    salary_min: number | null
+    salary_max: number | null
+    salary_text: string | null
+    description_summary: string | null
+    full_description: string | null
+    source_type:
+      | 'direct_employer'
+      | 'partner_feed'
+      | 'curated_external'
+      | 'government_api'
+    source_name: string | null
+    source_job_id: string | null
+    source_url: string | null
+    apply_url: string | null
+    is_external: boolean
+    is_verified: boolean
+    status: 'draft' | 'active' | 'expired' | 'removed'
+    posted_at: string | null
+    expires_at: string | null
+    last_seen_at: string | null
+    created_at: string
+    updated_at: string | null
+  }
+  Insert: {
+    id?: string
+    employer_id?: string | null
+    title: string
+    company_name: string
+    location?: string | null
+    city?: string | null
+    state?: string | null
+    trade_category?: string | null
+    employment_type?: string | null
+    salary_min?: number | null
+    salary_max?: number | null
+    salary_text?: string | null
+    description_summary?: string | null
+    full_description?: string | null
+    source_type?:
+      | 'direct_employer'
+      | 'partner_feed'
+      | 'curated_external'
+      | 'government_api'
+    source_name?: string | null
+    source_job_id?: string | null
+    source_url?: string | null
+    apply_url?: string | null
+    is_external?: boolean
+    is_verified?: boolean
+    status?: 'draft' | 'active' | 'expired' | 'removed'
+    posted_at?: string | null
+    expires_at?: string | null
+    last_seen_at?: string | null
+    created_at?: string
+    updated_at?: string | null
+  }
+  Update: {
+    id?: string
+    employer_id?: string | null
+    title?: string
+    company_name?: string
+    location?: string | null
+    city?: string | null
+    state?: string | null
+    trade_category?: string | null
+    employment_type?: string | null
+    salary_min?: number | null
+    salary_max?: number | null
+    salary_text?: string | null
+    description_summary?: string | null
+    full_description?: string | null
+    source_type?:
+      | 'direct_employer'
+      | 'partner_feed'
+      | 'curated_external'
+      | 'government_api'
+    source_name?: string | null
+    source_job_id?: string | null
+    source_url?: string | null
+    apply_url?: string | null
+    is_external?: boolean
+    is_verified?: boolean
+    status?: 'draft' | 'active' | 'expired' | 'removed'
+    posted_at?: string | null
+    expires_at?: string | null
+    last_seen_at?: string | null
+    created_at?: string
+    updated_at?: string | null
+  }
+  Relationships: [
+    {
+      foreignKeyName: 'jobs_employer_id_fkey'
+      columns: ['employer_id']
+      isOneToOne: false
+      referencedRelation: 'users'
+      referencedColumns: ['id']
+    },
+  ]
+}
+            application_events: {
         Row: {
           actor_id: string | null
           application_id: string
