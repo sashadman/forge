@@ -1,12 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import {
   BriefcaseBusiness,
   ChevronDown,
   GraduationCap,
-  Hammer,
   Menu,
   UserRound,
   X,
@@ -70,14 +70,19 @@ export default function SiteNavbar() {
           {/* Brand */}
           <Link href="/" onClick={closeMenu} className="flex items-center gap-3 group">
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white transition-all"
               style={{
-                background: 'var(--cyan)',
-                color: 'var(--text-on-cyan)',
-                boxShadow: '0 0 14px rgba(0,229,255,0.35)',
+                boxShadow: '0 8px 18px rgba(15,23,42,0.12)',
               }}
             >
-              <Hammer className="h-4 w-4" />
+              <Image
+                src="/AraSkills-Logo.png"
+                alt={`${siteConfig.name} logo`}
+                width={36}
+                height={36}
+                className="h-full w-full object-contain"
+                priority
+              />
             </div>
             <div>
               <span

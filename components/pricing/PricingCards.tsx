@@ -68,8 +68,8 @@ const employerPlans = [
       'Priority support',
       'Sponsored pathway options',
     ],
-    ctaLabel: 'Discuss partnership',
-    ctaHref: '/for-employers',
+    ctaLabel: 'Start employer request',
+    ctaHref: '/employers/sign-up',
   },
 ]
 
@@ -133,8 +133,8 @@ const providerPlans = [
       'Multi-provider support',
       'Campaign support',
     ],
-    ctaLabel: 'Discuss partnership',
-    ctaHref: '/for-programs',
+    ctaLabel: 'Request provider access',
+    ctaHref: '/training-providers/claim',
   },
 ]
 

@@ -34,6 +34,10 @@ type SocialLink = {
   icon: ReactNode
 }
 
+type ActiveSocialLink = SocialLink & {
+  href: string
+}
+
 function formatOpportunityType(type: string) {
   return type
     .split('_')
@@ -115,7 +119,7 @@ export default async function EmployerDetailPage({ params }: PageProps) {
   const activeOpportunities =
     employer.opportunities?.filter((opportunity) => opportunity.is_active) ?? []
 
-  const socialLinks: SocialLink[] = [
+  const socialLinkOptions: SocialLink[] = [
     {
       label: 'LinkedIn',
       href: employer.linkedin_url,
@@ -151,7 +155,11 @@ export default async function EmployerDetailPage({ params }: PageProps) {
       href: employer.other_social_url,
       icon: <ExternalLink className="h-4 w-4" />,
     },
-  ].filter((link) => Boolean(link.href))
+  ]
+
+  const socialLinks = socialLinkOptions.filter(
+    (link): link is ActiveSocialLink => Boolean(link.href)
+  )
 
   return (
     <main className="page-shell">
@@ -389,7 +397,7 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                     {socialLinks.map((link) => (
                       <a
                         key={link.label}
-                        href={link.href || '#'}
+                        href={link.href}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"

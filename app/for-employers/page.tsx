@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   ClipboardList,
   GraduationCap,
-  HardHat,
   LogIn,
   PlusCircle,
   UserPlus,
@@ -86,14 +85,6 @@ const employerWorkflow = [
   'Submit real jobs or apprenticeships for review',
   'Review applications and readiness snapshots',
   'Keep listings current and connected to real hiring needs',
-]
-
-const employerTools = [
-  'Employer profile management',
-  'Reviewed jobs and apprenticeship listings',
-  'Application review workflow',
-  'Applicant readiness snapshots',
-  'Submission review and listing status control',
 ]
 
 export default function ForEmployersPage() {
@@ -253,56 +244,6 @@ export default function ForEmployersPage() {
             </div>
           </section>
 
-          <section className="rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl md:p-12">
-            <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-sky-300">
-                  Employer workspace
-                </p>
-
-                <h2 className="mt-4 text-3xl font-bold tracking-tight">
-                  Keep hiring actions inside the employer journey.
-                </h2>
-
-                <p className="mt-5 max-w-3xl leading-7 text-slate-300">
-                  Employers should not be routed into the job-seeker dashboard.
-                  They should manage profile quality, listings, and applications
-                  from the employer workspace.
-                </p>
-
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Link href="/employers/sign-up" className="btn-light">
-                    Create employer account
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <Link
-                    href="/employers/dashboard"
-                    className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
-                  >
-                    Go to employer dashboard
-                  </Link>
-                </div>
-              </div>
-
-              <div className="rounded-3xl bg-white/10 p-6 ring-1 ring-white/15">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20">
-                  <HardHat className="h-7 w-7" />
-                </div>
-
-                <h3 className="mt-6 text-2xl font-bold">Employer tools</h3>
-
-                <ul className="mt-5 space-y-3 text-slate-300">
-                  {employerTools.map((tool) => (
-                    <li key={tool} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-sky-300" />
-                      <span>{tool}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </section>
         </div>
       </ThemedPublicSection>
 

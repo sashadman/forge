@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   CheckCircle2,
-  Hammer,
   ShieldCheck,
   Zap,
 } from 'lucide-react'
@@ -86,8 +86,15 @@ export default function HomePage() {
         {/* Header */}
         <header className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl" style={{ background: 'var(--cyan)', color: 'var(--text-on-cyan)', boxShadow: '0 0 20px rgba(0,229,255,0.4)' }}>
-              <Hammer className="h-5 w-5" />
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white" style={{ boxShadow: '0 10px 24px rgba(15,23,42,0.16)' }}>
+              <Image
+                src="/AraSkills-Logo.png"
+                alt={`${siteConfig.name} logo`}
+                width={44}
+                height={44}
+                className="h-full w-full object-contain"
+                priority
+              />
             </div>
             <div>
               <p style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '18px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>

@@ -7,14 +7,12 @@ import {
   ClipboardCheck,
   FilePenLine,
   GraduationCap,
-  Handshake,
   ListChecks,
   ShieldCheck,
   Users,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import SiteFooter from '@/components/layout/SiteFooter'
-import NextStepPanel from '@/components/ui/NextStepPanel'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { siteConfig } from '@/config/site'
@@ -200,18 +198,6 @@ export default function ForProgramsPage() {
 
       <ThemedPublicSection className="pb-20">
         <div className="section-shell">
-          <div className="pt-8">
-            <NextStepPanel
-              title="Start with a verified provider request."
-              description="The provider path should begin with ownership review. Organizations can request access, then admins can review the claim before provider tools are enabled."
-              primaryHref="/training-providers/claim"
-              primaryLabel="Request provider access"
-              secondaryHref="#program-data"
-              secondaryLabel="Review program data fields"
-              icon={<ShieldCheck className="h-6 w-6" />}
-            />
-          </div>
-
           <section id="provider-workflow" className="section-padding scroll-mt-28">
             <div className="max-w-3xl">
               <p className="eyebrow">Provider workflow</p>
@@ -341,90 +327,6 @@ export default function ForProgramsPage() {
             </div>
           </section>
 
-          <section
-            id="provider-insights"
-            className="scroll-mt-28 rounded-[2rem] p-8 shadow-xl md:p-12"
-            style={{
-              background:
-                'linear-gradient(135deg, #0F172A 0%, #172033 55%, #1E293B 100%)',
-              border: '1px solid rgba(255,255,255,0.14)',
-              color: '#F8FAFC',
-            }}
-          >
-            <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-start">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: '#D97706' }}>
-                  Provider insights
-                </p>
-
-                <h2 className="mt-4 text-3xl font-bold tracking-tight" style={{ color: '#FFFFFF' }}>
-                  Providers should eventually see useful data, not just public
-                  listing text.
-                </h2>
-
-                <p className="mt-5 max-w-3xl leading-7" style={{ color: '#E2E8F0' }}>
-                  Provider dashboards can eventually show how seekers interact with
-                  program listings: views, saves, career-focus interest,
-                  readiness patterns, and application-intent signals. That data
-                  should support better program communication without exposing
-                  private seeker information.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link href="/training-providers/claim" className="btn-light">
-                    Request provider access
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href="/training-providers/dashboard"
-                    className="btn-outline px-7 py-4"
-                    style={{ borderColor: 'rgba(255,255,255,0.28)', color: '#F8FAFC' }}
-                  >
-                    Track provider request
-                  </Link>
-                  <Link
-                    href="#provider-workflow"
-                    className="btn-outline"
-                    style={{ borderColor: 'rgba(255,255,255,0.28)', color: '#F8FAFC' }}
-                  >
-                    Back to provider workflow
-                  </Link>
-                </div>
-              </div>
-
-              <div className="rounded-3xl bg-white p-6 text-slate-950 shadow-lg">
-                <div
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ background: '#D97706', color: '#FFFFFF' }}
-                >
-                  <BarChart3 className="h-7 w-7" />
-                </div>
-
-                <h3 className="mt-6 text-2xl font-bold text-slate-950">
-                  Future provider dashboard
-                </h3>
-
-                <ul className="mt-5 space-y-3 text-slate-800">
-                  {providerTools.map((tool) => (
-                    <li key={tool} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
-                      <span className="font-medium">{tool}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-6 rounded-2xl border p-4" style={{ borderColor: 'rgba(217,119,6,0.28)', background: 'rgba(217,119,6,0.08)' }}>
-                  <div className="flex items-start gap-3">
-                    <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-slate-950" />
-                    <p className="text-sm font-medium leading-6 text-slate-800">
-                      Provider tools should be built as a secured workflow, not
-                      as a simple public form that anyone can submit.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </ThemedPublicSection>
 
