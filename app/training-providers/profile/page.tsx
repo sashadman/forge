@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import TrainingProviderProfileForm from '@/components/training-providers/TrainingProviderProfileForm'
@@ -101,8 +100,6 @@ export default async function TrainingProviderProfilePage() {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

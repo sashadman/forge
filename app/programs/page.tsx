@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import ProgramsExplorer, {
   type Program,
@@ -268,8 +267,6 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
           </section>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, ClipboardCheck } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import SubmittedApplicationsSection from '@/components/dashboard/SubmittedApplicationsSection'
 import DashboardActionCenter from '@/components/dashboard/DashboardActionCenter'
@@ -66,8 +65,6 @@ export default async function DashboardApplicationsPage() {
           <SubmittedApplicationsSection applications={submittedApplications} />
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

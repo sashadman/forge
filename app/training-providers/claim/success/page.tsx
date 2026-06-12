@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { siteConfig } from '@/config/site'
@@ -48,8 +47,6 @@ export default function TrainingProviderClaimSuccessPage() {
           </section>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

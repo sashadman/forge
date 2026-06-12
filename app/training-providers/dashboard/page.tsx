@@ -13,7 +13,6 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { createClient } from '@/lib/supabase/server'
@@ -513,8 +512,6 @@ export default async function TrainingProviderDashboardPage() {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

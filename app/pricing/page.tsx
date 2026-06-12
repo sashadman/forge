@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, Building2, GraduationCap, ShieldCheck } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import PricingCards from '@/components/pricing/PricingCards'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
@@ -101,8 +100,6 @@ export default function PricingPage() {
           <PricingCards />
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

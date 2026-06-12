@@ -15,7 +15,6 @@ import {
   UserRound,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
 
 export default async function DashboardPage() {
@@ -346,8 +345,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

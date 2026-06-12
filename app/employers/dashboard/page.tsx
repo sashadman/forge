@@ -15,7 +15,6 @@ import {
   XCircle,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import PageHero from '@/components/ui/PageHero'
 import EmptyState from '@/components/ui/EmptyState'
 import NextStepPanel from '@/components/ui/NextStepPanel'
@@ -628,8 +627,6 @@ export default async function EmployerDashboardPage() {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

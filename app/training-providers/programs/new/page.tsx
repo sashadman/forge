@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import ProviderProgramSubmissionForm from '@/components/training-providers/ProviderProgramSubmissionForm'
@@ -107,8 +106,6 @@ export default async function NewProviderProgramPage() {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

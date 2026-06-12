@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowRight, BriefcaseBusiness, MapPin } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import type { Job } from '@/types/job'
 
@@ -144,8 +143,6 @@ export default async function EmployerJobsPage() {
           </div>
         </section>
       </main>
-
-      <SiteFooter />
     </>
   )
 }

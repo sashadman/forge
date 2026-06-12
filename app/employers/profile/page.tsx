@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import EmployerProfileEditForm from '@/components/employers/EmployerProfileEditForm'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
@@ -84,8 +83,6 @@ export default async function EmployerProfilePage() {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

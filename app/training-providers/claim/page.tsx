@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ProviderClaimForm, {
   type ClaimLinkedProgram,
 } from '@/components/training-providers/ProviderClaimForm'
@@ -83,8 +82,6 @@ export default async function TrainingProviderClaimPage({
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, BriefcaseBusiness, CheckCircle2 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 
 async function createJob(formData: FormData) {
@@ -320,8 +319,6 @@ export default async function NewEmployerJobPage() {
           </form>
         </section>
       </main>
-
-      <SiteFooter />
     </>
   )
 }

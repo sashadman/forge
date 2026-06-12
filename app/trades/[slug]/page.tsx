@@ -9,13 +9,12 @@ import {
   Clock,
   DollarSign,
   GraduationCap,
-  Hammer,
   ShieldCheck,
   TrendingUp,
+  Wrench,
   XCircle,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import { TRADES, TRADE_MAP, formatSalaryRange, formatSalary } from '@/utils/trades'
@@ -125,7 +124,7 @@ export default function CareerPathDetailPage({
                   />
 
                   <StatCard
-                    icon={Hammer}
+                    icon={Wrench}
                     label="Work style"
                     value="Hands-on skilled work"
                   />
@@ -192,7 +191,7 @@ export default function CareerPathDetailPage({
           <div className="mt-8 grid gap-8 lg:grid-cols-3">
             <InfoList
               title="Key skills"
-              icon={Hammer}
+              icon={Wrench}
               items={trade.key_skills}
             />
 
@@ -293,8 +292,6 @@ export default function CareerPathDetailPage({
           </section>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

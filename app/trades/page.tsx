@@ -8,7 +8,6 @@ import {
   Search,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import TradesExplorer from '@/components/trades/TradesExplorer'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
@@ -139,8 +138,6 @@ export default function TradesPage() {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

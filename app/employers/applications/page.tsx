@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BriefcaseBusiness, Inbox, UsersRound } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import PageHero from '@/components/ui/PageHero'
 import BackLink from '@/components/ui/BackLink'
 import EmptyState from '@/components/ui/EmptyState'
@@ -131,8 +130,6 @@ export default async function EmployerApplicationsPage() {
           </section>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, BriefcaseBusiness } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import SavedOpportunitiesSection from '@/components/dashboard/SavedOpportunitiesSection'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
@@ -59,8 +58,6 @@ export default async function DashboardJobsPage() {
           />
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

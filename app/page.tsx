@@ -178,11 +178,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Footer strip */}
-        <footer style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', paddingBottom: '20px', display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          <p>Career Seeker · Employer · Training Provider</p>
-        </footer>
       </div>
     </main>
   )

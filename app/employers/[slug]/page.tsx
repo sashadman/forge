@@ -18,7 +18,6 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
 
@@ -452,8 +451,6 @@ export default async function EmployerDetailPage({ params }: PageProps) {
           </aside>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

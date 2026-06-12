@@ -10,7 +10,6 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import type { Job } from '@/types/job'
 
@@ -178,8 +177,6 @@ export default async function JobsPage() {
           )}
         </section>
       </main>
-
-      <SiteFooter />
     </>
   )
 }

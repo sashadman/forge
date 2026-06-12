@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { BriefcaseBusiness, GraduationCap, Send, ShieldCheck } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import OpportunityHero from '@/components/opportunities/detail/OpportunityHero'
 import OpportunityOverview from '@/components/opportunities/detail/OpportunityOverview'
@@ -177,8 +176,6 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

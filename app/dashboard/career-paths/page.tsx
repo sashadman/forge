@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Map } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import SavedTradesSection from '@/components/dashboard/SavedTradesSection'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
@@ -54,8 +53,6 @@ export default async function DashboardCareerPathsPage() {
           <SavedTradesSection savedTrades={savedTrades} />
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

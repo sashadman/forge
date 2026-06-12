@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import OpportunitiesExplorer from '@/components/opportunities/OpportunitiesExplorer'
 import { createClient } from '@/lib/supabase/server'
@@ -167,8 +166,6 @@ export default async function OpportunitiesPage() {
           </section>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

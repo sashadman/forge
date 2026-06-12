@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import DashboardHero from '@/components/dashboard/DashboardHero'
 import MissionSequence from '@/components/dashboard/MissionSequence'
 import DashboardReadinessWidget from '@/components/dashboard/DashboardReadinessWidget'
@@ -45,9 +44,6 @@ export default function DesignPreviewPage() {
       <section className="section-shell py-12">
         <DashboardReadinessWidget items={previewItems} score={previewScore} />
       </section>
-
-      <PreviewLabel label="SiteFooter" />
-      <SiteFooter />
     </main>
   )
 }

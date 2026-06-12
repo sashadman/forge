@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import TrainingSourceExplorer from '@/components/training-sources/TrainingSourceExplorer'
@@ -79,8 +78,6 @@ export default async function TrainingSourcesPage() {
           </div>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

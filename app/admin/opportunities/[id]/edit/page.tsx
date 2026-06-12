@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import AdminOpportunityEditForm from '@/components/admin/AdminOpportunityEditForm'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
@@ -99,8 +98,6 @@ export default async function EditAdminOpportunityPage({ params }: PageProps) {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

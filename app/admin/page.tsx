@@ -14,7 +14,6 @@ import {
   UsersRound,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import PageHero from '@/components/ui/PageHero'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import { createClient } from '@/lib/supabase/server'
@@ -393,8 +392,6 @@ export default async function AdminPage() {
           </section>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

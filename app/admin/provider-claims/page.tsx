@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { Building2, Clock, GraduationCap, Mail, MapPin } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import { createClient } from '@/lib/supabase/server'
 import ProviderClaimReviewForm from '@/components/training-providers/ProviderClaimReviewForm'
 import CreateProviderProfileFromClaimButton from '@/components/training-providers/CreateProviderProfileFromClaimButton'
@@ -292,8 +291,6 @@ export default async function AdminProviderClaimsPage() {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

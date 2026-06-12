@@ -11,7 +11,6 @@ import {
   XCircle,
 } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import PageHero from '@/components/ui/PageHero'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import { createClient } from '@/lib/supabase/server'
@@ -430,8 +429,6 @@ export default async function CandidateDetailPage({
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

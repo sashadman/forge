@@ -1,9 +1,9 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   ArrowRight,
   BriefcaseBusiness,
   GraduationCap,
-  Hammer,
   ShieldCheck,
   Sparkles,
   UserRound,
@@ -74,8 +74,14 @@ export default function HomeHero() {
         <div className="rounded-[2.25rem] border border-white/10 bg-white/[0.08] p-5 shadow-2xl shadow-black/30 backdrop-blur">
           <div className="rounded-[1.75rem] bg-white/95 p-6 text-slate-950 shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
-                <Hammer className="h-6 w-6" />
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 ring-1 ring-slate-200">
+                <Image
+                  src="/AraSkills-Logo.png"
+                  alt={`${siteConfig.name} logo`}
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-contain"
+                />
               </div>
 
               <div>

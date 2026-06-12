@@ -313,7 +313,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       {
         id: 'q6-a',
         text: 'Home improvement or DIY projects',
-        emoji: '🔨',
+        emoji: '🧰',
         trade_weights: { construction: 1.5, carpentry: 1.5, plumbing: 1 },
       },
       {

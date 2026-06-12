@@ -3,6 +3,7 @@ import { Barlow, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/config/site'
 import ThemeProvider from '@/components/theme/ThemeProvider'
+import SiteFooter from '@/components/layout/SiteFooter'
 
 const barlow = Barlow({
   subsets: ['latin'],
@@ -60,7 +61,10 @@ export default function RootLayout({
       className={`theme-light ${barlow.variable} ${dmSans.variable} ${jetbrains.variable}`}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <SiteFooter />
+        </ThemeProvider>
       </body>
     </html>
   )

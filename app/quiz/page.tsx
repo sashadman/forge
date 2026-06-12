@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Compass, GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import CareerQuiz from '@/components/quiz/CareerQuiz'
@@ -85,8 +84,6 @@ export default function QuizPage() {
           </section>
         </div>
       </ThemedPublicSection>
-
-      <SiteFooter />
     </ThemedPublicPage>
   )
 }

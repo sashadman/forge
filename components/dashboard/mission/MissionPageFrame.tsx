@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { type ReactNode } from 'react'
 import { ArrowLeft, ArrowRight, TerminalSquare } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import MissionNav from '@/components/dashboard/mission/MissionNav'
 import ThemeToggle from '@/components/theme/ThemeToggle'
 import { useTheme } from '@/components/theme/ThemeProvider'
@@ -168,8 +167,6 @@ export default function MissionPageFrame({
       >
         <div className="section-shell pt-8">{children}</div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

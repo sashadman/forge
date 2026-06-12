@@ -1,5 +1,4 @@
 import SiteNavbar from '@/components/layout/SiteNavbar'
-import SiteFooter from '@/components/layout/SiteFooter'
 import BackLink from '@/components/ui/BackLink'
 import DashboardProfilePanel from '@/components/dashboard/DashboardProfilePanel'
 import { getDashboardPageData } from '@/lib/dashboard/get-dashboard-page-data'
@@ -47,8 +46,6 @@ export default async function DashboardProfilePage() {
           />
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }
