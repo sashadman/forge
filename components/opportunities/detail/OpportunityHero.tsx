@@ -4,6 +4,10 @@ import type {
   OpportunityDetailEmployer,
 } from '@/lib/opportunities/get-opportunity-detail-data'
 import { formatOpportunityType } from '@/lib/opportunities/get-opportunity-detail-data'
+import {
+  getOpportunityTrustLabel,
+  isExternalOpportunity,
+} from '@/lib/opportunities/opportunity-trust'
 
 type OpportunityHeroProps = {
   opportunity: OpportunityDetail
@@ -14,6 +18,12 @@ export default function OpportunityHero({
   opportunity,
   employer,
 }: OpportunityHeroProps) {
+  const externalOpportunity = isExternalOpportunity(opportunity)
+  const trustLabel = getOpportunityTrustLabel({
+    verification_status: opportunity.verification_status,
+    employerIsVerified: employer?.is_verified,
+  })
+
   return (
     <section className="hero-dark">
       <div className="hero-fade" />
@@ -37,29 +47,38 @@ export default function OpportunityHero({
               {employer?.name || 'Employer listing'}
             </p>
 
-            {employer && (
+            {(employer || externalOpportunity) && (
               <span
                 className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide ${
-                  employer.is_verified
+                  !externalOpportunity && employer?.is_verified
                     ? 'bg-green-400/15 text-green-200 ring-1 ring-green-300/30'
-                    : 'bg-white/10 text-slate-200 ring-1 ring-white/15'
+                    : externalOpportunity
+                      ? 'bg-orange-400/15 text-orange-100 ring-1 ring-orange-300/30'
+                      : 'bg-white/10 text-slate-200 ring-1 ring-white/15'
                 }`}
               >
-                {employer.is_verified
-                  ? 'Verified employer'
-                  : 'Employer not yet verified'}
+                {trustLabel}
               </span>
             )}
           </div>
+
+          {externalOpportunity && (
+            <p className="mt-4 max-w-3xl text-sm font-semibold leading-6 text-slate-300">
+              Source:{' '}
+              {opportunity.source_name ||
+                employer?.name ||
+                'Trusted external hiring source'}
+            </p>
+          )}
 
           <p className="lead-text-dark mt-6 max-w-3xl">
             {opportunity.description}
           </p>
 
           <p className="mt-6 max-w-3xl text-sm leading-6 text-slate-400">
-            Review the employer, requirements, and application details before
-            submitting. Directory details can change, so confirm external
-            application instructions when provided.
+            Review the employer, requirements, source, and application details
+            before applying. External opportunities open on the original
+            employer or partner application page.
           </p>
         </div>
       </div>

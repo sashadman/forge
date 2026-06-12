@@ -69,6 +69,22 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
       }
     }
 
+    if (
+      opportunity.verification_status === 'source_verified' ||
+      opportunity.verification_status === 'admin_reviewed'
+    ) {
+      return {
+        title: 'This external opportunity opens on the original application site.',
+        description:
+          'Ara Skills helps you discover it, but the application happens through the employer or partner hiring page. Review the source and apply details before leaving the platform.',
+        primaryHref: '#apply',
+        primaryLabel: 'Review apply details',
+        secondaryHref: '/opportunities',
+        secondaryLabel: 'Compare more jobs & apprenticeships',
+        icon: <BriefcaseBusiness className="h-6 w-6" />,
+      }
+    }
+
     if (!user) {
       return {
         title: 'Sign in before applying so your progress is saved.',
@@ -146,6 +162,9 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
                 <OpportunityApplicationPanel
                   opportunityId={opportunity.id}
                   applicationUrl={opportunity.application_url}
+                  externalUrl={opportunity.external_url}
+                  sourceName={opportunity.source_name}
+                  verificationStatus={opportunity.verification_status}
                   userIsSignedIn={Boolean(user)}
                   readinessScore={readinessScore}
                   introMessageTemplate={introMessageTemplate}

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import {
   BriefcaseBusiness,
+  ExternalLink,
   MapPin,
   ShieldCheck,
 } from 'lucide-react'
@@ -10,6 +11,11 @@ import type {
   OpportunityDetailEmployer,
 } from '@/lib/opportunities/get-opportunity-detail-data'
 import { formatOpportunityType } from '@/lib/opportunities/get-opportunity-detail-data'
+import {
+  getOpportunityTrustDescription,
+  getOpportunityTrustLabel,
+  isExternalOpportunity,
+} from '@/lib/opportunities/opportunity-trust'
 
 type OpportunityDetailsCardProps = {
   opportunity: OpportunityDetail
@@ -20,6 +26,17 @@ export default function OpportunityDetailsCard({
   opportunity,
   employer,
 }: OpportunityDetailsCardProps) {
+  const externalOpportunity = isExternalOpportunity(opportunity)
+  const trustLabel = getOpportunityTrustLabel({
+    verification_status: opportunity.verification_status,
+    employerIsVerified: employer?.is_verified,
+  })
+  const trustDescription = getOpportunityTrustDescription({
+    verification_status: opportunity.verification_status,
+    employerIsVerified: employer?.is_verified,
+  })
+  const applyUrl = opportunity.application_url || opportunity.external_url
+
   return (
     <div className="content-panel">
       <p className="eyebrow">Listing details</p>
@@ -56,7 +73,34 @@ export default function OpportunityDetailsCard({
         />
       </div>
 
-      {employer && (
+      <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div className="flex items-start gap-3">
+          {externalOpportunity ? (
+            <ExternalLink className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+          ) : (
+            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+          )}
+
+          <div>
+            <p className="font-semibold text-slate-950">{trustLabel}</p>
+
+            <p className="mt-1 text-sm leading-6 text-slate-500">
+              {trustDescription}
+            </p>
+
+            {externalOpportunity && (
+              <p className="mt-3 text-sm font-semibold leading-6 text-slate-700">
+                Source:{' '}
+                {opportunity.source_name ||
+                  employer?.name ||
+                  'Trusted external hiring source'}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {employer && !externalOpportunity && (
         <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-start gap-3">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
@@ -83,10 +127,22 @@ export default function OpportunityDetailsCard({
       </div>
 
       <p className="mt-5 text-xs leading-6 text-slate-500">
-        This is a public opportunity listing. Always confirm pay, schedule,
-        requirements, and application details directly with the employer or
-        listing provider.
+        {externalOpportunity
+          ? 'This external opportunity is listed for discovery. Confirm pay, schedule, requirements, and application details on the original application page.'
+          : 'This is a public Ara Skills opportunity listing. Always confirm pay, schedule, requirements, and application details directly with the employer.'}
       </p>
+
+      {externalOpportunity && applyUrl && (
+        <a
+          href={applyUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-outline mt-4 w-full"
+        >
+          Apply on Employer Site
+          <ExternalLink className="h-4 w-4" />
+        </a>
+      )}
     </div>
   )
 }

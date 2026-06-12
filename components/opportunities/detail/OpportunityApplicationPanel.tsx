@@ -19,6 +19,7 @@ import {
   submitOpportunityApplication,
   withdrawOpportunityApplication,
 } from '@/app/actions/applications'
+import { isExternalOpportunity } from '@/lib/opportunities/opportunity-trust'
 
 type ExistingApplication = {
   id: string
@@ -30,6 +31,9 @@ type ExistingApplication = {
 type OpportunityApplicationPanelProps = {
   opportunityId: string
   applicationUrl: string | null
+  externalUrl: string | null
+  sourceName: string | null
+  verificationStatus: string | null
   userIsSignedIn: boolean
   readinessScore: number
   introMessageTemplate: string
@@ -75,6 +79,9 @@ function getReadinessMessage(score: number) {
 export default function OpportunityApplicationPanel({
   opportunityId,
   applicationUrl,
+  externalUrl,
+  sourceName,
+  verificationStatus,
   userIsSignedIn,
   readinessScore,
   introMessageTemplate,
@@ -87,6 +94,10 @@ export default function OpportunityApplicationPanel({
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
 
+  const externalOpportunity = isExternalOpportunity({
+    verification_status: verificationStatus,
+  })
+  const externalApplyUrl = applicationUrl || externalUrl
   const alreadyApplied = Boolean(application && application.status !== 'withdrawn')
   const readiness = getReadinessMessage(readinessScore)
 
@@ -146,6 +157,55 @@ export default function OpportunityApplicationPanel({
     })
   }
 
+  if (externalOpportunity) {
+    return (
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
+          <ExternalLink className="h-6 w-6" />
+        </div>
+
+        <h3 className="mt-5 text-2xl font-bold text-slate-950">
+          Apply on Employer Site
+        </h3>
+
+        <p className="muted-text mt-3">
+          Ara Skills helps you discover this external opportunity. The
+          application happens on the original employer or partner hiring page,
+          not inside Ara Skills.
+        </p>
+
+        <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-4">
+          <p className="text-sm font-semibold text-slate-950">
+            External Opportunity
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-slate-700">
+            Source:{' '}
+            {sourceName || 'Trusted external hiring source'}. Confirm current
+            pay, schedule, requirements, and deadline before applying.
+          </p>
+        </div>
+
+        {externalApplyUrl ? (
+          <a
+            href={externalApplyUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary mt-6 w-full px-6 py-4"
+          >
+            Apply on Employer Site
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        ) : (
+          <p className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-700">
+            The original application link is not available yet. Check the
+            employer or source website before applying.
+          </p>
+        )}
+      </section>
+    )
+  }
+
   if (!userIsSignedIn) {
     return (
       <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -173,7 +233,7 @@ export default function OpportunityApplicationPanel({
             rel="noreferrer"
             className="btn-outline mt-3 w-full"
           >
-            Employer application page
+            Apply on Employer Site
             <ExternalLink className="h-4 w-4" />
           </a>
         )}
@@ -240,7 +300,7 @@ export default function OpportunityApplicationPanel({
             rel="noreferrer"
             className="btn-outline mt-3 w-full"
           >
-            Employer application page
+            Apply on Employer Site
             <ExternalLink className="h-4 w-4" />
           </a>
         )}
@@ -262,10 +322,10 @@ export default function OpportunityApplicationPanel({
         </div>
 
         <div>
-          <p className="eyebrow">Apply through platform</p>
+          <p className="eyebrow">Apply through Ara Skills</p>
 
           <h3 className="mt-3 text-2xl font-bold text-slate-950">
-            Submit your application
+            Apply through Ara Skills
           </h3>
 
           <p className="muted-text mt-3">
@@ -346,7 +406,7 @@ export default function OpportunityApplicationPanel({
         className="btn-primary mt-5 w-full px-6 py-4"
       >
         <Send className="h-4 w-4" />
-        {isPending ? 'Submitting...' : 'Submit application'}
+        {isPending ? 'Submitting...' : 'Submit application through Ara Skills'}
       </button>
 
       {applicationUrl && (
@@ -356,7 +416,7 @@ export default function OpportunityApplicationPanel({
           rel="noreferrer"
           className="btn-outline mt-3 w-full"
         >
-          Employer application page
+          Apply on Employer Site
           <ExternalLink className="h-4 w-4" />
         </a>
       )}

@@ -28,6 +28,10 @@ export type OpportunityDetail = {
   requirements: string[] | null
   benefits: string[] | null
   application_url: string | null
+  external_url: string | null
+  source_name: string | null
+  source_attribution: string | null
+  verification_status: string | null
   employers: OpportunityDetailEmployer | OpportunityDetailEmployer[] | null
 }
 
@@ -89,6 +93,10 @@ export async function getOpportunityDetailPageData(
       requirements,
       benefits,
       application_url,
+      external_url,
+      source_name,
+      source_attribution,
+      verification_status,
       employers (
         name,
         slug,

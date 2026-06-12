@@ -37,6 +37,11 @@ export default async function OpportunitiesPage() {
       pay_range,
       schedule,
       description,
+      application_url,
+      external_url,
+      source_name,
+      source_attribution,
+      verification_status,
       employers (
         name,
         slug,
@@ -94,10 +99,10 @@ export default async function OpportunitiesPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl">
-              Browse active jobs, apprenticeships, trainee roles, and
-              pre-apprenticeships that have been reviewed, sourced, or employer
-              verified. This directory stays honest: no fake openings, no filler
-              listings, and no dead-end records.
+              Explore skilled-trades opportunities from Ara Skills employers
+              and trusted external hiring sources. Direct-posted jobs can be
+              managed through Ara Skills. External opportunities will take you
+              to the original employer or partner application page.
             </p>
           </div>
         </div>
@@ -108,7 +113,7 @@ export default async function OpportunitiesPage() {
           <div className="pt-8">
             <NextStepPanel
               title="Ready to take action? Start with reviewed listings."
-              description="Use this page when you want apply-now or near-apply jobs and apprenticeships that passed the public visibility gate. If you are still exploring direction or training, start with career paths or training programs first."
+              description="Some jobs are posted directly by employers, while others link to trusted external hiring pages. We label the source clearly so you know where each application happens."
               primaryHref="/programs"
               primaryLabel="Compare training programs"
               secondaryHref="/trades"

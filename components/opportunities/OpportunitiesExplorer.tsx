@@ -7,12 +7,18 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   ClipboardList,
+  ExternalLink,
   MapPin,
   Search,
   ShieldCheck,
   SlidersHorizontal,
 } from 'lucide-react'
 import SaveOpportunityButton from '@/components/opportunities/SaveOpportunityButton'
+import {
+  getOpportunityApplyLabel,
+  getOpportunityTrustLabel,
+  isExternalOpportunity,
+} from '@/lib/opportunities/opportunity-trust'
 
 type EmployerRelation = {
   name: string
@@ -31,6 +37,11 @@ type Opportunity = {
   pay_range: string | null
   schedule: string | null
   description: string
+  application_url: string | null
+  external_url: string | null
+  source_name: string | null
+  source_attribution: string | null
+  verification_status: string | null
   employers: EmployerRelation | EmployerRelation[] | null
 }
 
@@ -231,7 +242,7 @@ export default function OpportunitiesExplorer({
               onChange={(event) => setVerifiedOnly(event.target.checked)}
               className="rounded border-slate-300 text-orange-600 focus:ring-orange-500"
             />
-            Verified only
+            Verified employer only
           </label>
 
           <button
@@ -249,6 +260,14 @@ export default function OpportunitiesExplorer({
         <div className="grid gap-6 lg:grid-cols-2">
           {filteredOpportunities.map((opportunity) => {
             const employer = getEmployer(opportunity)
+            const externalOpportunity = isExternalOpportunity(opportunity)
+            const trustLabel = getOpportunityTrustLabel({
+              verification_status: opportunity.verification_status,
+              employerIsVerified: employer?.is_verified,
+            })
+            const applyLabel = getOpportunityApplyLabel(opportunity)
+            const applyUrl =
+              opportunity.application_url || opportunity.external_url
 
             return (
               <article key={opportunity.id} className="card">
@@ -264,14 +283,18 @@ export default function OpportunitiesExplorer({
                         </span>
 
                         <span className="trust-badge">
-                          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
-                          Reviewed listing
+                          {externalOpportunity ? (
+                            <ExternalLink className="h-3.5 w-3.5 text-orange-600" />
+                          ) : (
+                            <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+                          )}
+                          {trustLabel}
                         </span>
 
-                        {employer?.is_verified && (
+                        {employer?.is_verified && !externalOpportunity && (
                           <span className="trust-badge">
                             <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
-                            Verified employer
+                            Direct employer listing
                           </span>
                         )}
                       </div>
@@ -283,6 +306,15 @@ export default function OpportunitiesExplorer({
                       <p className="mt-2 font-semibold text-slate-600">
                         {employer?.name || 'Employer listing'}
                       </p>
+
+                      {externalOpportunity && (
+                        <p className="mt-2 text-sm font-semibold text-slate-500">
+                          Source:{' '}
+                          {opportunity.source_name ||
+                            employer?.name ||
+                            'Trusted external hiring source'}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-950 text-white transition group-hover:bg-orange-600">
@@ -326,13 +358,27 @@ export default function OpportunitiesExplorer({
                 </div>
 
                 <div className="mt-6 flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <Link
-                    href={`/opportunities/${opportunity.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
-                  >
-                    View listing
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <Link
+                      href={`/opportunities/${opportunity.slug}`}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700 hover:text-orange-800"
+                    >
+                      View listing
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+
+                    {externalOpportunity && applyUrl && (
+                      <a
+                        href={applyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-950"
+                      >
+                        {applyLabel}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
 
                   <div className="sm:min-w-52">
                     <SaveOpportunityButton
