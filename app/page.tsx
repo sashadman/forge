@@ -131,13 +131,13 @@ export default function HomePage() {
                   Choose your path
                 </span>
 
-                <h1 className="mt-6" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', fontWeight: 900, lineHeight: 1.02, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-                  Choose your path.{' '}
-                  <span style={{ color: 'var(--cyan)' }}>Build what&apos;s next.</span>
+                <h1 className="mt-6" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.0rem, 5vw, 3.5rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+                 Start your future in skilled trades. {' '}
+                
                 </h1>
 
                 <p className="mt-6 max-w-xl" style={{ fontSize: '1.125rem', lineHeight: 1.75, color: 'var(--text-secondary)' }}>
-                  Skilled trades should feel easier to explore, not harder to understand. Choose your role, enter the right path, and move through a focused experience built around careers, training, hiring, and workforce connections.
+                  Ara Skills helps you explore trade careers, find training, connect with employers, and take the next step toward real opportunity. Whether you are starting fresh, changing careers, hiring talent, or building workforce partnerships, Ara Skills gives every path a clear place to begin.
                 </p>
               </div>
 
