@@ -259,13 +259,6 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   </h2>
                 </div>
 
-                <Link
-                  href="/opportunities"
-                  className="btn-outline px-5 py-2 text-sm"
-                >
-                  View all opportunities
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
               </div>
 
               {activeOpportunities.length > 0 ? (
@@ -333,14 +326,9 @@ export default async function EmployerDetailPage({ params }: PageProps) {
                   </h3>
 
                   <p className="muted-text mt-2">
-                    This employer does not have active jobs or apprenticeships listed right
-                    now. We do not show fake openings.
+                    This employer does not have active jobs or apprenticeships
+                    listed right now. We do not show fake openings.
                   </p>
-
-                  <Link href="/opportunities" className="btn-dark mt-5">
-                    Browse job and apprenticeships
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
                 </div>
               )}
             </section>

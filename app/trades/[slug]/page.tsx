@@ -4,12 +4,10 @@ import { notFound } from 'next/navigation'
 import {
   ArrowRight,
   Award,
-  BriefcaseBusiness,
   CheckCircle2,
   Clock,
   DollarSign,
   GraduationCap,
-  ShieldCheck,
   TrendingUp,
   Wrench,
   XCircle,
@@ -94,10 +92,6 @@ export default function CareerPathDetailPage({
                 <Link href="/quiz" className="btn-primary px-7 py-4">
                   Check fit with quiz
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-
-                <Link href="/programs" className="btn-outline-dark px-7 py-4">
-                  Explore training programs
                 </Link>
               </div>
             </div>
@@ -252,44 +246,6 @@ export default function CareerPathDetailPage({
             </section>
           </div>
 
-          <section className="mt-8 rounded-[2rem] border border-slate-200 bg-slate-950 p-8 text-white shadow-xl">
-            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
-                <BriefcaseBusiness className="h-8 w-8" />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
-                  Career seeker next step
-                </p>
-
-                <h2 className="mt-4 text-3xl font-bold tracking-tight">
-                  Compare preparation options before applying.
-                </h2>
-
-                <p className="mt-4 max-w-4xl leading-7 text-slate-300">
-                  Once a career path looks promising, compare training programs,
-                  build your readiness profile, and then review real jobs or
-                  apprenticeships that fit your direction.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link href="/programs" className="btn-light">
-                    Explore training programs
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <Link
-                    href="/dashboard/readiness"
-                    className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
-                  >
-                    Build readiness profile
-                    <ShieldCheck className="h-4 w-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </section>
     </main>

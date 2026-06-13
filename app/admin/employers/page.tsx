@@ -274,10 +274,6 @@ export default async function AdminEmployersPage() {
                   Add only real employers after checking their information.
                 </p>
 
-                <Link href="/admin/employers/new" className="btn-primary mt-5">
-                  Add employer
-                  <Plus className="h-4 w-4" />
-                </Link>
               </div>
             )}
           </div>

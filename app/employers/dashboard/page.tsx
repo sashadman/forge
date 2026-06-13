@@ -324,8 +324,6 @@ export default async function EmployerDashboardPage() {
                   ? 'Review applications'
                   : 'Submit opportunity'
               }
-              secondaryHref="/employers/profile"
-              secondaryLabel="Improve profile"
               icon={<UsersRound className="h-6 w-6" />}
             />
           </div>
@@ -335,12 +333,18 @@ export default async function EmployerDashboardPage() {
               <section className="content-panel">
                 <p className="eyebrow">Employer profile</p>
 
-                <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">
+                <h2
+                  className="mt-3 text-3xl font-bold tracking-tight"
+                  style={{ color: 'var(--text-primary)' }}
+                >
                   {employer.name}
                 </h2>
 
                 {employer.industry && (
-                  <p className="mt-2 font-semibold text-slate-600">
+                  <p
+                    className="mt-2 font-semibold"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
                     {employer.industry}
                   </p>
                 )}
@@ -381,16 +385,6 @@ export default async function EmployerDashboardPage() {
                     <ExternalLink className="h-4 w-4" />
                   </Link>
 
-                  <Link href="/employers/opportunities/new" className="btn-primary w-full">
-                    Submit opportunity
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <Link href="/employers/profile" className="btn-outline w-full">
-                    Edit employer profile
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
                   <Link href="/employers/applications" className="btn-outline w-full">
                     Review applications
                     <UsersRound className="h-4 w-4" />
@@ -403,7 +397,10 @@ export default async function EmployerDashboardPage() {
                   <div>
                     <p className="eyebrow">Profile quality</p>
 
-                    <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-950">
+                    <h3
+                      className="mt-3 text-2xl font-bold tracking-tight"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
                       {completenessScore}% complete
                     </h3>
                   </div>
@@ -452,10 +449,6 @@ export default async function EmployerDashboardPage() {
                     </p>
                   </div>
 
-                  <Link href="/employers/opportunities/new" className="btn-primary">
-                    Submit opportunity
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
                 </div>
 
                 {submissions.length > 0 ? (
@@ -473,10 +466,6 @@ export default async function EmployerDashboardPage() {
                       icon={<FileCheck2 className="h-6 w-6" />}
                       title="No submitted opportunities yet"
                       description="Submit your first real job, apprenticeship, trainee role, or pre-apprenticeship for admin review. It will stay private until approved."
-                      primaryHref="/employers/opportunities/new"
-                      primaryLabel="Submit opportunity"
-                      secondaryHref="/employers/profile"
-                      secondaryLabel="Improve profile first"
                     />
                   </div>
                 )}
@@ -576,10 +565,6 @@ export default async function EmployerDashboardPage() {
                           ? 'You have approved submissions. Once they are connected to public listings, they will show here.'
                           : 'Submit a real opportunity for review. Once approved, it will become a public listing.'
                       }
-                      primaryHref="/employers/opportunities/new"
-                      primaryLabel="Submit opportunity"
-                      secondaryHref="/employers/profile"
-                      secondaryLabel="Improve profile first"
                     />
                   </div>
                 )}
@@ -639,7 +624,7 @@ function EmployerSubmissionCard({
   const statusMeta = getSubmissionStatusMeta(submission.status)
 
   return (
-    <article className="card bg-slate-50">
+    <article className="card">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div>
           <div className="flex flex-wrap gap-2">
@@ -655,16 +640,25 @@ function EmployerSubmissionCard({
             </span>
           </div>
 
-          <h3 className="mt-4 text-2xl font-bold text-slate-950">
+          <h3
+            className="mt-4 text-2xl font-bold"
+            style={{ color: 'var(--text-primary)' }}
+          >
             {submission.title}
           </h3>
 
-          <p className="mt-2 font-semibold text-slate-600">
+          <p
+            className="mt-2 font-semibold"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             {submission.trade_slug}
           </p>
         </div>
 
-        <p className="text-sm font-semibold text-slate-500">
+        <p
+          className="text-sm font-semibold"
+          style={{ color: 'var(--text-muted)' }}
+        >
           Submitted {formatDate(submission.created_at)}
         </p>
       </div>
@@ -688,11 +682,22 @@ function EmployerSubmissionCard({
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4">
-        <p className="font-semibold text-slate-950">{statusMeta.description}</p>
+      <div
+        className="mt-6 rounded-2xl border p-4"
+        style={{ borderColor: 'var(--border)', background: 'var(--bg-base)' }}
+      >
+        <p
+          className="font-semibold"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {statusMeta.description}
+        </p>
 
         {submission.admin_notes && (
-          <p className="mt-3 text-sm leading-6 text-slate-600">
+          <p
+            className="mt-3 text-sm leading-6"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             Admin note: {submission.admin_notes}
           </p>
         )}
@@ -714,7 +719,12 @@ function EmployerMetricCard({
     <div className="content-panel">
       <div className="text-orange-600">{icon}</div>
       <p className="eyebrow mt-5">{label}</p>
-      <h2 className="mt-3 text-3xl font-bold text-slate-950">{value}</h2>
+      <h2
+        className="mt-3 text-3xl font-bold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </h2>
     </div>
   )
 }
@@ -730,12 +740,20 @@ function DetailItem({
 }) {
   return (
     <div className="mini-card">
-      <div className="flex items-center gap-2 text-slate-500">
+      <div
+        className="flex items-center gap-2"
+        style={{ color: 'var(--text-muted)' }}
+      >
         {icon}
         <p className="text-xs font-semibold uppercase tracking-wide">{label}</p>
       </div>
 
-      <p className="mt-2 font-semibold text-slate-950">{value}</p>
+      <p
+        className="mt-2 font-semibold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </p>
     </div>
   )
 }
@@ -743,11 +761,19 @@ function DetailItem({
 function MiniDetail({ label, value }: { label: string; value: string }) {
   return (
     <div className="mini-card-white">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <p
+        className="text-xs font-semibold uppercase tracking-wide"
+        style={{ color: 'var(--text-muted)' }}
+      >
         {label}
       </p>
 
-      <p className="mt-1 font-bold text-slate-950">{value}</p>
+      <p
+        className="mt-1 font-bold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </p>
     </div>
   )
 }
@@ -771,8 +797,18 @@ function CompletenessItem({
         )}
 
         <div>
-          <p className="font-semibold text-slate-950">{label}</p>
-          <p className="mt-1 text-sm leading-6 text-slate-500">{helpText}</p>
+          <p
+            className="font-semibold"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            {label}
+          </p>
+          <p
+            className="mt-1 text-sm leading-6"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {helpText}
+          </p>
         </div>
       </div>
     </div>

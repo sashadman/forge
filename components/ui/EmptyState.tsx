@@ -30,17 +30,26 @@ export default function EmptyState({
             {icon || <ShieldCheck className="h-7 w-7" />}
           </div>
 
-          <h3 className="mt-5 text-2xl font-black tracking-tight text-slate-950">
+          <h3
+            className="mt-5 text-2xl font-black tracking-tight"
+            style={{ color: 'var(--text-primary)' }}
+          >
             {title}
           </h3>
 
-          <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-600">
+          <p
+            className="mt-3 max-w-2xl text-base font-semibold leading-7"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             {description}
           </p>
 
-          <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-slate-500">
-            Ara Skills keeps these sections honest: records appear only when they are
-            real, active, reviewed, or saved through the correct workflow.
+          <p
+            className="mt-4 max-w-2xl text-sm font-semibold leading-6"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            Ara Skills only shows records that are real, active, reviewed, or
+            saved through the correct workflow.
           </p>
         </div>
 

@@ -336,17 +336,6 @@ export default async function AdminProgramsPage() {
                       is added to the platform.
                     </p>
 
-                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                      <Link href="/admin/programs/new" className="btn-primary">
-                        Add program
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-
-                      <Link href="/admin" className="btn-dark">
-                        Back to admin
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </div>
                   </div>
                 </div>
               </div>

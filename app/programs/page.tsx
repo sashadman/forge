@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
+import { GraduationCap } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import NextStepPanel from '@/components/ui/NextStepPanel'
 import ProgramsExplorer, {
@@ -229,42 +228,6 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
             />
           </div>
 
-          <section className="mt-8 rounded-[2rem] border border-white/10 bg-slate-950 p-8 text-white shadow-xl">
-            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-orange-300 ring-1 ring-white/15">
-                <BriefcaseBusiness className="h-8 w-8" />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-300">
-                  Ready for work?
-                </p>
-
-                <h2 className="mt-4 text-3xl font-bold tracking-tight">
-                  Move from training research to real openings.
-                </h2>
-
-                <p className="mt-4 max-w-4xl leading-7 text-slate-300">
-                  Once you understand the training pathway, compare real jobs,
-                  apprenticeships, and trainee roles to see what employers
-                  expect.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link href="/opportunities" className="btn-light">
-                    View jobs & apprenticeships
-                  </Link>
-
-                  <Link
-                    href="/dashboard/readiness"
-                    className="btn-outline border-white/20 bg-white/10 text-white hover:bg-white/15"
-                  >
-                    Build readiness profile
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </ThemedPublicSection>
     </ThemedPublicPage>

@@ -32,7 +32,7 @@ const providerWorkflow = [
   {
     title: 'Admin reviews the request',
     description:
-      'Provider access should not be automatic. An admin reviews the organization, website, evidence, and requested access before future editing tools are enabled.',
+      'An admin reviews the organization, website, evidence, and requested access before editing tools are enabled.',
     icon: ClipboardCheck,
   },
   {
@@ -117,7 +117,7 @@ export default function ForProgramsPage() {
 
             <p className="mt-5 max-w-2xl text-base leading-7 sm:text-lg" style={{ color: '#E2E8F0' }}>
               {siteConfig.name} helps training providers,
-              apprenticeship programs, workforce organizations, and schools can
+              apprenticeship programs, workforce organizations, and schools
               request access, manage verified provider profiles, submit programs,
               and request updates through an admin-reviewed workflow.
             </p>
@@ -353,9 +353,6 @@ export default function ForProgramsPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
 
-                <Link href="/training-providers/claim" className="btn-outline">
-                  Request provider access
-                </Link>
               </div>
             </div>
           </section>

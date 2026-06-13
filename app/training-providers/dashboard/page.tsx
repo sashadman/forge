@@ -17,7 +17,6 @@ import ThemedPublicPage from '@/components/theme/ThemedPublicPage'
 import ThemedPublicSection from '@/components/theme/ThemedPublicSection'
 import { createClient } from '@/lib/supabase/server'
 import { siteConfig } from '@/config/site'
-import RoleFlowCards from '@/components/ui/RoleFlowCards'
 
 export const metadata: Metadata = {
   title: `Training Provider Dashboard — ${siteConfig.name}`,
@@ -377,16 +376,6 @@ export default async function TrainingProviderDashboardPage() {
                   </p>
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <Link href="/training-providers/programs" className="btn-primary">
-                    View programs
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-
-                  <Link href="/training-providers/profile" className="btn-outline">
-                    Edit provider profile
-                  </Link>
-                </div>
               </div>
 
               <div className="mt-8 grid gap-5 lg:grid-cols-2">
@@ -398,17 +387,26 @@ export default async function TrainingProviderDashboardPage() {
                       </div>
 
                       <div>
-                        <h3 className="text-xl font-bold text-slate-950">
+                        <h3
+                          className="text-xl font-bold"
+                          style={{ color: 'var(--text-primary)' }}
+                        >
                           {providerProfile.name}
                         </h3>
 
-                        <p className="mt-1 text-sm text-slate-600">
+                        <p
+                          className="mt-1 text-sm"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
                           {providerProfile.city}, {providerProfile.state} ·{' '}
                           {providerProfile.verification_status}
                         </p>
 
                         {providerProfile.contact_email && (
-                          <p className="mt-2 text-sm text-slate-600">
+                          <p
+                            className="mt-2 text-sm"
+                            style={{ color: 'var(--text-secondary)' }}
+                          >
                             {providerProfile.contact_email}
                           </p>
                         )}
@@ -503,13 +501,6 @@ export default async function TrainingProviderDashboardPage() {
               action="Edit profile"
             />
           </section>
-                    <div className="mt-8">
-            <RoleFlowCards
-              role="training_provider"
-              title="Provider workflow map"
-              description="Use these pages for provider-specific work only. Program management, provider profile updates, and claims stay separate from career-seeker planning tools."
-            />
-          </div>
         </div>
       </ThemedPublicSection>
     </ThemedPublicPage>
@@ -533,7 +524,12 @@ function ProviderMetricCard({
 
       <p className="eyebrow mt-5">{label}</p>
 
-      <p className="mt-3 text-3xl font-bold text-slate-950">{value}</p>
+      <p
+        className="mt-3 text-3xl font-bold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </p>
 
       <p className="muted-text mt-3">{description}</p>
     </div>
@@ -596,13 +592,18 @@ function ProviderActionCard({
   return (
     <Link
       href={href}
-      className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+      className="group card card-hover p-6"
     >
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-orange-700">
         {icon}
       </div>
 
-      <h2 className="mt-5 text-2xl font-bold text-slate-950">{title}</h2>
+      <h2
+        className="mt-5 text-2xl font-bold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {title}
+      </h2>
 
       <p className="muted-text mt-3">{description}</p>
 

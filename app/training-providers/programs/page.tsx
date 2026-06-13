@@ -206,11 +206,17 @@ export default async function TrainingProviderProgramsPage() {
                           )}
                         </div>
 
-                        <h3 className="mt-4 text-2xl font-bold text-slate-950">
+                        <h3
+                          className="mt-4 text-2xl font-bold"
+                          style={{ color: 'var(--text-primary)' }}
+                        >
                           {program.name}
                         </h3>
 
-                        <p className="mt-3 max-w-3xl line-clamp-3 text-slate-600">
+                        <p
+                          className="mt-3 max-w-3xl line-clamp-3"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
                           {program.description}
                         </p>
 
@@ -305,12 +311,6 @@ export default async function TrainingProviderProgramsPage() {
                   You can also submit new real programs for admin review.
                 </p>
 
-                <div className="mt-8 flex justify-center">
-                  <Link href="/training-providers/programs/new" className="btn-primary">
-                    Submit program
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
               </section>
             )}
           </div>
@@ -323,11 +323,19 @@ export default async function TrainingProviderProgramsPage() {
 function StatusCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="mini-card">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+      <p
+        className="text-xs font-bold uppercase tracking-wide"
+        style={{ color: 'var(--text-muted)' }}
+      >
         {label}
       </p>
 
-      <p className="mt-2 text-2xl font-bold text-slate-950">{value}</p>
+      <p
+        className="mt-2 text-2xl font-bold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </p>
     </div>
   )
 }
@@ -335,11 +343,19 @@ function StatusCard({ label, value }: { label: string; value: string }) {
 function InfoCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="mini-card">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+      <p
+        className="text-xs font-bold uppercase tracking-wide"
+        style={{ color: 'var(--text-muted)' }}
+      >
         {label}
       </p>
 
-      <p className="mt-2 font-semibold text-slate-950">{value}</p>
+      <p
+        className="mt-2 font-semibold"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        {value}
+      </p>
     </div>
   )
 }

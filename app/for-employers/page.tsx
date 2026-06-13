@@ -26,7 +26,7 @@ const employerActions = [
   {
     title: 'Create employer account',
     description:
-      'Start the employer onboarding path and connect future listings to the correct organization.',
+      'Start onboarding and connect future listings to the correct organization.',
     href: '/employers/sign-up',
     icon: UserPlus,
     primary: true,
@@ -42,7 +42,7 @@ const employerActions = [
   {
     title: 'Employer dashboard',
     description:
-      'Go directly to the employer dashboard if your account and employer profile are already active.',
+      'Open your employer workspace once your account and profile are active.',
     href: '/employers/dashboard',
     icon: BriefcaseBusiness,
     primary: false,
@@ -110,9 +110,9 @@ export default function ForEmployersPage() {
             </h1>
 
             <p className="lead-text-dark mt-6 max-w-3xl" style={{ color: '#E2E8F0' }}>
-              {siteConfig.name} helps skilled-trades employers create a real
-              employer profile, submit honest jobs or apprenticeships for review, and
-              review applicants through a focused employer workflow.
+              {siteConfig.name} helps skilled-trades employers create a
+              credible public profile, submit real jobs or apprenticeships for
+              review, and manage applicant follow-up in one workspace.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -186,19 +186,31 @@ export default function ForEmployersPage() {
                   href={action.href}
                   className="group card card-hover p-6"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl"
+                    style={{ background: 'var(--amber-muted)', color: 'var(--amber)' }}
+                  >
                     <Icon className="h-6 w-6" />
                   </div>
 
-                  <h2 className="mt-5 text-xl font-bold text-slate-950">
+                  <h2
+                    className="mt-5 text-xl font-bold"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
                     {action.title}
                   </h2>
 
-                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                  <p
+                    className="mt-3 text-sm leading-6"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
                     {action.description}
                   </p>
 
-                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-700">
+                  <div
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold"
+                    style={{ color: 'var(--amber)' }}
+                  >
                     Open
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </div>
@@ -228,7 +240,10 @@ export default function ForEmployersPage() {
 
                 return (
                   <div key={benefit.title} className="card card-hover p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
+                    <div
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                      style={{ background: 'var(--amber-muted)', color: 'var(--amber)' }}
+                    >
                       <Icon className="h-7 w-7" />
                     </div>
 
@@ -270,9 +285,6 @@ export default function ForEmployersPage() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
 
-                <Link href="/employers/sign-up" className="btn-outline">
-                  Create employer account
-                </Link>
               </div>
             </div>
           </section>

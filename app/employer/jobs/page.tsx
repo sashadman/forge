@@ -83,21 +83,20 @@ export default async function EmployerJobsPage() {
           <div className="mt-10">
             {employerJobs.length === 0 ? (
               <div className="content-panel border-dashed p-10">
-                <h2 className="text-xl font-black text-slate-950">
+                <h2
+                  className="text-xl font-black"
+                  style={{ color: 'var(--text-primary)' }}
+                >
                   No jobs posted yet.
                 </h2>
-                <p className="mt-3 max-w-2xl text-slate-600">
+                <p
+                  className="mt-3 max-w-2xl"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
                   Start by creating your first skilled-trades opportunity.
                   Draft jobs stay private until you publish them.
                 </p>
 
-                <Link
-                  href="/employer/jobs/new"
-                  className="btn-primary mt-6"
-                >
-                  Create first job
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
               </div>
             ) : (
               <div className="grid gap-5">
@@ -112,15 +111,24 @@ export default async function EmployerJobsPage() {
                           {job.status}
                         </span>
 
-                        <h2 className="mt-4 text-2xl font-black text-slate-950">
+                        <h2
+                          className="mt-4 text-2xl font-black"
+                          style={{ color: 'var(--text-primary)' }}
+                        >
                           {job.title}
                         </h2>
 
-                        <p className="mt-2 font-bold text-slate-700">
+                        <p
+                          className="mt-2 font-bold"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
                           {job.company_name}
                         </p>
 
-                        <p className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-500">
+                        <p
+                          className="mt-2 inline-flex items-center gap-2 text-sm font-semibold"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
                           <MapPin className="h-4 w-4" />
                           {[job.city, job.state].filter(Boolean).join(', ') ||
                             job.location ||
