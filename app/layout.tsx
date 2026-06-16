@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Barlow, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/config/site'
@@ -28,6 +28,8 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  manifest: '/manifest.webmanifest',
   title: {
     default: `${siteConfig.name} — Start Your Trade Career`,
     template: `%s | ${siteConfig.name}`,
@@ -38,19 +40,32 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/icon.png',
+        url: '/icons/icon-192.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        url: '/icons/icon-512.png',
         sizes: '512x512',
         type: 'image/png',
       },
     ],
     apple: [
       {
-        url: '/apple-icon.png',
+        url: '/icons/apple-touch-icon.png',
         sizes: '180x180',
         type: 'image/png',
       },
     ],
-    shortcut: ['/icon.png'],
+    shortcut: ['/icons/icon-192.png'],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: siteConfig.name,
+  },
+  formatDetection: {
+    telephone: false,
   },
   openGraph: {
     title: `${siteConfig.name} — Start Your Trade Career`,
@@ -64,6 +79,16 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — Start Your Trade Career`,
     description: siteConfig.description,
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FFFFFF' },
+    { media: '(prefers-color-scheme: dark)', color: '#101827' },
+  ],
 }
 
 export default function RootLayout({

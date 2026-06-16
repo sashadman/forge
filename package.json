@@ -8,12 +8,17 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "ios:sync": "cap sync ios",
+    "ios:open": "cap open ios",
     "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts",
     "seed:training-sources": "tsx scripts/seed-training-sources.ts",
     "import:program-candidates": "tsx scripts/import-training-program-candidates.ts",
     "import:scorecard-fields": "tsx scripts/import-college-scorecard-fields.ts"
   },
   "dependencies": {
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0",
+    "@capacitor/ios": "^8.4.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.0",
     "@radix-ui/react-dropdown-menu": "^2.1.0",
