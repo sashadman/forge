@@ -5,7 +5,7 @@
    Components do NOT need to change — they read variables.
 ═══════════════════════════════════════════════════════════ */
 
-.theme-light {
+html.theme-light {
   color-scheme: light;
 
   /* Surfaces flip to light */
@@ -35,8 +35,8 @@
   --cyan-glow:     0 12px 30px rgba(3, 105, 161, 0.14);
   --border-cyan:   rgba(3, 105, 161, 0.22);
 
-  --amber:         #D97706;
-  --amber-dim:     #D97706;
+  --amber:         #B45309;
+  --amber-dim:     #9A3412;
   --amber-muted:   rgba(180, 83, 9, 0.08);
   --amber-glow:    0 12px 28px rgba(180, 83, 9, 0.12);
 
@@ -44,7 +44,7 @@
   --coral:         #BE123C;
 }
 
-.theme-dark {
+html.theme-dark {
   color-scheme: dark;
 
   --bg-void:     #101827;
@@ -79,14 +79,14 @@
 }
 
 /* Body background for light theme */
-.theme-light body {
+html.theme-light body {
   background:
     linear-gradient(180deg, rgba(14, 165, 233, 0.06) 0%, transparent 18rem),
     linear-gradient(135deg, rgba(217, 119, 6, 0.04) 0%, transparent 30rem),
     var(--bg-void);
 }
 
-.theme-dark body {
+html.theme-dark body {
   background:
     linear-gradient(180deg, rgba(14, 165, 233, 0.06) 0%, transparent 18rem),
     linear-gradient(135deg, rgba(217, 119, 6, 0.04) 0%, transparent 30rem),
@@ -95,28 +95,28 @@
 
 /* Hero fade adapts to light bg */
 /* Scrollbar in light mode */
-.theme-light ::-webkit-scrollbar-track { background: var(--bg-raised); }
-.theme-light ::-webkit-scrollbar-thumb { background: var(--border-mid); }
+html.theme-light ::-webkit-scrollbar-track { background: var(--bg-raised); }
+html.theme-light ::-webkit-scrollbar-thumb { background: var(--border-mid); }
 
 /* Admin cards light adjustments */
-.theme-light .admin-action-card {
+html.theme-light .admin-action-card {
   background: var(--bg-base);
   border-color: var(--border);
   color: var(--text-primary);
 }
 
-.theme-light .admin-action-card-featured {
+html.theme-light .admin-action-card-featured {
   border-color: var(--border-cyan);
   background: linear-gradient(135deg, rgba(0, 143, 175, 0.05), var(--bg-base));
 }
 
-.theme-light .admin-card-description { color: var(--text-secondary); }
-.theme-light .admin-card-metric { background: var(--bg-raised); color: var(--text-primary); }
-.theme-light .admin-card-action { color: var(--cyan); }
+html.theme-light .admin-card-description { color: var(--text-secondary); }
+html.theme-light .admin-card-metric { background: var(--bg-raised); color: var(--text-primary); }
+html.theme-light .admin-card-action { color: var(--cyan); }
 
-.theme-light .shadow-slate-950\/10,
-.theme-light .shadow-slate-950\/15,
-.theme-light .shadow-slate-950\/20,
-.theme-light .shadow-slate-950\/25 {
+html.theme-light .shadow-slate-950\/10,
+html.theme-light .shadow-slate-950\/15,
+html.theme-light .shadow-slate-950\/20,
+html.theme-light .shadow-slate-950\/25 {
   --tw-shadow-color: rgba(15, 23, 42, 0.08) !important;
 }

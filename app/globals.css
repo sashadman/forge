@@ -940,7 +940,7 @@
   .text-orange-600,
   .text-orange-700,
   .text-orange-800 {
-    color: #D97706 !important;
+    color: #B45309 !important;
   }
 
   .text-orange-50,
@@ -962,7 +962,7 @@
   .hover\:text-orange-800:hover,
   .group:hover .group-hover\:text-orange-700,
   .group:hover .group-hover\:text-orange-800 {
-    color: #D97706 !important;
+    color: #B45309 !important;
   }
 
   .bg-orange-50,
@@ -993,7 +993,7 @@
   .bg-orange-700,
   .bg-orange-800,
   .bg-orange-900 {
-    background-color: #D97706 !important;
+    background-color: #B45309 !important;
   }
 
   .hover\:bg-orange-50:hover,
@@ -1011,7 +1011,7 @@
   .hover\:bg-orange-600:hover,
   .hover\:bg-orange-700:hover,
   .group:hover .group-hover\:bg-orange-600 {
-    background-color: #D97706 !important;
+    background-color: #B45309 !important;
   }
 
   .border-orange-100,
@@ -1022,7 +1022,7 @@
   .border-orange-300\/30,
   .border-orange-400\/20,
   .border-orange-400\/30 {
-    border-color: #D97706 !important;
+    border-color: #B45309 !important;
   }
 
   .hover\:border-orange-200:hover,
@@ -1032,7 +1032,7 @@
   .focus\:border-orange-600:focus,
   .focus-within\:border-orange-400:focus-within,
   .group:hover .group-hover\:ring-orange-200 {
-    border-color: #D97706 !important;
+    border-color: #B45309 !important;
   }
 
   .ring-orange-100,
@@ -1043,7 +1043,7 @@
   .focus\:ring-orange-100:focus,
   .focus\:ring-orange-500:focus,
   .focus-within\:ring-orange-100:focus-within {
-    --tw-ring-color: #D97706 !important;
+    --tw-ring-color: #B45309 !important;
   }
 
   .shadow-orange-900\/10 {
@@ -1056,21 +1056,21 @@
   .from-orange-500,
   .from-orange-500\/10,
   .from-orange-500\/16 {
-    --tw-gradient-from: #D97706 var(--tw-gradient-from-position) !important;
-    --tw-gradient-to: rgba(217, 119, 6, 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-from: #B45309 var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgba(180, 83, 9, 0) var(--tw-gradient-to-position) !important;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
   }
 
   .via-orange-50,
   .via-orange-400,
   .via-orange-500 {
-    --tw-gradient-to: rgba(217, 119, 6, 0) var(--tw-gradient-to-position) !important;
-    --tw-gradient-stops: var(--tw-gradient-from), #D97706 var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+    --tw-gradient-to: rgba(180, 83, 9, 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), #B45309 var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
   }
 
   .to-orange-400,
   .to-orange-500 {
-    --tw-gradient-to: #D97706 var(--tw-gradient-to-position) !important;
+    --tw-gradient-to: #B45309 var(--tw-gradient-to-position) !important;
   }
 
   .text-indigo-200,
@@ -1198,4 +1198,36 @@
   font-size: 13px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/*
+  Legacy components still use hard-coded Tailwind slate text utilities inside
+  tokenized surfaces. In dark theme those surfaces turn dark, so remap the
+  common slate text classes back to readable design-token colors after the
+  generated utilities have loaded.
+*/
+.theme-dark :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-950, .text-slate-900, .text-slate-800, .text-slate-700):not(input):not(textarea):not(select),
+[data-theme='dark'] :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-950, .text-slate-900, .text-slate-800, .text-slate-700):not(input):not(textarea):not(select) {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-600, .text-slate-500):not(input):not(textarea):not(select),
+[data-theme='dark'] :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-600, .text-slate-500):not(input):not(textarea):not(select) {
+  color: var(--text-secondary) !important;
+}
+
+.theme-dark :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-400, .text-slate-300):not(input):not(textarea):not(select),
+[data-theme='dark'] :is(.card, .card-soft, .content-panel, .mini-card, .mini-card-white, .empty-state-panel)
+  :is(.text-slate-400, .text-slate-300):not(input):not(textarea):not(select) {
+  color: var(--text-muted) !important;
+}
+
+.theme-dark .level-badge,
+[data-theme='dark'] .level-badge {
+  color: #FDBA74;
 }
