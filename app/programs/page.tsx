@@ -25,7 +25,6 @@ type RpcSupabase = {
     data: DirectoryProgramRecord[] | null
     error: unknown
   }>
-  from: (table: string) => any
 }
 
 type DirectoryProgramRecord = {

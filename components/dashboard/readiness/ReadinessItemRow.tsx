@@ -115,7 +115,6 @@ export default function ReadinessItemRow({
   const status = item?.status ?? 'missing'
   const complete = isReadinessItemComplete(status)
   const hasFile = Boolean(item?.file_path)
-  const hasText = Boolean(textValue.trim())
   const isGeneratedTextFile = item?.file_mime_type === 'text/plain'
   const isUploadedDocument = hasFile && !isGeneratedTextFile
   const canExpand =

@@ -12,10 +12,7 @@ import {
   UserRound,
 } from 'lucide-react'
 
-// MissionNav no longer needs isDay — it reads from CSS variables automatically
-type MissionNavProps = {
-  isDay?: boolean  // kept for API compat, no longer used
-}
+// MissionNav reads its appearance from CSS variables automatically.
 
 const missions = [
   {
@@ -68,7 +65,7 @@ const missions = [
   },
 ]
 
-export default function MissionNav({ isDay }: MissionNavProps) {
+export default function MissionNav() {
   const pathname = usePathname()
 
   const currentIndex = Math.max(

@@ -33,7 +33,6 @@ type Opportunity = {
 }
 
 type OpportunityEditFormProps = {
-  employerSlug: string
   opportunity: Opportunity
 }
 
@@ -83,7 +82,6 @@ function joinLines(value: string[] | null) {
 }
 
 export default function OpportunityEditForm({
-  employerSlug,
   opportunity,
 }: OpportunityEditFormProps) {
   const router = useRouter()

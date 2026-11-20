@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BriefcaseBusiness, Database, PlusCircle } from 'lucide-react'
+import { BriefcaseBusiness, Database } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import PageHero from '@/components/ui/PageHero'
 import BackLink from '@/components/ui/BackLink'

@@ -156,7 +156,7 @@ export default function MissionPageFrame({
         </div>
       </section>
 
-      <MissionNav isDay={isDay} />
+      <MissionNav />
 
       <section
         className={

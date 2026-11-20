@@ -11,18 +11,18 @@ function getTimestamp(seconds: number | null | undefined) {
 }
 
 async function recordBillingEvent(event: Stripe.Event) {
-  const admin = createAdminClient()
+  const admin = createAdminClient() as unknown as LooseAdminClient
 
-  await (admin as any).from('billing_events').upsert({
+  await admin.from('billing_events').upsert({
     stripe_event_id: event.id,
     type: event.type,
-    payload: event as any,
+    payload: event as unknown as Record<string, unknown>,
     processed_at: new Date().toISOString(),
   })
 }
 
 async function syncSubscription(subscription: Stripe.Subscription) {
-  const admin = createAdminClient()
+  const admin = createAdminClient() as unknown as LooseAdminClient
   const customerId =
     typeof subscription.customer === 'string'
       ? subscription.customer
@@ -31,7 +31,7 @@ async function syncSubscription(subscription: Stripe.Subscription) {
   const priceId = subscription.items.data[0]?.price.id ?? null
 
   if (userId) {
-    await (admin as any).from('billing_customers').upsert(
+    await admin.from('billing_customers').upsert(
       {
         user_id: userId,
         stripe_customer_id: customerId,
@@ -42,7 +42,7 @@ async function syncSubscription(subscription: Stripe.Subscription) {
     )
   }
 
-  await (admin as any).from('billing_subscriptions').upsert(
+  await admin.from('billing_subscriptions').upsert(
     {
       user_id: userId,
       stripe_customer_id: customerId,
@@ -62,7 +62,7 @@ async function syncSubscription(subscription: Stripe.Subscription) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const admin = createAdminClient()
+  const admin = createAdminClient() as unknown as LooseAdminClient
   const userId = session.metadata?.user_id || session.client_reference_id || null
   const customerId =
     typeof session.customer === 'string'
@@ -70,7 +70,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       : session.customer?.id
 
   if (userId && customerId) {
-    await (admin as any).from('billing_customers').upsert(
+    await admin.from('billing_customers').upsert(
       {
         user_id: userId,
         stripe_customer_id: customerId,
@@ -125,4 +125,15 @@ export async function POST(request: Request) {
   await recordBillingEvent(event)
 
   return NextResponse.json({ received: true })
+}
+
+type LooseBillingTable = {
+  upsert: (
+    values: Record<string, unknown>,
+    options?: { onConflict: string }
+  ) => Promise<unknown>
+}
+
+type LooseAdminClient = {
+  from: (table: 'billing_events' | 'billing_customers' | 'billing_subscriptions') => LooseBillingTable
 }

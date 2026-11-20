@@ -4,7 +4,6 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   Clock,
-  Send,
 } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/supabase/app-types'
 import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState'

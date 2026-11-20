@@ -93,7 +93,6 @@ export default async function EditOpportunityPage({ params }: PageProps) {
         <div className="section-shell">
           <div className="-mt-12">
             <OpportunityEditForm
-              employerSlug={employer.slug}
               opportunity={opportunity}
             />
           </div>

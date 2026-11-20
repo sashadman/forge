@@ -11,6 +11,22 @@ function getOrigin(request: NextRequest) {
   )
 }
 
+type BillingCustomerRow = {
+  stripe_customer_id: string | null
+}
+
+type BillingCustomerTable = {
+  select: (columns: string) => {
+    eq: (column: string, value: string) => {
+      maybeSingle: () => Promise<{ data: BillingCustomerRow | null }>
+    }
+  }
+}
+
+type LooseAdminClient = {
+  from: (table: 'billing_customers') => BillingCustomerTable
+}
+
 export async function POST(request: NextRequest) {
   const supabase = createClient()
   const {
@@ -23,8 +39,8 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  const admin = createAdminClient()
-  const { data: billingCustomer } = await (admin as any)
+  const admin = createAdminClient() as unknown as LooseAdminClient
+  const { data: billingCustomer } = await admin
     .from('billing_customers')
     .select('stripe_customer_id')
     .eq('user_id', user.id)

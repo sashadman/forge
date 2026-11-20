@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "test": "npm run lint && npm run type-check",
     "ios:sync": "cap sync ios",
     "ios:open": "cap open ios",
     "seed:ca-colleges": "tsx scripts/seed-california-community-colleges.ts",

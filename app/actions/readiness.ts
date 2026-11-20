@@ -189,14 +189,12 @@ export async function toggleReadinessCheckbox({
   checked: boolean
 }) {
   const userId = await getAuthenticatedUserId()
-return upsertReadinessItem({
-  userId,
-  type,
-  status: 'uploaded',
-  textContent: null,
- 
-})
-
+  return upsertReadinessItem({
+    userId,
+    type,
+    status: checked ? 'complete' : 'missing',
+    textContent: null,
+  })
 }
 
 export async function saveReadinessText({

@@ -107,17 +107,12 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
   const program = data as ProgramDetailRecord
 
-  const programDataOrigin = getSafeString(program.data_origin)
   const programSourceUrl = getSafeString(program.source_url)
   const officialSourceUrl = programSourceUrl ?? program.website_url
-
-  const isPromotedPublicSource =
-    programDataOrigin === 'candidate_promoted' ||
-    programDataOrigin === 'official_source_import'
-    const trustLabel = getProgramTrustLabel(program)
-const trustDescription = getProgramTrustDescription(program)
-const originLabel = formatProgramOrigin(program.data_origin)
-const freshnessLabel = getFreshnessLabel(program.updated_at)
+  const trustLabel = getProgramTrustLabel(program)
+  const trustDescription = getProgramTrustDescription(program)
+  const originLabel = formatProgramOrigin(program.data_origin)
+  const freshnessLabel = getFreshnessLabel(program.updated_at)
 
   return (
     <main className="page-shell">

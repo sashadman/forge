@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Inbox, ShieldCheck } from 'lucide-react'
 import SiteNavbar from '@/components/layout/SiteNavbar'
 import PageHero from '@/components/ui/PageHero'
